@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @EnableAutoConfiguration
 public class MainController {
 
+    //TODO: finish addition web tools
+    //TODO: fix  bug: Could not execute build using Gradle installation 'C:\Gradle\gradle-4.6'
+    //TODO: add leftover dependencies
+
     @Value("${shopName}")
     private String message;
 
