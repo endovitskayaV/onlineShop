@@ -20,6 +20,9 @@
 <#if shopName??>
       <p > ${shopName}</p>
 </#if>
+
+
+
 <!--<a href="<@spring.url '/personList'/>">Person List</a>-->
 </div>
 </body>
