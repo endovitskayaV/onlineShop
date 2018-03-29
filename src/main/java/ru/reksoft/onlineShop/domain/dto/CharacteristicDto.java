@@ -13,7 +13,7 @@ public class CharacteristicDto {
     private long id;
     private String name;
     private String type;
-    private List<CategoryDto> categoryDtoList;
+    private List<CategoryDto> categoryList;
 
 
 //    //!!!!!!!!!!!

@@ -21,9 +21,11 @@ public class ItemEntity {
     @Column(name = "id", nullable = false)
     private long id;
 
-
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "description", nullable = false)
+    private String description;
 
     @Column(name = "storage", nullable = false)
     private int storage;
@@ -34,12 +36,22 @@ public class ItemEntity {
     @ManyToOne()
     @JoinColumn(name = "category_id")
     @NotNull
-    private CategoryEntity categoryEntity;
+    private CategoryEntity category;
 
 
     @ManyToMany()
     @JoinTable(name = "characteristic_item",
             joinColumns =@JoinColumn(name = "characteristic_id"),
             inverseJoinColumns = @JoinColumn(name = "item_id"))
-    private List<CharacteristicEntity> characteristicEntityList;
+    @AttributeOverrides({
+            @AttributeOverride(
+                    name = "required",
+                    column = @Column(
+                            name = "required",
+                            table = "characteristic_item"
+                    )
+            )
+    })
+
+    private List<CharacteristicEntity> characteristicList;
 }

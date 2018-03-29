@@ -2526,7 +2526,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         // Needed for arrow key navigation
         this.dropdownEl.tabIndex = 0;
 
-        // Only set tabindex if it hasn't been set by userEntity
+        // Only set tabindex if it hasn't been set by user
         $(this.dropdownEl).children().each(function (el) {
           if (!el.getAttribute('tabindex')) {
             el.setAttribute('tabindex', 0);
@@ -5018,7 +5018,7 @@ $jscomp.polyfill = function (e, r, p, m) {
    * Attach Waves to an input element (or any element which doesn't
    * bubble mouseup/mousedown events).
    *   Intended to be used with dynamically loaded forms/inputs, or
-   * where the userEntity doesn't want a delegated click handler.
+   * where the user doesn't want a delegated click handler.
    */
   Waves.attach = function (element) {
     //FUTURE: automatically add waves classes and allow users
@@ -5636,7 +5636,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         // Calculate raw deltaX
         var totalDeltaX = this._xPos - this._startingXpos;
 
-        // dragDirection is the attempted userEntity drag direction
+        // dragDirection is the attempted user drag direction
         var dragDirection = totalDeltaX > 0 ? 'right' : 'left';
 
         // Don't allow totalDeltaX to exceed Sidenav width or be dragged in the opposite direction
@@ -5709,7 +5709,7 @@ $jscomp.polyfill = function (e, r, p, m) {
           // Calculate raw deltaX
           var totalDeltaX = this._xPos - this._startingXpos;
 
-          // dragDirection is the attempted userEntity drag direction
+          // dragDirection is the attempted user drag direction
           var dragDirection = totalDeltaX > 0 ? 'right' : 'left';
 
           // Don't allow totalDeltaX to exceed Sidenav width or be dragged in the opposite direction

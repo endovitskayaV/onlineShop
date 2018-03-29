@@ -16,17 +16,20 @@ public class CharacteristicEntity {
     @Column(name = "id", nullable = false)
     private long id;
 
-    @Column(name="name", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name="type", nullable = false)
+    @Column(name = "type", nullable = false)
     private String type;
 
     @ManyToMany()
     @JoinTable(name = "category_characteristic",
-            joinColumns =@JoinColumn(name = "category_id"),
+            joinColumns = @JoinColumn(name = "category_id"),
             inverseJoinColumns = @JoinColumn(name = "characteristic_id"))
-    private List<CategoryEntity> categoryEntityList;
+    private List<CategoryEntity> categoryList;
+
+    @Transient
+    private boolean required;
 
 
 //    //!!!!!!!!!!!
@@ -35,6 +38,20 @@ public class CharacteristicEntity {
 
 //    //!!!!!!!!!!!
 //    @JoinTable(name = "category_characteristic",
-//    joinColumns = @JoinColumn(name = "is_required"))
-//    private boolean isRequired;
+//            joinColumns = @JoinColumn(name = "is_required"),
+//            inverseJoinColumns = @JoinColumn(name = "characteristic_id"))
+
+    //@OneToOne(mappedBy = "category_characteristic")
+   // @JoinColumn(name = "is_required")
+
+//    @JoinTable(name = "category_characteristic",
+//           joinColumns = @JoinColumn(name = "is_required"),
+//            inverseJoinColumns = @JoinColumn(name = "characteristic_id"))
+
+//    @ManyToOne
+//    @JoinTable(name = "category_characteristic",
+//            joinColumns = @JoinColumn(name = "is_required"),
+//            inverseJoinColumns = @JoinColumn(name = "characteristic_id"))
+//    @Column()
+
 }

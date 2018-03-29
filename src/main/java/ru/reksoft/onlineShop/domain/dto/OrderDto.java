@@ -1,19 +1,21 @@
 package ru.reksoft.onlineShop.domain.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
 @Data
+@Builder
 public class OrderDto {
 
     private long id;
-    private UserDto userDto;
-    private StatusDto statusDto;
+    private UserDto user;
+    private StatusDto status;
     private Date date;
     private String deliveryAddress;
-    private List<ItemDto> itemDtoList;
+    private List<ItemDto> itemList;
 
 
 

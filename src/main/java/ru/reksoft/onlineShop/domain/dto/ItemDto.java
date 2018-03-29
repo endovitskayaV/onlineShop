@@ -17,8 +17,9 @@ public class ItemDto {
 
     private long id;
     private String name;
+    private String description;
     private int storage;
     private int price;
-    private CategoryDto categoryDto;
-    private List<CharacteristicDto> characteristicDtoList;
+    private CategoryDto category;
+    private List<CharacteristicDto> characteristicList;
 }

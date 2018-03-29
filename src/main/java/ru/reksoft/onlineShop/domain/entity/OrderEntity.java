@@ -1,5 +1,6 @@
 package ru.reksoft.onlineShop.domain.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Data
 @Entity
+@Builder
 @Table(name = "order_info")
 public class OrderEntity {
     @Id
@@ -16,10 +18,10 @@ public class OrderEntity {
     private long id;
 
     @ManyToOne
-    private UserEntity userEntity;
+    private UserEntity user;
 
     @ManyToOne
-    private StatusEntity statusEntity;
+    private StatusEntity status;
 
     @Column(name = "date")
     private Date date;
@@ -37,7 +39,7 @@ public class OrderEntity {
     @JoinTable(name = "order_item",
             joinColumns ={@JoinColumn(name = "item_id")},//, @JoinColumn(name = "count", referencedColumnName = "count")},
             inverseJoinColumns = @JoinColumn(name = "order_id"))
-    private List<ItemEntity> itemEntityList;
+    private List<ItemEntity> itemList;
 
 
 }

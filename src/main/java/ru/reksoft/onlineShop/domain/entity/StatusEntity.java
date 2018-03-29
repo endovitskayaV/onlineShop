@@ -1,12 +1,14 @@
 package ru.reksoft.onlineShop.domain.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name="statusEntity")
+@Builder
+@Table(name="status")
 public class StatusEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

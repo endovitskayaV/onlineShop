@@ -1,5 +1,6 @@
 package ru.reksoft.onlineShop.domain.entity;
 
+import lombok.Builder;
 import lombok.Data;
 import ru.reksoft.onlineShop.domain.Role;
 
@@ -7,6 +8,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
+@Builder
 @Table(name = "user_info")
 public class UserEntity {
     @Id

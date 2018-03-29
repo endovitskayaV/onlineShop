@@ -42,15 +42,20 @@
 
 <div class="row">
     <div class="col s6 offset-s3" style="margin-top: 100px">
-    <#list items as item>
-    <div class="card-panel grey lighten-5 z-depth-1">
-        <div class="col s3">    <a href="/items/${item.id}">${item.name}</a></div>
-        <div class="col s1">${item.price}rub</div>
-        <div class="col s1">${item.storage}ps</div>
-        <div style="alignment: right"><a href="/busket" class="waves-effect waves-light btn">buy</a></div>
-    </div>
-    </#list>
 
+        <#if empty_busket==true >
+            <div class="col s1">Busket is empty</div>
+        <#else>
+
+    <#list order.itemList as item>
+        <div class="card-panel grey lighten-5 z-depth-1">
+            <div class="col s3">    <a href="/items/${item.id}">${item.name}</a></div>
+            <div class="col s1">${item.price}rub</div>
+            <div class="col s1">${item.storage}ps</div>
+            <div style="alignment: right"><a class="waves-effect waves-light btn">order</a></div>
+        </div>
+    </#list>
+        </#if>
     </div>
 </div>
 
