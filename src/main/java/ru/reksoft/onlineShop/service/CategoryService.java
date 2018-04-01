@@ -19,7 +19,7 @@ public class CategoryService {
     }
 
     public List<CategoryDto> getAll(){
-        return categoryRepository.findAll() .stream()
+        return categoryRepository.findAll().stream()
                 .map(EntityToDto::toDto).collect(Collectors.toList());
     }
 }

@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,4 +18,5 @@ public class CategoryDto {
     private String name;
     private String description;
     private int rating;
+    private Map<CharacteristicDto, Boolean> characteristicRequiredMap;
 }

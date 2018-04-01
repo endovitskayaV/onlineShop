@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -28,4 +28,10 @@ public class CategoryEntity {
 
     @Column(name = "rating", nullable = false)
     private int rating;
+
+    @ElementCollection
+    @CollectionTable(name ="category_characteristic", joinColumns = @JoinColumn(name = "category_id"))
+    @MapKeyJoinColumn(name = "characteristic_id")
+    @Column(name = "required")
+    private Map<CharacteristicEntity, Boolean> characteristicRequiredMap;
 }

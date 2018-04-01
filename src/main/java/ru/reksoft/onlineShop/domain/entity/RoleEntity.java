@@ -6,16 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Map;
 
-@Entity
-@Table(name = "characteristic")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Builder
-public class CharacteristicEntity {
+@Table(name = "role_info")
+public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -24,7 +22,6 @@ public class CharacteristicEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "type", nullable = false)
-    private String type;
-
+    @Column(name = "description")
+    private String description;
 }

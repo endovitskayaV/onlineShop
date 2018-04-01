@@ -1,12 +1,16 @@
 package ru.reksoft.onlineShop.domain.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import ru.reksoft.onlineShop.domain.Role;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Builder
 @Table(name = "user_info")
@@ -22,9 +26,10 @@ public class UserEntity {
     @Column(name="password", nullable = false)
     private String password;
 
-    @Column(name = "role", nullable = false)
-    @Enumerated
-    private Role role;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    @NotNull
+    private RoleEntity role;
 
     @Column(name="name")
     private String name;
@@ -40,7 +45,4 @@ public class UserEntity {
 
     @Column(name = "phone_number")
     private String phoneNumber;
-
-//    @OneToMany(targetEntity = , mappedBy = "user_info")
-//    private List<OrderEntity> orderList;
 }
