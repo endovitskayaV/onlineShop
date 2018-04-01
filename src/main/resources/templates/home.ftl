@@ -23,7 +23,7 @@
 </div>
 
 
-<div class="row">
+    <div class="row">
     <form class="col s12">
         <div class="row">
             <div class="input-field col s3 offset-s4">
@@ -66,6 +66,8 @@
         </div>
     </div>
 </div>
+
+
 <!--JavaScript at end of body for optimized loading-->
 <script type="text/javascript" src="js/materialize.min.js"></script>
 </body>

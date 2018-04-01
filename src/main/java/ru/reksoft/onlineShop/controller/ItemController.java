@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.view.RedirectView;
+import ru.reksoft.onlineShop.domain.Item;
 import ru.reksoft.onlineShop.domain.dto.*;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.ItemService;
@@ -75,7 +76,13 @@ public class ItemController {
 
     @RequestMapping(value = "/items/add", method = RequestMethod.GET)
     public String add(Model model) {
-        ItemDto itemDto = ItemDto.builder().build();
+        ItemDto itemDto = ItemDto.builder()
+                .id(0)
+                .name("")
+                .description("")
+                .price(0)
+                .storage(0)
+        .build();
         model.addAttribute("item", itemDto);
         model.addAttribute("categories", categoryService.getAll());
         return "add_item";
@@ -90,7 +97,7 @@ public class ItemController {
         return "add_item";
     }
 
-    @RequestMapping(value = {"/items/add", "/items/edit"}, method = RequestMethod.POST)
+    @RequestMapping(value = "/items/add", method = RequestMethod.POST)
     public RedirectView save(ItemDto itemDto) {
         itemService.add(itemDto);
         return new RedirectView("/items");
