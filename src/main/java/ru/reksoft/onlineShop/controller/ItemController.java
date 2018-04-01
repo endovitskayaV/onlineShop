@@ -13,12 +13,16 @@ import ru.reksoft.onlineShop.domain.dto.*;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.ItemService;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Controller
 @EnableAutoConfiguration
 public class ItemController {
     private ItemService itemService;
     private CategoryService categoryService;
-    ;
 
     @Autowired
     public ItemController(ItemService itemService,
@@ -27,30 +31,47 @@ public class ItemController {
         this.categoryService = categoryService;
     }
 
-    @Value("${shopName}")
-    private String message;
+//    @Value("${shopName}")
+//    private String shopName;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public RedirectView home(Model model) {
-        return new RedirectView("/items");
+    public String home(Model model) {
+        //sortBy category rating
+        model.addAttribute("items", itemService.getAll());
+
+        //sortBy rating
+        model.addAttribute("categories", categoryService.getAll());
+        return "home";
     }
 
 
     @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public String getAllItems(Model model) {
-        model.addAttribute("items", itemService.getAll());
+    public String getItemsByCategory(Model model,String category) {
+        CategoryDto c=categoryService.getByName(category);
+        List<ItemDto> items = itemService.getByCategoryId(c.getId());
+        model.addAttribute("items", items);
+        model.addAttribute("categories", categoryService.getAll());
         return "home";
     }
 
     @RequestMapping(value = "/items/{id}", method = RequestMethod.GET)
     public String getById(Model model, @PathVariable long id) {
-//        ItemDto itemDto = itemService.getById(id);
-//        if (itemDto == null) return "error";
-//        model.addAttribute("item", itemDto);
-        model.addAttribute("items", itemService.getAll());
-        return "item_1";
+        ItemDto itemDto = itemService.getById(id);
+        if (itemDto == null) return "error";
+        model.addAttribute("item", itemDto);
+        return "item";
     }
 
+    public List<CharacteristicDto> getCharacteristic(Model model, long categoryId) {
+        CategoryDto categoryDto = categoryService.getById(categoryId);
+        if (categoryDto == null) return null;
+        return new ArrayList<>(
+                categoryDto.getCharacteristicRequiredMap().entrySet().stream()
+                        .filter(Map.Entry::getValue) //select required characteristics
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                        .keySet()); //extract characteristics from Map <Characteristic, Boolean>
+        // model.addAttribute("characteristics", characteristicList);
+    }
 
     @RequestMapping(value = "/items/add", method = RequestMethod.GET)
     public String add(Model model) {
@@ -60,9 +81,24 @@ public class ItemController {
         return "add_item";
     }
 
-    @RequestMapping(value = "/items/add", method = RequestMethod.POST)
-    public RedirectView add(ItemDto itemDto) {
+    @RequestMapping(value = "/items/edit", method = RequestMethod.GET)
+    public String edit(Model model, long id) {
+        ItemDto itemDto = itemService.getById(id);
+        if (itemDto == null) return "error";
+        model.addAttribute("item", itemDto);
+        model.addAttribute("categories", categoryService.getAll());
+        return "add_item";
+    }
+
+    @RequestMapping(value = {"/items/add", "/items/edit"}, method = RequestMethod.POST)
+    public RedirectView save(ItemDto itemDto) {
         itemService.add(itemDto);
+        return new RedirectView("/items");
+    }
+
+    @RequestMapping(value = "/items/delete", method = RequestMethod.DELETE)
+    public RedirectView delete(long id) {
+        itemService.delete(id);
         return new RedirectView("/items");
     }
 }

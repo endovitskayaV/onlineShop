@@ -15,21 +15,33 @@ public class ItemService {
     private ItemRepository itemRepository;
 
     @Autowired
-    public ItemService(ItemRepository itemRepository){
-        this.itemRepository=itemRepository;
+    public ItemService(ItemRepository itemRepository) {
+        this.itemRepository = itemRepository;
     }
 
-    public List<ItemDto> getAll(){
-        return  itemRepository.findAll()
+    public List<ItemDto> getAll() {
+        return itemRepository.findAll()
                 .stream()
                 .map(EntityToDto::toDto).collect(Collectors.toList());
     }
 
-    public ItemDto getById(long id){
-        return EntityToDto.toDto(itemRepository.findById(id).get());
+    public ItemDto getById(long id) {
+        return EntityToDto.toDto(
+                itemRepository.findById(id).isPresent() ?
+                        itemRepository.findById(id).get() :
+                        null);
     }
 
-    public void add(ItemDto itemDto){
+    public List<ItemDto> getByCategoryId(long categoryId) {
+        return itemRepository.findAllByCategoryId(categoryId).stream()
+                .map(EntityToDto::toDto).collect(Collectors.toList());
+    }
+
+    public void add(ItemDto itemDto) {
         itemRepository.save(DtoToEntity.toEntity(itemDto));
+    }
+
+    public void delete(long id) {
+        itemRepository.deleteById(id);
     }
 }

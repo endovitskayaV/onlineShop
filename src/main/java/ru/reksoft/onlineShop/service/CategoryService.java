@@ -22,4 +22,12 @@ public class CategoryService {
         return categoryRepository.findAll().stream()
                 .map(EntityToDto::toDto).collect(Collectors.toList());
     }
+
+    public CategoryDto getById(long id){
+        return EntityToDto.toDto(categoryRepository.findById(id).get());
+    }
+
+    public CategoryDto getByName(String name){
+        return EntityToDto.toDto(categoryRepository.findByName(name));
+    }
 }

@@ -40,21 +40,32 @@
 <div class="divider z-depth-3"></div>
 
 
-<div class="row">
-    <div class="col s6 offset-s3" style="margin-top: 100px">
-    <#list items as item>
-    <div class="card-panel grey lighten-5 z-depth-1">
-        <div>    <a href="/items/${item.id}">${item.name}</a></div>
-        <div>${item.price}rub</div>
-        <div>${item.storage}ps</div>
-        <div style="alignment: right"><a href="/busket" class="waves-effect waves-light btn">buy</a></div>
+<div class="row" style="margin-top: 100px">
+    <div class="col s3">
+        <div class="collection">
+    <#list categories as category>
+        <div><a href="/items?category=${category.name}" class="collection-item">${category.name}</a></div>
+    </#list>
+        </div>
     </div>
+
+
+    <div class="col s8">
+        <div class="row">
+            <div class="col s6 offset-s3">
+    <#list items as item>
+        <div class="card-panel grey lighten-5 z-depth-1">
+            <div><a href="/items/${item.id}">${item.name}</a></div>
+            <div>${item.price}rub</div>
+            <div>${item.storage}ps</div>
+            <div style="alignment: right"><a href="/busket" class="waves-effect waves-light btn">buy</a></div>
+        </div>
     </#list>
 
+            </div>
+        </div>
     </div>
 </div>
-
-
 <!--JavaScript at end of body for optimized loading-->
 <script type="text/javascript" src="js/materialize.min.js"></script>
 </body>
