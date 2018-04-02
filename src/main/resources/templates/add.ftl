@@ -15,7 +15,7 @@
 
 <form action="/items/add" method="post">
 
-    <label for="1" hidden="hidden">weight</label> <input type="text"  class="validate">
+     <input type="text"  class="validate"> <label for="1" hidden="hidden">weight</label>
     <input type="number" name="id" class="validate" hidden="hidden" value="0"> <label for="id" hidden="hidden">Category</label>
     <input type="text" name="name"  required="required" value="${item.name}"/>
     <input type="text" name="description"  value="${item.description}"/>
@@ -33,6 +33,8 @@
         <button type="reset">Cancel</button>
         <button type="submit">Save</button>
     </p>
+
+    <div id="characteristicDiv"></div>
 </form>
 
 <script type="text/javascript" src="../js/items.js"></script>

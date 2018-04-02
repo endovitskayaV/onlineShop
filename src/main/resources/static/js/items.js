@@ -4,7 +4,7 @@ function loadCharacteristics(element) {
         var characteristicDiv = $('#characteristicDiv');
         characteristicDiv.html("");
         $.each(data, function (key, characteristic) {
-            var newInput = '<label for="'+characteristic.id+'" hidden="hidden">'+characteristic.name+'</label> <input type="text"  class="validate">';
+            var newInput = '<input type="text"  class="validate"> <label for="'+characteristic.id+'" hidden="hidden">'+characteristic.name+'</label>';
             characteristicDiv.append(newInput);
         });
     });
