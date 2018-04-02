@@ -52,7 +52,8 @@ public class ItemController {
         }
     }
 
-    @GetMapping("/characteristics")
+    @RequestMapping(value = "/characteristics",method=RequestMethod.GET)
+        @ResponseBody
     public List<CharacteristicDto> getCharacteristic(long categoryId) {
         CategoryDto categoryDto = categoryService.getById(categoryId);
         if (categoryDto == null) {
@@ -67,6 +68,11 @@ public class ItemController {
 
         // model.addAttribute("characteristics", characteristicList);
     }
+
+
+
+
+
 
     @GetMapping("add")
     public String add(Model model) {
