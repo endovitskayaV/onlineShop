@@ -1,6 +1,6 @@
 package ru.reksoft.onlineShop.domain.util;
 
-import ru.reksoft.onlineShop.domain.dto.*;
+import ru.reksoft.onlineShop.model.dto.*;
 import ru.reksoft.onlineShop.domain.entity.*;
 ;
 import java.util.Map;

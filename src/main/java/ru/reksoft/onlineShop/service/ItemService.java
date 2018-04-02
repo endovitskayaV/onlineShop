@@ -2,7 +2,7 @@ package ru.reksoft.onlineShop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.reksoft.onlineShop.domain.dto.ItemDto;
+import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.domain.repository.ItemRepository;
 import ru.reksoft.onlineShop.domain.util.DtoToEntity;
 import ru.reksoft.onlineShop.domain.util.EntityToDto;
@@ -22,14 +22,12 @@ public class ItemService {
     public List<ItemDto> getAll() {
         return itemRepository.findAll()
                 .stream()
-                .map(EntityToDto::toDto).collect(Collectors.toList());
+                .map(EntityToDto::toDto)
+                .collect(Collectors.toList());
     }
 
     public ItemDto getById(long id) {
-        return EntityToDto.toDto(
-                itemRepository.findById(id).isPresent() ?
-                        itemRepository.findById(id).get() :
-                        null);
+        return EntityToDto.toDto(itemRepository.findById(id).orElse(null));
     }
 
     public List<ItemDto> getByCategoryId(long categoryId) {

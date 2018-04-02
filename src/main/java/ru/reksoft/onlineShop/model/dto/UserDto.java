@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.domain.dto;
+package ru.reksoft.onlineShop.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

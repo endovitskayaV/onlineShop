@@ -1,26 +1,28 @@
 package ru.reksoft.onlineShop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.view.RedirectView;
-import ru.reksoft.onlineShop.domain.Item;
-import ru.reksoft.onlineShop.domain.dto.*;
+import ru.reksoft.onlineShop.model.dto.CategoryDto;
+import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
+import ru.reksoft.onlineShop.model.dto.EditableItemDto;
+import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.ItemService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.SplittableRandom;
 import java.util.stream.Collectors;
 
 @Controller
-@EnableAutoConfiguration
+@RequestMapping("/items")
 public class ItemController {
     private ItemService itemService;
     private CategoryService categoryService;
@@ -35,55 +37,50 @@ public class ItemController {
 //    @Value("${shopName}")
 //    private String shopName;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String home(Model model) {
-        //sortBy category rating
-        model.addAttribute("items", itemService.getAll());
-
-        //sortBy rating
+    @GetMapping
+    public String getByCategory(Model model, String category) {
+        model.addAttribute("items", itemService.getByCategoryId((categoryService.getByName(category)).getId()));
         model.addAttribute("categories", categoryService.getAll());
         return "home";
     }
 
-
-    @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public String getItemsByCategory(Model model,String category) {
-        CategoryDto c=categoryService.getByName(category);
-        List<ItemDto> items = itemService.getByCategoryId(c.getId());
-        model.addAttribute("items", items);
-        model.addAttribute("categories", categoryService.getAll());
-        return "home";
-    }
-
-    @RequestMapping(value = "/items/{id}", method = RequestMethod.GET)
+    @GetMapping("{id}")
     public String getById(Model model, @PathVariable long id) {
         ItemDto itemDto = itemService.getById(id);
-        if (itemDto == null) return "error";
-        model.addAttribute("item", itemDto);
-        return "item";
+        if (itemDto == null) {
+            return "error";
+        } else {
+            model.addAttribute("item", itemDto);
+            model.addAttribute("categories", categoryService.getAll());
+            return "item";
+        }
     }
 
     public List<CharacteristicDto> getCharacteristic(Model model, long categoryId) {
         CategoryDto categoryDto = categoryService.getById(categoryId);
-        if (categoryDto == null) return null;
+        if (categoryDto == null) {
+            return null;
+        }
         return new ArrayList<>(
                 categoryDto.getCharacteristicRequiredMap().entrySet().stream()
                         .filter(Map.Entry::getValue) //select required characteristics
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
                         .keySet()); //extract characteristics from Map <Characteristic, Boolean>
+
+
         // model.addAttribute("characteristics", characteristicList);
     }
 
     @RequestMapping(value = "/items/add", method = RequestMethod.GET)
     public String add(Model model) {
-        ItemDto itemDto = ItemDto.builder()
+        EditableItemDto editableItemDto=EditableItemDto.builder()
                 .id(0)
                 .name("")
                 .description("")
                 .price(0)
                 .storage(0)
-        .build();
-        model.addAttribute("item", itemDto);
+                .build();
+        model.addAttribute("item", editableItemDto);
         model.addAttribute("categories", categoryService.getAll());
         return "add_item";
     }

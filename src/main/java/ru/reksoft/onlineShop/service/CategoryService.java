@@ -2,7 +2,7 @@ package ru.reksoft.onlineShop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.reksoft.onlineShop.domain.dto.CategoryDto;
+import ru.reksoft.onlineShop.model.dto.CategoryDto;
 import ru.reksoft.onlineShop.domain.repository.CategoryRepository;
 import ru.reksoft.onlineShop.domain.util.EntityToDto;
 
@@ -24,7 +24,7 @@ public class CategoryService {
     }
 
     public CategoryDto getById(long id){
-        return EntityToDto.toDto(categoryRepository.findById(id).get());
+        return EntityToDto.toDto(categoryRepository.getOne(id));
     }
 
     public CategoryDto getByName(String name){

@@ -2,7 +2,7 @@ package ru.reksoft.onlineShop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.reksoft.onlineShop.domain.dto.CharacteristicDto;
+import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.domain.repository.CharacteristicRepository;
 import ru.reksoft.onlineShop.domain.util.EntityToDto;
 

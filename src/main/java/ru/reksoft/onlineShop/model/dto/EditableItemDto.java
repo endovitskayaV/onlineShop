@@ -1,20 +1,15 @@
-package ru.reksoft.onlineShop.domain.dto;
+package ru.reksoft.onlineShop.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Map;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ItemDto {
+public class EditableItemDto {
 
     private long id;
     private String name;
@@ -22,6 +17,5 @@ public class ItemDto {
     private int storage;
     private String description;
     private int price;
-    private CategoryDto category;
-    private Map<CharacteristicDto, String> characteristicValueMap;
+    private long categoryId;
 }

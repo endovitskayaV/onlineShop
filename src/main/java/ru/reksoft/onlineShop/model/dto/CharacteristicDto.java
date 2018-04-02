@@ -1,12 +1,9 @@
-package ru.reksoft.onlineShop.domain.dto;
+package ru.reksoft.onlineShop.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.List;
 
 
 @Data

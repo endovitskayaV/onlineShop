@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.domain;
+package ru.reksoft.onlineShop.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Item {
-
+public class StatusDto {
     private long id;
     private String name;
-   // private String producer;
-    private int storage;
     private String description;
-    private int price;
 }

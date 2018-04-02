@@ -6,9 +6,9 @@
 //import org.springframework.ui.Model;
 //import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestMethod;
-//import ru.reksoft.onlineShop.domain.dto.ItemDto;
-//import ru.reksoft.onlineShop.domain.dto.OrderDto;
-//import ru.reksoft.onlineShop.domain.dto.UserDto;
+//import ru.reksoft.onlineShop.model.dto.ItemDto;
+//import ru.reksoft.onlineShop.model.dto.OrderDto;
+//import ru.reksoft.onlineShop.model.dto.UserDto;
 //import ru.reksoft.onlineShop.service.ItemService;
 //import ru.reksoft.onlineShop.service.OrderService;
 //import ru.reksoft.onlineShop.service.StatusService;

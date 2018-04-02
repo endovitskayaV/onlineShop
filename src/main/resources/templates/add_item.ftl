@@ -40,21 +40,18 @@
 <div class="divider z-depth-3"></div>
 
 <form action="/items/add" method="post">
-    <input type="number" name="id" class="validate" hidden="hidden" value="0">
+    <input type="number" name="id" class="validate" hidden="hidden" value="0"> <label for="id" hidden="hidden">Category</label>
     <input type="text" name="name"  required="required" value="${item.name}"/>
     <input type="text" name="description"  value="${item.description}"/>
     <input type="number" name="storage"  required="required" value="${item.storage}"/>
     <input type="number" name="price"  required="required" value="${item.price}"/>
-    <select  required="required">
+    <select id="categoryId" name="category" required="required">
         <option value="" disabled selected>Choose your option</option>
          <#list categories as category>
- <option name="categoryId"  value="${category.id}">${category.name}</option>
-           <input type="number" name="id" hidden="hidden" value="0">
-           <input type="text" name="description"  hidden="hidden" value=${category.description}>
-           <input type="number" name="rating" hidden="hidden" value=${category.rating}>
-
+       <option name="categoryId"  value="${category.id}">${category.name}</option>
          </#list>
     </select>
+    <label for="categoryId">Category</label>
     <p>
         <button type="reset">Cancel</button>
         <button type="submit">Save</button>
@@ -109,13 +106,13 @@
 </div>
 
 <div class="input-field col s12">
-    <select required="required">
+    <select id="category" name="category" required="required">
         <option value="" disabled selected>Choose your option</option>
          <#list categories as category>
         <option value="${category.id}">${category.name}</option>
          </#list>
     </select>
-    <label>Category</label>
+    <label for="category">Category</label>
 </div>
 
 

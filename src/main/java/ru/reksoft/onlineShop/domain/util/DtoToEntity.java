@@ -1,6 +1,6 @@
 package ru.reksoft.onlineShop.domain.util;
 
-import ru.reksoft.onlineShop.domain.dto.*;
+import ru.reksoft.onlineShop.model.dto.*;
 import ru.reksoft.onlineShop.domain.entity.*;
 
 import java.util.Map;
@@ -17,9 +17,9 @@ public class DtoToEntity {
                 .price(itemDto.getPrice())
                 .category(toEntity(itemDto.getCategory()))
                 .characteristicValueMap(itemDto.getCharacteristicValueMap().entrySet()
-                .stream().collect((Collectors.toMap(x -> toEntity(x.getKey()),
+                        .stream().collect((Collectors.toMap(x -> toEntity(x.getKey()),
                                 Map.Entry::getValue))))
-              .build();
+                .build();
     }
 
 
@@ -78,8 +78,8 @@ public class DtoToEntity {
                 .build();
     }
 
-    public static OrderEntity toEntity(OrderDto orderDto){
-        if (orderDto==null) return null;
+    public static OrderEntity toEntity(OrderDto orderDto) {
+        if (orderDto == null) return null;
         return OrderEntity.builder()
                 .id(orderDto.getId())
                 .date(orderDto.getDate())
