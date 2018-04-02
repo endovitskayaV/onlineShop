@@ -5,7 +5,7 @@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="/css/materialize.min.css" media="screen,projection"/>
 
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -44,7 +44,7 @@
     <div class="col s3">
         <div class="collection">
     <#list categories as category>
-        <div><a href="/items?id=${category.id}&name=${category.name}" class="collection-item">${category.name}</a></div>
+        <div><a href="/items?category=${category.name}" class="collection-item">${category.name}</a></div>
     </#list>
         </div>
     </div>
@@ -65,7 +65,6 @@
 </div>
 
 
-<!--JavaScript at end of body for optimized loading-->
-<script type="text/javascript" src="js/materialize.min.js"></script>
+<script type="text/javascript" src="/js"></script>
 </body>
 </html>

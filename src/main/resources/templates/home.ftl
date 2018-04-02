@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="webjars/jquery/2.0.3/jquery.min.js"></script>
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
@@ -66,7 +67,7 @@
         </div>
     </div>
 </div>
-
+<script type="text/javascript" src="js/items.js"></script>
 
 <!--JavaScript at end of body for optimized loading-->
 <script type="text/javascript" src="js/materialize.min.js"></script>

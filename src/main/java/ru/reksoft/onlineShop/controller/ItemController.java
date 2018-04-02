@@ -3,10 +3,7 @@ package ru.reksoft.onlineShop.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.reksoft.onlineShop.model.dto.CategoryDto;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
@@ -18,7 +15,6 @@ import ru.reksoft.onlineShop.service.ItemService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.SplittableRandom;
 import java.util.stream.Collectors;
 
 @Controller
@@ -56,7 +52,8 @@ public class ItemController {
         }
     }
 
-    public List<CharacteristicDto> getCharacteristic(Model model, long categoryId) {
+    @GetMapping("/characteristics")
+    public List<CharacteristicDto> getCharacteristic(long categoryId) {
         CategoryDto categoryDto = categoryService.getById(categoryId);
         if (categoryDto == null) {
             return null;
@@ -71,7 +68,7 @@ public class ItemController {
         // model.addAttribute("characteristics", characteristicList);
     }
 
-    @RequestMapping(value = "/items/add", method = RequestMethod.GET)
+    @GetMapping("add")
     public String add(Model model) {
         EditableItemDto editableItemDto=EditableItemDto.builder()
                 .id(0)
@@ -82,7 +79,7 @@ public class ItemController {
                 .build();
         model.addAttribute("item", editableItemDto);
         model.addAttribute("categories", categoryService.getAll());
-        return "add_item";
+        return "add";
     }
 
     @RequestMapping(value = "/items/edit", method = RequestMethod.GET)
@@ -91,12 +88,12 @@ public class ItemController {
         if (itemDto == null) return "error";
         model.addAttribute("item", itemDto);
         model.addAttribute("categories", categoryService.getAll());
-        return "add_item";
+        return "add";
     }
 
-    @RequestMapping(value = "/items/add", method = RequestMethod.POST)
-    public RedirectView save(ItemDto itemDto) {
-        itemService.add(itemDto);
+    @PostMapping("/add")
+    public RedirectView save(EditableItemDto itemDto) {
+        //itemService.add(itemDto);
         return new RedirectView("/items");
     }
 
