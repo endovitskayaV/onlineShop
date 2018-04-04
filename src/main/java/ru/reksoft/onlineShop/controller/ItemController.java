@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import ru.reksoft.onlineShop.model.dto.CategoryDto;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.model.dto.EditableItemDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
@@ -13,9 +12,6 @@ import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.ItemService;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/items")
@@ -33,7 +29,16 @@ public class ItemController {
 //    @Value("${shopName}")
 //    private String shopName;
 
+
     @GetMapping
+    public String getAll(Model model) {
+        model.addAttribute("items", itemService.getAll());
+        model.addAttribute("categories", categoryService.getAll());
+        return "home";
+    }
+
+
+    @GetMapping(params = "category")
     public String getByCategory(Model model, String category) {
         model.addAttribute("items", itemService.getByCategoryId((categoryService.getByName(category)).getId()));
         model.addAttribute("categories", categoryService.getAll());
@@ -52,40 +57,21 @@ public class ItemController {
         }
     }
 
-    @RequestMapping(value = "/characteristics",method=RequestMethod.GET)
-        @ResponseBody
-    public List<CharacteristicDto> getCharacteristic(long categoryId) {
-        CategoryDto categoryDto = categoryService.getById(categoryId);
-        if (categoryDto == null) {
-            return null;
-        }
-        return new ArrayList<>(
-                categoryDto.getCharacteristicRequiredMap().entrySet().stream()
-                        .filter(Map.Entry::getValue) //select required characteristics
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-                        .keySet()); //extract characteristics from Map <Characteristic, Boolean>
-
-
-        // model.addAttribute("characteristics", characteristicList);
-    }
-
-
-
-
-
 
     @GetMapping("add")
     public String add(Model model) {
-        EditableItemDto editableItemDto=EditableItemDto.builder()
-                .id(0)
+        EditableItemDto editableItemDto = EditableItemDto.builder()
+               // .id(0)
                 .name("")
+                .producer("")
                 .description("")
                 .price(0)
                 .storage(0)
                 .build();
         model.addAttribute("item", editableItemDto);
         model.addAttribute("categories", categoryService.getAll());
-        return "add";
+        model.addAttribute("characteristicsList", new ArrayList<CharacteristicDto>());
+        return "add_item";
     }
 
     @RequestMapping(value = "/items/edit", method = RequestMethod.GET)
@@ -94,13 +80,12 @@ public class ItemController {
         if (itemDto == null) return "error";
         model.addAttribute("item", itemDto);
         model.addAttribute("categories", categoryService.getAll());
-        return "add";
+        return "add_item";
     }
 
     @PostMapping("/add")
-    public RedirectView save(EditableItemDto itemDto) {
-        //itemService.add(itemDto);
-        return new RedirectView("/items");
+    public RedirectView save(EditableItemDto editableItemDto) {
+        return new RedirectView("/items/"+itemService.add(editableItemDto));
     }
 
     @RequestMapping(value = "/items/delete", method = RequestMethod.DELETE)

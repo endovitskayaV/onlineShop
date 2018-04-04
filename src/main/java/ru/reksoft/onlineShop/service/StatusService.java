@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.model.dto.StatusDto;
 import ru.reksoft.onlineShop.domain.repository.StatusRepository;
-import ru.reksoft.onlineShop.domain.util.EntityToDto;
+import ru.reksoft.onlineShop.domain.converter.EntityToDto;
 
 @Service
 public class StatusService {

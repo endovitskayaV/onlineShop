@@ -1,28 +1,15 @@
-package ru.reksoft.onlineShop.domain.util;
+package ru.reksoft.onlineShop.domain.converter;
 
-import ru.reksoft.onlineShop.model.dto.*;
 import ru.reksoft.onlineShop.domain.entity.*;
+import ru.reksoft.onlineShop.domain.repository.CategoryRepository;
+import ru.reksoft.onlineShop.domain.repository.ItemRepository;
+import ru.reksoft.onlineShop.model.dto.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DtoToEntity {
-    public static ItemEntity toEntity(ItemDto itemDto) {
-        if (itemDto == null) return null;
-        return ItemEntity.builder()
-                .id(itemDto.getId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .storage(itemDto.getStorage())
-                .price(itemDto.getPrice())
-                .category(toEntity(itemDto.getCategory()))
-                .characteristicValueMap(itemDto.getCharacteristicValueMap().entrySet()
-                        .stream().collect((Collectors.toMap(x -> toEntity(x.getKey()),
-                                Map.Entry::getValue))))
-                .build();
-    }
-
-
     public static CharacteristicEntity toEntity(CharacteristicDto characteristicDto) {
         if (characteristicDto == null) return null;
         return CharacteristicEntity.builder()
@@ -86,9 +73,9 @@ public class DtoToEntity {
                 .deliveryAddress(orderDto.getDeliveryAddress())
                 .user(DtoToEntity.toEntity(orderDto.getUser()))
                 .status(DtoToEntity.toEntity(orderDto.getStatus()))
-                .itemQuantityMap(orderDto.getItemQuantityMap().entrySet()
-                        .stream().collect(Collectors.toMap(x -> toEntity(x.getKey()),
-                                Map.Entry::getValue)))
+//                .itemQuantityMap(orderDto.getItemQuantityMap().entrySet()
+//                        .stream().collect(Collectors.toMap(x -> toEntity(x.getKey()),
+//                                Map.Entry::getValue)))getValue
                 .build();
     }
 }

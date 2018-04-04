@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.domain.util;
+package ru.reksoft.onlineShop.domain.converter;
 
 import ru.reksoft.onlineShop.model.dto.*;
 import ru.reksoft.onlineShop.domain.entity.*;

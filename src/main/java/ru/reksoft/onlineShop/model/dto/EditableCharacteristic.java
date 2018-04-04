@@ -10,14 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CharacteristicDto {
-    private long id;
+public class EditableCharacteristic {
     private String name;
     private String type;
-    private String value;
-
-//    //!!!!!!!!!!!
-//    @JoinTable(name = "category_characteristic",
-//    joinColumns = @JoinColumn(name = "is_required"))
-//    private boolean isRequired;
 }
