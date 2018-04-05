@@ -40,7 +40,7 @@ public class ItemEntity {
     @NotNull
     private CategoryEntity category;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name ="characteristic_item",joinColumns = @JoinColumn(name = "item_id"))
     @MapKeyJoinColumn(name = "characteristic_id")
     @Column(name = "value")

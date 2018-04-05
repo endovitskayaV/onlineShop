@@ -1,7 +1,7 @@
 function loadCharacteristics(element) {
     var categoryId = (element[element.selectedIndex].id);
         var characteristicsDiv = $('#characteristicsDiv');
-        var i = value = $("#counter").val();
+        var i = $("#counter").val();
     $.each(data, function (key, characteristic) {
             var newInput = '<input type="number" name="characteristicsList[' + i + '].id" class="validate" hidden="hidden" value="' + characteristic.id + '"> ' +
                 '<input type="text" name="characteristicsList[' + i + '].type" class="validate" hidden="hidden" value="' + characteristic.type + '"> ' +

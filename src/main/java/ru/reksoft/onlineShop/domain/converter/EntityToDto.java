@@ -1,48 +1,29 @@
 package ru.reksoft.onlineShop.domain.converter;
 
-import ru.reksoft.onlineShop.model.dto.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.domain.entity.*;
-;
+import ru.reksoft.onlineShop.domain.repository.ItemRepository;
+import ru.reksoft.onlineShop.model.dto.*;
+
 import java.util.Map;
 import java.util.stream.Collectors;
 
+;
+
+
 public class EntityToDto {
-    public static ItemDto toDto(ItemEntity itemEntity) {
-        if (itemEntity == null) return null;
-        return ItemDto.builder()
-                .id(itemEntity.getId())
-                .name(itemEntity.getName())
-                .description(itemEntity.getDescription())
-                .storage(itemEntity.getStorage())
-                .price(itemEntity.getPrice())
-                .category(toDto(itemEntity.getCategory()))
-                .characteristicValueMap(itemEntity.getCharacteristicValueMap().entrySet()
-                        .stream().collect(Collectors.toMap(x -> toDto(x.getKey()),
-                                Map.Entry::getValue)))
-                .build();
-    }
 
 
-    public static CharacteristicDto toDto(CharacteristicEntity characteristicEntityEntity) {
-        if (characteristicEntityEntity == null) return null;
-        return CharacteristicDto.builder()
-                .id(characteristicEntityEntity.getId())
-                .name(characteristicEntityEntity.getName())
-                .type(characteristicEntityEntity.getType())
-                .build();
-    }
+    public static CharacteristicDto toDto(CharacteristicEntity characteristicEntity) {
+        if (characteristicEntity == null) return null;
 
-    public static CategoryDto toDto(CategoryEntity categoryEntity) {
-        if (categoryEntity == null) return null;
-        return CategoryDto.builder()
-                .id(categoryEntity.getId())
-                .name(categoryEntity.getName())
-                .description(categoryEntity.getDescription())
-                .rating(categoryEntity.getRating())
-                .characteristicRequiredMap(categoryEntity.getCharacteristicRequiredMap().entrySet()
-                        .stream().collect(Collectors.toMap(x -> toDto(x.getKey()),
-                                Map.Entry::getValue)))
-                .build();
+            return CharacteristicDto.builder()
+                    .id(characteristicEntity.getId())
+                    .name(characteristicEntity.getName())
+                    .type(characteristicEntity.getType())
+                    .build();
+
     }
 
     public static RoleDto toDto(RoleEntity roleEntity) {
@@ -86,9 +67,9 @@ public class EntityToDto {
                 .deliveryAddress(orderEntity.getDeliveryAddress())
                 .user(EntityToDto.toDto(orderEntity.getUser()))
                 .status(EntityToDto.toDto(orderEntity.getStatus()))
-                .itemQuantityMap(orderEntity.getItemQuantityMap().entrySet()
-                        .stream().collect(Collectors.toMap(x -> toDto(x.getKey()),
-                                Map.Entry::getValue)))
+//                .itemQuantityMap(orderEntity.getItemQuantityMap().entrySet()
+//                        .stream().collect(Collectors.toMap(x -> toDto(x.getKey()),
+//                                Map.Entry::getValue)))
                 .build();
     }
 }

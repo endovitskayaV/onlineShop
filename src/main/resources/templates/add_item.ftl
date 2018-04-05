@@ -9,15 +9,26 @@
     <link rel="stylesheet" type="text/css" href="<@spring.url '/css/style.css'/>"/>
 </head>
 
-<body>
+<body  style="background-color: #f5f5f5">
 
 
 <form action="/items/add" method="post">
-
-    <input type="number" name="id" class="validate" hidden="hidden"> <label for="id"
-                                                                                      hidden="hidden">id</label>
+    <div class="col s3 offset-s4" >
+    <input type="number" name="id" class="validate" hidden="hidden"> <label for="id" hidden="hidden">id</label>
     <div class="row">
-        <div class="col s12">
+        <div class="col s5">
+            <div class="row">
+                <div class="input-field col s3">
+                    <select required="required" id="categoryId"  name="categoryId" required="required" onchange="loadCharacteristics(this)">
+                        <option value="" disabled selected>Choose your option</option>
+              <#list categories as category>
+            <option id="${category.id}" name="categoryId" value="${category.id}">${category.name}</option>
+              </#list>
+                    </select>
+                    <label for="categoryId">Category</label>
+                    <a href="/categories/add" class="waves-effect waves-light btn" ><i class="material-icons">add</i></a>
+                </div>
+            </div>
             <div class="row">
                 <div class="input-field col s3">
                     <input id="name" required="required" name="name" type="text" class="validate" value="${item.name}">
@@ -49,25 +60,18 @@
                     <label for="description">Description</label>
                 </div>
             </div>
-            <div class="row">
-                <div class="input-field col s3">
-                    <select required="required" id="categoryId"  name="categoryId" required="required" onchange="loadCharacteristics(this)">
-                        <option value="" disabled selected>Choose your option</option>
-              <#list categories as category>
-            <option id="${category.id}" name="categoryId" value="${category.id}">${category.name}</option>
-              </#list>
-                    </select>
-                    <label for="categoryId">Category</label>
-                    <button class="waves-effect waves-light btn" onclick="addCategory(this)"><i class="material-icons">add</i></button>
-                </div>
-            </div>
+
             <div id="characteristicDiv"></div>
         </div>
     </div>
+
     <p>
         <button class="waves-effect waves-light btn" type="submit">Save</button>
         <button class="waves-effect waves-light btn" type="reset">Reset</button>
     </p>
+
+        </div>
+
 </form>
 
 

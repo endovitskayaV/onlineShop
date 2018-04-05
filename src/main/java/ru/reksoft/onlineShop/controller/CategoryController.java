@@ -6,20 +6,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.reksoft.onlineShop.model.dto.CategoryDto;
-import ru.reksoft.onlineShop.model.dto.EditableCharacteristic;
+import org.springframework.web.servlet.view.RedirectView;
+import ru.reksoft.onlineShop.domain.entity.CategoryEntity;
+import ru.reksoft.onlineShop.model.dto.*;
 import ru.reksoft.onlineShop.service.CategoryService;
+import ru.reksoft.onlineShop.service.CharacteristicService;
 
-import java.util.HashMap;
+import java.util.List;
 
 @Controller
 @RequestMapping("/categories")
-public class CategoriesController {
+public class CategoryController {
     private CategoryService categoryService;
+    private CharacteristicService characteristicService;
 
     @Autowired
-    public CategoriesController(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService, CharacteristicService characteristicService) {
         this.categoryService = categoryService;
+        this.characteristicService=characteristicService;
     }
 
     @GetMapping("/add")
@@ -27,19 +31,18 @@ public class CategoriesController {
         CategoryDto categoryDto = CategoryDto.builder()
                 .name("")
                 .description("")
-                .characteristicRequiredMap(new HashMap<>())
+                // .characteristicRequiredMap(new HashMap<>())
                 .build();
         model.addAttribute("category", categoryDto);
 
-        EditableCharacteristic editableCharacteristic = EditableCharacteristic.builder()
-                .name("")
-                .type("")
-                .build();
-        model.addAttribute("characteristic", editableCharacteristic);
+
+        model.addAttribute("characteristics", characteristicService.getAll());
         return "add_category";
     }
 
-    @PostMapping(value = "/add", params = "category")
-    public void add(CategoryDto category) {
+    @PostMapping(value = "/add")
+    public RedirectView add(EditableCategoryDto category) {
+        categoryService.add(category);
+       return new RedirectView("/items");
     }
 }

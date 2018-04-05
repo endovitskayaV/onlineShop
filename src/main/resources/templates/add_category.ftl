@@ -12,9 +12,9 @@
 <body>
 
 
-<form action="/categories/add" method="post">
 
-    <input type="number" name="id" class="validate" hidden="hidden">
+
+    <input type="number" id="id" name="id" class="validate" hidden="hidden" value="${category.id}">
     <div class="row">
         <div class="col s12">
             <div class="row">
@@ -35,36 +35,29 @@
                     <label for="rating">Rating</label>
                 </div>
             </div>
-            <div>
-                <div class="row">
-                    <div class="col s12">
-                        <div class="row">
-                            <div class="input-field col s3">
-                                <input id="name" required="required" name="name" type="text" class="validate" value="${characteristic.name}">
-                                <label for="name">Name</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s3">
-                                <input id="type" required="required" name="type" type="text" class="validate" value="${characteristic.type}">
-                                <label for="type">Type</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="characteristicsDiv">
+            <div class="row">
+            <div class="input-field col s3">
+                <select  id="select" required="required" name="characteristicIdArray[0]" multiple>
+                    <option value="" disabled selected>Choose your option</option>
+                    <#assign i = 1>
+                  <#list characteristics as characteristic>
+                     <option id="characteristicIdArray[${i}].id" name="characteristicIdArray[${i}].id" value="${characteristic.id}">${characteristic.name}</option>
+                      <#assign i++>
+                  </#list>
+                </select>
+                <label>Materialize Multiple Select</label>
             </div>
-        </div>
+            </div>
     </div>
     <p>
-        <button class="waves-effect waves-light btn" type="submit">Save</button>
+        <button class="waves-effect waves-light btn" onclick="post('select')">Save</button>
         <button class="waves-effect waves-light btn" type="reset">Reset</button>
     </p>
-</form>
 
 
 
 
+<script type="text/javascript" src="../js/addCategoryHandler.js"></script>
 <script type="text/javascript" src="../js/addItemsHandler.js"></script>
 <script type="text/javascript" src="../js/materialize.min.js"></script>
 <script type="text/javascript" src="../js/initSelect.js"></script>

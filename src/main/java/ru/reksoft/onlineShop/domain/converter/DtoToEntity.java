@@ -19,18 +19,6 @@ public class DtoToEntity {
                 .build();
     }
 
-    public static CategoryEntity toEntity(CategoryDto categoryDto) {
-        if (categoryDto == null) return null;
-        return CategoryEntity.builder()
-                .id(categoryDto.getId())
-                .name(categoryDto.getName())
-                .description(categoryDto.getDescription())
-                .rating(categoryDto.getRating())
-                .characteristicRequiredMap(categoryDto.getCharacteristicRequiredMap().entrySet()
-                        .stream().collect((Collectors.toMap(x -> toEntity(x.getKey()),
-                                Map.Entry::getValue))))
-                .build();
-    }
 
     public static RoleEntity toEntity(RoleDto roleDto) {
         if (roleDto == null) return null;

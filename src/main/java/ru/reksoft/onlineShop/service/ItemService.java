@@ -26,19 +26,20 @@ public class ItemService {
     }
 
     public List<ItemDto> getAll() {
+        List<ItemEntity> itemEntities=itemRepository.findAll();
         return itemRepository.findAll()
                 .stream()
-                .map(EntityToDto::toDto)
+                .map(itemConverter::toDto)
                 .collect(Collectors.toList());
     }
 
     public ItemDto getById(long id) {
-        return EntityToDto.toDto(itemRepository.findById(id).orElse(null));
+        return itemConverter.toDto(itemRepository.findById(id).orElse(null));
     }
 
     public List<ItemDto> getByCategoryId(long categoryId) {
         return itemRepository.findAllByCategoryId(categoryId).stream()
-                .map(EntityToDto::toDto).collect(Collectors.toList());
+                .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
     public long add(EditableItemDto editableItemDto) {

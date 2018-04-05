@@ -12,6 +12,7 @@ import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.ItemService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/items")
@@ -32,7 +33,10 @@ public class ItemController {
 
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("items", itemService.getAll());
+        List<ItemDto> items=itemService.getAll();
+        model.addAttribute("items",items );
+        model.addAttribute("itemsSize",items.size());
+
         model.addAttribute("categories", categoryService.getAll());
         return "home";
     }
@@ -40,7 +44,10 @@ public class ItemController {
 
     @GetMapping(params = "category")
     public String getByCategory(Model model, String category) {
-        model.addAttribute("items", itemService.getByCategoryId((categoryService.getByName(category)).getId()));
+        List<ItemDto> items= itemService.getByCategoryId((categoryService.getByName(category)).getId());
+        model.addAttribute("items",items );
+        model.addAttribute("itemsSize",items.size());
+
         model.addAttribute("categories", categoryService.getAll());
         return "home";
     }
@@ -53,7 +60,8 @@ public class ItemController {
         } else {
             model.addAttribute("item", itemDto);
             model.addAttribute("categories", categoryService.getAll());
-            return "item";
+            model.addAttribute("characteristics", itemDto.getCharacteristicList());
+            return "item_info";
         }
     }
 
@@ -61,7 +69,6 @@ public class ItemController {
     @GetMapping("add")
     public String add(Model model) {
         EditableItemDto editableItemDto = EditableItemDto.builder()
-               // .id(0)
                 .name("")
                 .producer("")
                 .description("")
@@ -70,7 +77,7 @@ public class ItemController {
                 .build();
         model.addAttribute("item", editableItemDto);
         model.addAttribute("categories", categoryService.getAll());
-        model.addAttribute("characteristicsList", new ArrayList<CharacteristicDto>());
+       // model.addAttribute("characteristicsList", new ArrayList<CharacteristicDto>());
         return "add_item";
     }
 
