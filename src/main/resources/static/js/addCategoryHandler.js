@@ -9,6 +9,7 @@ function post(id) {
         i++;
     });
     $.post((query), function( data ) {
+        $.get(document.location.origin+"items/add");
     });
 
 }

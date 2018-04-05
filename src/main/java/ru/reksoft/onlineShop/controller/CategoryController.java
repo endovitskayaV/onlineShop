@@ -41,8 +41,9 @@ public class CategoryController {
     }
 
     @PostMapping(value = "/add")
-    public RedirectView add(EditableCategoryDto category) {
+    public String add(EditableCategoryDto category) {
         categoryService.add(category);
-       return new RedirectView("/items");
+        return "items";
+       //return new RedirectView("/items");
     }
 }

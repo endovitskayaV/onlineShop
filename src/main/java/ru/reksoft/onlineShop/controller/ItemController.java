@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import ru.reksoft.onlineShop.model.dto.CategoryDto;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.model.dto.EditableItemDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
@@ -13,6 +14,7 @@ import ru.reksoft.onlineShop.service.ItemService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/items")
@@ -77,26 +79,28 @@ public class ItemController {
                 .build();
         model.addAttribute("item", editableItemDto);
         model.addAttribute("categories", categoryService.getAll());
-       // model.addAttribute("characteristicsList", new ArrayList<CharacteristicDto>());
         return "add_item";
     }
 
-    @RequestMapping(value = "/items/edit", method = RequestMethod.GET)
-    public String edit(Model model, long id) {
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String edit(Model model, @PathVariable long id) {
         ItemDto itemDto = itemService.getById(id);
         if (itemDto == null) return "error";
         model.addAttribute("item", itemDto);
-        model.addAttribute("categories", categoryService.getAll());
-        return "add_item";
+        List<CategoryDto> categoryDtos= categoryService.getAll().stream().filter(x->(!x.equals(itemDto.getCategory()))).collect(Collectors.toList());
+        model.addAttribute("categories", categoryService.getAll().stream().filter(x->(!x.equals(itemDto.getCategory()))).collect(Collectors.toList()));
+        model.addAttribute("characteristics", itemDto.getCharacteristicList());
+        model.addAttribute("selectedCategory",itemDto.getCategory());
+        return "edit_ite";
     }
 
-    @PostMapping("/add")
+    @PostMapping(value = {"/add", "/edit"})
     public RedirectView save(EditableItemDto editableItemDto) {
-        return new RedirectView("/items/"+itemService.add(editableItemDto));
+        return new RedirectView("/items/"+itemService.save(editableItemDto));
     }
 
-    @RequestMapping(value = "/items/delete", method = RequestMethod.DELETE)
-    public RedirectView delete(long id) {
+    @RequestMapping(value = "/delete/{id}")
+    public RedirectView delete(Model model, @PathVariable long id) {
         itemService.delete(id);
         return new RedirectView("/items");
     }

@@ -12,7 +12,7 @@
 <body>
 
 
-
+<form method="post" action="/categories/add">
 
     <input type="number" id="id" name="id" class="validate" hidden="hidden" value="${category.id}">
     <div class="row">
@@ -50,10 +50,10 @@
             </div>
     </div>
     <p>
-        <button class="waves-effect waves-light btn" onclick="post('select')">Save</button>
+        <a href="javascript: post('select')" class="waves-effect waves-light btn">Save</a>
         <button class="waves-effect waves-light btn" type="reset">Reset</button>
     </p>
-
+</form>
 
 
 

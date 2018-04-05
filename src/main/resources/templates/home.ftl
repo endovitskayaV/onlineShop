@@ -10,6 +10,8 @@
 </head>
 
 <body style="background-color: #f5f5f5">
+
+
 <div class="white">
     <div class="row">
         <div class="col s3 offset-s9" style="margin-top: 10px">
@@ -77,6 +79,13 @@
                 </div>
                 <div class="card-action">
                     <a href="/basket" class="waves-effect waves-light btn">buy</a>
+                    <a href="/items/edit/${item.id}"> <i style="font-size: 36px; color: #4db6ac;"
+                                                         class="material-icons">edit</i>
+                        <a href="/items/delete/${item.id}"> <i style="font-size: 36px; color: #4db6ac;"
+                                                               class="material-icons modal-trigger">delete</i>
+                             <#if error??>
+ <span style="color: red">${error}</span>
+                             </#if>
                 </div>
             </div>
         </div>
@@ -90,8 +99,7 @@
     </div>
 </div>
 
-
-<script type="text/javascript" src="js/items.js"></script>
+<script type="text/javascript" src="js/homeHandler.js"></script>
 
 <!--JavaScript at end of body for optimized loading-->
 <script type="text/javascript" src="js/materialize.min.js"></script>

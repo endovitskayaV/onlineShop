@@ -19,18 +19,6 @@
         <div class="col s5">
             <div class="row">
                 <div class="input-field col s3">
-                    <select required="required" id="categoryId"  name="categoryId" required="required" onchange="loadCharacteristics(this)">
-                        <option value="" disabled selected>Choose your option</option>
-              <#list categories as category>
-            <option id="${category.id}" name="categoryId" value="${category.id}">${category.name}</option>
-              </#list>
-                    </select>
-                    <label for="categoryId">Category</label>
-                    <a href="/categories/add" class="waves-effect waves-light btn" ><i class="material-icons">add</i></a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s3">
                     <input id="name" required="required" name="name" type="text" class="validate" value="${item.name}">
                     <label for="name">Name</label>
                 </div>
@@ -60,7 +48,18 @@
                     <label for="description">Description</label>
                 </div>
             </div>
-
+            <div class="row">
+                <div class="input-field col s3">
+                    <select required="required" id="categoryId"  name="categoryId" required="required" onchange="loadCharacteristics(this)">
+                        <option value="" disabled selected>Choose your option</option>
+              <#list categories as category>
+            <option id="${category.id}" name="categoryId" value="${category.id}">${category.name}</option>
+              </#list>
+                    </select>
+                    <label for="categoryId">Category</label>
+                    <button class="waves-effect waves-light btn" onclick="addCategory(this)"><i class="material-icons">add</i></button>
+                </div>
+            </div>
             <div id="characteristicDiv"></div>
         </div>
     </div>

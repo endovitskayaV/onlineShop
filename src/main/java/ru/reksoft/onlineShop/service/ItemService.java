@@ -42,14 +42,22 @@ public class ItemService {
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
-    public long add(EditableItemDto editableItemDto) {
-        ItemEntity itemEntity=itemConverter.toEntity(editableItemDto);
-        itemEntity.setId(itemRepository.count()+1);
-       ItemEntity itemEntity1= itemRepository.save(itemEntity);
+    public long save(EditableItemDto editableItemDto) {
+        if (itemRepository.findById(editableItemDto.getCategoryId()).orElse(null)!=null) return itemRepository.save(itemConverter.toEntity(editableItemDto)).getId();
+            ItemEntity itemEntity = itemConverter.toEntity(editableItemDto);
+            itemEntity.setId(itemRepository.count() + 1);
+            ItemEntity itemEntity1 = itemRepository.save(itemEntity);
+
         return itemEntity1.getId();
     }
 
-    public void delete(long id) {
-        itemRepository.deleteById(id);
+    public boolean delete(long id) {
+        try {
+            itemRepository.deleteById(id);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
     }
 }
