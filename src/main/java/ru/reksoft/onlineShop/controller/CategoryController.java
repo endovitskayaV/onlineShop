@@ -1,19 +1,22 @@
 package ru.reksoft.onlineShop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import ru.reksoft.onlineShop.domain.entity.CategoryEntity;
 import ru.reksoft.onlineShop.model.dto.*;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.CharacteristicService;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/categories")
@@ -27,25 +30,34 @@ public class CategoryController {
         this.characteristicService=characteristicService;
     }
 
+
+    @GetMapping("/{id}")
+    @ResponseBody
+    public CategoryDto getCharacteristic(@PathVariable long id) {
+        return categoryService.getById(id);
+    }
+
+
     @GetMapping("/add")
     public String add(Model model) {
-        CategoryDto categoryDto = CategoryDto.builder()
+       NewCategoryDto newCategoryDto=NewCategoryDto.builder()
                 .name("")
                 .description("")
-                // .characteristicRequiredMap(new HashMap<>())
                 .build();
-        model.addAttribute("category", categoryDto);
-
-
+        model.addAttribute("category", newCategoryDto);
         model.addAttribute("characteristics", characteristicService.getAll());
         return "add_category";
     }
 
     @PostMapping(value = "/add")
-  //  @ResponseBody
-    public RedirectView add(EditableCategoryDto category) {
-        categoryService.add(category);
-       // return "items";
-       return new RedirectView("/items");
+    public ResponseEntity add(NewCategoryDto category) {
+        long id = categoryService.add(category);
+        if (id == -1) {
+            return new ResponseEntity<>("Category '" + category.getName() +"' already exists!",
+                    new HttpHeaders(),
+                    HttpStatus.BAD_REQUEST);
+        } else {
+            return ResponseEntity.ok(3);
+        }
     }
 }

@@ -1,3 +1,38 @@
-body{
-    background-color: #f5f5f5;
+body {
+    background-color: #f5f5f5
+}
+
+.material-icons.cl-4db6a {
+    color: #4db6ac;
+}
+.material-icons.cl-4db6a:hover {
+    color: #2ab7a9;
+}
+.material-icons.sz-30 {
+   font-size: 30px;
+}
+
+.material-icons.sz-33 {
+    font-size: 33px;
+}
+
+
+.material-icons.sz-36 {
+    font-size: 36px;
+}
+
+.material-icons.fw-b {
+    font-weight: bold;
+}
+
+.cl-4db6ac{
+    color: #4db6ac;
+}
+
+.cl-33C6BA{
+    color: #33C6BA;
+}
+
+.fs-40{
+    font-size: 40px;
 }

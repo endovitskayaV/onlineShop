@@ -7,7 +7,7 @@ import ru.reksoft.onlineShop.domain.entity.CharacteristicEntity;
 import ru.reksoft.onlineShop.domain.repository.CategoryRepository;
 import ru.reksoft.onlineShop.domain.repository.CharacteristicRepository;
 import ru.reksoft.onlineShop.model.dto.CategoryDto;
-import ru.reksoft.onlineShop.model.dto.EditableCategoryDto;
+import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,24 +36,21 @@ public class CategoryConverter {
     }
 
 
-    public CategoryEntity toEntity(EditableCategoryDto editableCategoryDto) {
-
-        if (editableCategoryDto == null) return null;
-
-        CategoryEntity categoryEntity = categoryRepository.findById(editableCategoryDto.getId()).orElse(null);
-
-        Map<CharacteristicEntity, Boolean> map = new HashMap<>();
-
-       // List<Long> list = Arrays.stream(editableCategoryDto.getCharacteristicIds()).boxed().collect(Collectors.toList());
-        //List<Long> list = Arrays.asList();
-        editableCategoryDto.getCharacteristicIds().forEach(x -> map.put(characteristicRepository.findById(x).orElse(null), true));
-        return CategoryEntity.builder()
-                .id(editableCategoryDto.getId())
-                .name(editableCategoryDto.getName())
-                .description(editableCategoryDto.getDescription())
-                .rating(editableCategoryDto.getRating())
-                .characteristicRequiredMap(categoryEntity == null ? map : categoryEntity.getCharacteristicRequiredMap())
-                .build();
+    public CategoryEntity toEntity(NewCategoryDto newCategoryDto) {
+        if (newCategoryDto == null) {
+            return null;
+        } else {
+            Map<CharacteristicEntity, Boolean> map = new HashMap<>();
+            newCategoryDto.getCharacteristicIds()
+                    .forEach(x -> map
+                            .put(characteristicRepository.findById(x).orElse(null), true));
+            return CategoryEntity.builder()
+                    .name(newCategoryDto.getName())
+                    .description(newCategoryDto.getDescription())
+                    .rating(newCategoryDto.getRating())
+                    .characteristicRequiredMap(map)
+                    .build();
+        }
 
     }
 
@@ -66,7 +63,9 @@ public class CategoryConverter {
                 .description(categoryEntity.getDescription())
                 .rating(categoryEntity.getRating())
                 .characteristicRequiredMap(categoryEntity.getCharacteristicRequiredMap().entrySet()
-                        .stream().collect(Collectors.toMap(x -> EntityToDto.toDto(x.getKey()), Map.Entry::getValue)))
+                        .stream().collect(Collectors.toMap(x ->
+                                        EntityToDto.toDto(x.getKey()),
+                                Map.Entry::getValue)))
                 .build();
     }
 

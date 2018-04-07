@@ -12,9 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EditableCategoryDto {
-
-    private long id;
+public class NewCategoryDto {
     private String name;
     private String description;
     private int rating;

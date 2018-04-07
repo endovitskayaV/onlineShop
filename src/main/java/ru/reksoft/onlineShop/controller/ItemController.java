@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.reksoft.onlineShop.model.dto.CategoryDto;
+import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.model.dto.NewItemDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.service.CategoryService;
+import ru.reksoft.onlineShop.service.CharacteristicService;
 import ru.reksoft.onlineShop.service.ItemService;
 
 import java.util.List;
@@ -21,17 +23,16 @@ import java.util.stream.Collectors;
 public class ItemController {
     private ItemService itemService;
     private CategoryService categoryService;
+    private CharacteristicService characteristicService;
 
     @Autowired
     public ItemController(ItemService itemService,
-                          CategoryService categoryService) {
+                          CategoryService categoryService,
+                          CharacteristicService characteristicService) {
         this.itemService = itemService;
         this.categoryService = categoryService;
+        this.characteristicService=characteristicService;
     }
-
-//    @Value("${shopName}")
-//    private String shopName;
-
 
     @GetMapping
     public String getAll(Model model) {
@@ -77,6 +78,13 @@ public class ItemController {
                 .build();
         model.addAttribute("item", newItemDto);
         model.addAttribute("categories", categoryService.getAll());
+
+        NewCategoryDto newCategoryDto=NewCategoryDto.builder()
+                .name("")
+                .description("")
+                .build();
+        model.addAttribute("category", newCategoryDto);
+        model.addAttribute("characteristics", characteristicService.getAll());
         return "add_item";
     }
 

@@ -3,10 +3,9 @@
 <html>
 <head>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="../css/my_style.css" />
+    <link type="text/css" rel="stylesheet" href="../css/my_style.css"/>
 </head>
 
 <body>
@@ -17,25 +16,26 @@
                 <form class="container" method="post" action="/items/add">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="name" required="required" name="name" type="text"  value="${item.name}">
+                            <input id="name" required="required" name="name" type="text" value="${item.name}">
                             <label for="name">Name</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="producer" required="required" name="producer" type="text"  value="${item.producer}">
+                            <input id="producer" required="required" name="producer" type="text"
+                                   value="${item.producer}">
                             <label for="producer">Producer</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="storage" name="storage" type="number"  value="${item.storage}">
+                            <input id="storage" name="storage" type="number" min="0" value="${item.storage}">
                             <label for="storage">Count</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="price" name="price" type="number"  value="${item.price}">
+                            <input id="price" name="price" type="number" min="0" value="${item.price}">
                             <label for="price">Price</label>
                         </div>
                     </div>
@@ -46,46 +46,54 @@
                             <label for="description">Description</label>
                         </div>
                     </div>
-                    <div class = "row">
+                    <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <select required id="categoryId"  name="categoryId"  onchange="loadCharacteristics(this)">
+                            <select required id="category" name="category" onchange="loadCharacteristics(this)">
                                 <option selected disabled value=''>Choose your option</option>
               <#list categories as category>
             <option id="${category.id}" name="categoryId" value="${category.id}">${category.name}</option>
               </#list>
                             </select>
-                            <label for="categoryId">Category</label>
+                            <label for="category">Category</label>
                         </div>
                         <div style="margin-top: 30px" class="input-field col s1">
-                            <a  href="" onclick="addCategory(this)">
-                                <i style="font-size: 33px;  font-weight: bold; color: #4db6ac;" class="material-icons">add</i>
+                            <a class="modal-trigger" href="#category_modal">
+                                <i class="material-icons cl-4db6a sz-33 fw-b">add</i>
                             </a>
                         </div>
                     </div>
 
                     <div id="characteristicDiv"></div>
 
-                    <div class = "row">
-                    <div class="input-field col s2 offset-s1">
-                        <button class="waves-effect waves-light btn" type="submit">Save</button>
+                    <div class="row">
+                        <div class="input-field col s2 offset-s1">
+                            <button class="waves-effect waves-light btn" type="submit">Save</button>
+                        </div>
+                        <div class="input-field col s2 offset-s5">
+                            <button class="waves-effect waves-light btn" type="reset">Reset</button>
+                        </div>
                     </div>
-                     <div class="input-field col s2 offset-s5">
-                         <button class="waves-effect waves-light btn" type="reset">Reset</button>
-                     </div>
-                    </div>
-
                 </form>
-
-
             </div>
-
         </div>
     </div>
 </div>
 
 
-<script type="text/javascript" src="../js/addItemsHandler.js"></script>
+<div id="category_modal" class="modal">
+    <div class="modal-content">
+        <#include "add_category.ftl">
+    </div>
+</div>
+
+
+<div id="error-modal" class="modal modal-content">
+</div>
+
 <script type="text/javascript" src="../js/materialize.min.js"></script>
+<script type="text/javascript" src="../js/addItemsHandler.js"></script>
 <script type="text/javascript" src="../js/initSelect.js"></script>
+<script type="text/javascript" src="../js/initModal.js"></script>
+
 </body>
 </html>
