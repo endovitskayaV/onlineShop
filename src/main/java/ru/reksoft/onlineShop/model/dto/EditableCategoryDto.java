@@ -18,5 +18,5 @@ public class EditableCategoryDto {
     private String name;
     private String description;
     private int rating;
-    long[] characteristicIds;
+    List<Long> characteristicIds;
 }

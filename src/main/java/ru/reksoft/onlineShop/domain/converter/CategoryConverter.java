@@ -44,9 +44,9 @@ public class CategoryConverter {
 
         Map<CharacteristicEntity, Boolean> map = new HashMap<>();
 
-        List<Long> list = Arrays.stream(editableCategoryDto.getCharacteristicIds()).boxed().collect(Collectors.toList());
+       // List<Long> list = Arrays.stream(editableCategoryDto.getCharacteristicIds()).boxed().collect(Collectors.toList());
         //List<Long> list = Arrays.asList();
-        list.forEach(x -> map.put(characteristicRepository.findById(x).orElse(null), true));
+        editableCategoryDto.getCharacteristicIds().forEach(x -> map.put(characteristicRepository.findById(x).orElse(null), true));
         return CategoryEntity.builder()
                 .id(editableCategoryDto.getId())
                 .name(editableCategoryDto.getName())

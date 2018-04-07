@@ -5,8 +5,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" type="text/css" href="<@spring.url '/css/style.css'/>"/>
+
+    <link type="text/css" rel="stylesheet" href="css/my_style.css" />
 </head>
 
 <body style="background-color: #f5f5f5">
@@ -29,7 +29,7 @@
                 <div>
                     <div class="btn" style="margin-top: 25px; margin-right: 300px"><i class="material-icons">search</i>
                     </div>
-                    <a href=""> <i style="font-size: 36px; color: #4db6ac;" class="material-icons">shopping_cart</i>
+                    <a href=""> <i style="font-size: 36px; color: #4db6ac;" class="material-icons hoverable">shopping_cart</i>
                     </a>
                 </div>
             </div>
@@ -43,12 +43,13 @@
 
 <div class="row" style="margin-top: 100px">
     <div class="col s3">
-        <div class="collection">
+        <div class="collection z-depth-1 hoverable">
     <#list categories as category>
         <div><a href="/items?category=${category.name}" class="collection-item">${category.name}</a></div>
     </#list>
         </div>
     </div>
+
 
 
                     <#if itemsSize<=0>
@@ -67,7 +68,7 @@
 
     <#list items as item>
 
-        <div class="card horizontal">
+        <div class="card horizontal hoverable">
             <div class="card-image">
                 <img width="60" height="200" src="../img/meizu.jpg">
             </div>
@@ -79,13 +80,11 @@
                 </div>
                 <div class="card-action">
                     <a href="/basket" class="waves-effect waves-light btn">buy</a>
-                    <a href="/items/edit/${item.id}"> <i style="font-size: 36px; color: #4db6ac;"
+                    <a href="/items/edit/${item.id}"> <i style="font-size: 33px; color: #4db6ac; margin-top: 10px"
                                                          class="material-icons">edit</i>
-                        <a href="/items/delete/${item.id}"> <i style="font-size: 36px; color: #4db6ac;"
+                        <a href="/items/delete/${item.id}"> <i style="font-size: 33px; color: #4db6ac; margin-top: 10px"
                                                                class="material-icons modal-trigger">delete</i>
-                             <#if error??>
- <span style="color: red">${error}</span>
-                             </#if>
+                        </a>
                 </div>
             </div>
         </div>

@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.domain.converter.ItemConverter;
 import ru.reksoft.onlineShop.domain.entity.ItemEntity;
-import ru.reksoft.onlineShop.model.dto.EditableItemDto;
+import ru.reksoft.onlineShop.model.dto.NewItemDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.domain.repository.ItemRepository;
-import ru.reksoft.onlineShop.domain.converter.DtoToEntity;
-import ru.reksoft.onlineShop.domain.converter.EntityToDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,11 +20,11 @@ public class ItemService {
     @Autowired
     public ItemService(ItemRepository itemRepository, ItemConverter itemConverter) {
         this.itemRepository = itemRepository;
-        this.itemConverter=itemConverter;
+        this.itemConverter = itemConverter;
     }
 
     public List<ItemDto> getAll() {
-        List<ItemEntity> itemEntities=itemRepository.findAll();
+        List<ItemEntity> itemEntities = itemRepository.findAll();
         return itemRepository.findAll()
                 .stream()
                 .map(itemConverter::toDto)
@@ -42,21 +40,30 @@ public class ItemService {
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
-    public long save(EditableItemDto editableItemDto) {
-        if (itemRepository.findById(editableItemDto.getCategoryId()).orElse(null)!=null) return itemRepository.save(itemConverter.toEntity(editableItemDto)).getId();
-            ItemEntity itemEntity = itemConverter.toEntity(editableItemDto);
-            itemEntity.setId(itemRepository.count() + 1);
-            ItemEntity itemEntity1 = itemRepository.save(itemEntity);
+    public long edit(NewItemDto newItemDto) {
+        if (itemRepository.findById(newItemDto.getCategoryId()).orElse(null) != null)
+            return itemRepository.save(itemConverter.toEntity(newItemDto)).getId();
+        ItemEntity itemEntity = itemConverter.toEntity(newItemDto);
+        itemEntity.setId(itemRepository.count() + 1);
+        ItemEntity itemEntity1 = itemRepository.save(itemEntity);
 
         return itemEntity1.getId();
+    }
+
+    public long add(NewItemDto newItemDto) {
+        if (itemRepository.findByNameAndProducer(newItemDto.getName(), newItemDto.getProducer()) != null) {
+            return -1;
+        }
+        ItemEntity newItemEntity = itemConverter.toEntity(newItemDto);
+        newItemEntity.setId(itemRepository.count() + 1);
+        return itemRepository.save(newItemEntity).getId();
     }
 
     public boolean delete(long id) {
         try {
             itemRepository.deleteById(id);
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }

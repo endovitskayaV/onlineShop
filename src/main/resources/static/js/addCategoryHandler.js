@@ -8,8 +8,8 @@ function post(id) {
         query+='&characteristicIds['+i+']='+selectedValues[i];
         i++;
     });
-    $.post((query), function( data ) {
-        $.get(document.location.origin+"items/add");
-    });
+
+    $.post(query);
+
 
 }

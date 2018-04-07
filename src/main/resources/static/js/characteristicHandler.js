@@ -3,12 +3,12 @@ function loadCharacteristics(element) {
         var characteristicsDiv = $('#characteristicsDiv');
         var i = $("#counter").val();
     $.each(data, function (key, characteristic) {
-            var newInput = '<input type="number" name="characteristicsList[' + i + '].id" class="validate" hidden="hidden" value="' + characteristic.id + '"> ' +
-                '<input type="text" name="characteristicsList[' + i + '].type" class="validate" hidden="hidden" value="' + characteristic.type + '"> ' +
-                '<input type="text" name="characteristicsList[' + i + '].name" class="validate" hidden="hidden" value="' + characteristic.name + '"> ' +
+            var newInput = '<input type="number" name="characteristics[' + i + '].id" class="validate" hidden="hidden" value="' + characteristic.id + '"> ' +
+                '<input type="text" name="characteristics[' + i + '].type" class="validate" hidden="hidden" value="' + characteristic.type + '"> ' +
+                '<input type="text" name="characteristics[' + i + '].name" class="validate" hidden="hidden" value="' + characteristic.name + '"> ' +
                 '    <div class="row">\n' +
                 '                <div class="input-field col s3">\n' +
-                '                    <input id="value" name="characteristicsList[' + i + '].value" type="text" class="validate">\n' +
+                '                    <input id="value" name="characteristics[' + i + '].value" type="text" class="validate">\n' +
                 '                    <label for="value">' + characteristic.name + '</label>\n' +
                 ' <span class="helper-text">' + characteristic.type + '</span>' +
                 '                </div>' +

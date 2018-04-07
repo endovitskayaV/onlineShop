@@ -3,16 +3,16 @@ package ru.reksoft.onlineShop.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.reksoft.onlineShop.model.dto.CategoryDto;
-import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
-import ru.reksoft.onlineShop.model.dto.EditableItemDto;
+import ru.reksoft.onlineShop.model.dto.NewItemDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.ItemService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,10 +35,9 @@ public class ItemController {
 
     @GetMapping
     public String getAll(Model model) {
-        List<ItemDto> items=itemService.getAll();
-        model.addAttribute("items",items );
-        model.addAttribute("itemsSize",items.size());
-
+        List<ItemDto> items = itemService.getAll();
+        model.addAttribute("items", items);
+        model.addAttribute("itemsSize", items.size());
         model.addAttribute("categories", categoryService.getAll());
         return "home";
     }
@@ -46,10 +45,9 @@ public class ItemController {
 
     @GetMapping(params = "category")
     public String getByCategory(Model model, String category) {
-        List<ItemDto> items= itemService.getByCategoryId((categoryService.getByName(category)).getId());
-        model.addAttribute("items",items );
-        model.addAttribute("itemsSize",items.size());
-
+        List<ItemDto> items = itemService.getByCategoryId((categoryService.getByName(category)).getId());
+        model.addAttribute("items", items);
+        model.addAttribute("itemsSize", items.size());
         model.addAttribute("categories", categoryService.getAll());
         return "home";
     }
@@ -58,6 +56,7 @@ public class ItemController {
     public String getById(Model model, @PathVariable long id) {
         ItemDto itemDto = itemService.getById(id);
         if (itemDto == null) {
+            model.addAttribute("message", "No such item");
             return "error";
         } else {
             model.addAttribute("item", itemDto);
@@ -67,19 +66,32 @@ public class ItemController {
         }
     }
 
-
     @GetMapping("add")
     public String add(Model model) {
-        EditableItemDto editableItemDto = EditableItemDto.builder()
+        NewItemDto newItemDto = NewItemDto.builder()
                 .name("")
                 .producer("")
                 .description("")
                 .price(0)
                 .storage(0)
                 .build();
-        model.addAttribute("item", editableItemDto);
+        model.addAttribute("item", newItemDto);
         model.addAttribute("categories", categoryService.getAll());
         return "add_item";
+    }
+
+    @PostMapping("/add")
+    public ModelAndView add(ModelMap modelMap, NewItemDto newItemDto) {
+        long id = itemService.add(newItemDto);
+        if (id == -1) {
+            modelMap.addAttribute("message",
+                    "Item '" + newItemDto.getProducer() + " " + newItemDto.getName() +
+                            "' already exists!");
+            return new ModelAndView("error", modelMap);
+        } else {
+            return new ModelAndView("redirect:/items/" + id);
+        }
+
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -87,16 +99,11 @@ public class ItemController {
         ItemDto itemDto = itemService.getById(id);
         if (itemDto == null) return "error";
         model.addAttribute("item", itemDto);
-        List<CategoryDto> categoryDtos= categoryService.getAll().stream().filter(x->(!x.equals(itemDto.getCategory()))).collect(Collectors.toList());
-        model.addAttribute("categories", categoryService.getAll().stream().filter(x->(!x.equals(itemDto.getCategory()))).collect(Collectors.toList()));
+        List<CategoryDto> categoryDtos = categoryService.getAll().stream().filter(x -> (!x.equals(itemDto.getCategory()))).collect(Collectors.toList());
+        model.addAttribute("categories", categoryService.getAll().stream().filter(x -> (!x.equals(itemDto.getCategory()))).collect(Collectors.toList()));
         model.addAttribute("characteristics", itemDto.getCharacteristicList());
-        model.addAttribute("selectedCategory",itemDto.getCategory());
+        model.addAttribute("selectedCategory", itemDto.getCategory());
         return "edit_ite";
-    }
-
-    @PostMapping(value = {"/add", "/edit"})
-    public RedirectView save(EditableItemDto editableItemDto) {
-        return new RedirectView("/items/"+itemService.save(editableItemDto));
     }
 
     @RequestMapping(value = "/delete/{id}")

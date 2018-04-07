@@ -11,12 +11,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EditableItemDto {
+
+/*
+* ItemDto class that is used for creation new item
+* does not contain id, because it is generated in service before inserting to db
+*/
+public class NewItemDto {
     private String name;
     private String producer;
     private int storage;
     private String description;
     private int price;
     private long categoryId;
-    private List<CharacteristicDto> characteristicsList;
+    private List<CharacteristicDto> characteristics;
 }

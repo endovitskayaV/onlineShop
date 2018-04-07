@@ -6,7 +6,7 @@ import ru.reksoft.onlineShop.domain.entity.CharacteristicEntity;
 import ru.reksoft.onlineShop.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.domain.repository.CategoryRepository;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
-import ru.reksoft.onlineShop.model.dto.EditableItemDto;
+import ru.reksoft.onlineShop.model.dto.NewItemDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 
 import java.util.ArrayList;
@@ -76,21 +76,26 @@ public class ItemConverter {
     }
 
 
-    public ItemEntity toEntity(EditableItemDto editableItemDto) {
-        if (editableItemDto == null) {
+    public ItemEntity toEntity(NewItemDto newItemDto) {
+        if (newItemDto == null) {
             return null;
         } else {
             Map<CharacteristicEntity, String> map = new HashMap<>();
-            editableItemDto.getCharacteristicsList().forEach(
-                    characteristicDto -> map.put(DtoToEntity.toEntity(characteristicDto), characteristicDto.getValue())
+            newItemDto.setCharacteristics(
+                    newItemDto.getCharacteristics().stream()
+                            .filter(characteristicDto -> !characteristicDto.getValue().equals(""))
+                            .collect(Collectors.toList()));
+            newItemDto.getCharacteristics().forEach(
+                    characteristicDto -> map.put(DtoToEntity.toEntity(characteristicDto),
+                            characteristicDto.getValue())
             );
             return ItemEntity.builder()
-                    .name(editableItemDto.getName())
-                    .producer(editableItemDto.getProducer())
-                    .description(editableItemDto.getDescription())
-                    .storage(editableItemDto.getStorage())
-                    .price(editableItemDto.getPrice())
-                    .category(categoryRepository.findById(editableItemDto.getCategoryId()).orElse(null))
+                    .name(newItemDto.getName())
+                    .producer(newItemDto.getProducer())
+                    .description(newItemDto.getDescription())
+                    .storage(newItemDto.getStorage())
+                    .price(newItemDto.getPrice())
+                    .category(categoryRepository.findById(newItemDto.getCategoryId()).orElse(null))
                     .characteristicValueMap(map)
                     .build();
         }
