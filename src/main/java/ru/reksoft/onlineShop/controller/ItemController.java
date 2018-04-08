@@ -1,15 +1,14 @@
 package ru.reksoft.onlineShop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import ru.reksoft.onlineShop.model.dto.CategoryDto;
 import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
-import ru.reksoft.onlineShop.model.dto.NewItemDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.CharacteristicService;
@@ -31,24 +30,21 @@ public class ItemController {
                           CharacteristicService characteristicService) {
         this.itemService = itemService;
         this.categoryService = categoryService;
-        this.characteristicService=characteristicService;
+        this.characteristicService = characteristicService;
     }
 
     @GetMapping
     public String getAll(Model model) {
         List<ItemDto> items = itemService.getAll();
         model.addAttribute("items", items);
-        model.addAttribute("itemsSize", items.size());
         model.addAttribute("categories", categoryService.getAll());
         return "home";
     }
-
 
     @GetMapping(params = "category")
     public String getByCategory(Model model, String category) {
         List<ItemDto> items = itemService.getByCategoryId((categoryService.getByName(category)).getId());
         model.addAttribute("items", items);
-        model.addAttribute("itemsSize", items.size());
         model.addAttribute("categories", categoryService.getAll());
         return "home";
     }
@@ -62,24 +58,24 @@ public class ItemController {
         } else {
             model.addAttribute("item", itemDto);
             model.addAttribute("categories", categoryService.getAll());
-            model.addAttribute("characteristics", itemDto.getCharacteristicList());
+            model.addAttribute("characteristics", itemDto.getCharacteristics());
             return "item_info";
         }
     }
 
     @GetMapping("add")
     public String add(Model model) {
-        NewItemDto newItemDto = NewItemDto.builder()
+        ItemDto itemDto = ItemDto.builder()
                 .name("")
                 .producer("")
                 .description("")
                 .price(0)
                 .storage(0)
                 .build();
-        model.addAttribute("item", newItemDto);
+        model.addAttribute("item", itemDto);
         model.addAttribute("categories", categoryService.getAll());
 
-        NewCategoryDto newCategoryDto=NewCategoryDto.builder()
+        NewCategoryDto newCategoryDto = NewCategoryDto.builder()
                 .name("")
                 .description("")
                 .build();
@@ -89,11 +85,11 @@ public class ItemController {
     }
 
     @PostMapping("/add")
-    public ModelAndView add(ModelMap modelMap, NewItemDto newItemDto) {
-        long id = itemService.add(newItemDto);
+    public ModelAndView add(ModelMap modelMap, ItemDto itemDto) {
+        long id = itemService.add(itemDto);
         if (id == -1) {
             modelMap.addAttribute("message",
-                    "Item '" + newItemDto.getProducer() + " " + newItemDto.getName() +
+                    "Item '" + itemDto.getProducer() + " " + itemDto.getName() +
                             "' already exists!");
             return new ModelAndView("error", modelMap);
         } else {
@@ -107,16 +103,22 @@ public class ItemController {
         ItemDto itemDto = itemService.getById(id);
         if (itemDto == null) return "error";
         model.addAttribute("item", itemDto);
-        List<CategoryDto> categoryDtos = categoryService.getAll().stream().filter(x -> (!x.equals(itemDto.getCategory()))).collect(Collectors.toList());
-        model.addAttribute("categories", categoryService.getAll().stream().filter(x -> (!x.equals(itemDto.getCategory()))).collect(Collectors.toList()));
-        model.addAttribute("characteristics", itemDto.getCharacteristicList());
-        model.addAttribute("selectedCategory", itemDto.getCategory());
-        return "edit_ite";
+        model.addAttribute("categories",
+                categoryService.getAll().stream()
+                        .filter(categoryDto -> (categoryDto.getId() != (itemDto.getCategoryId())))
+                        .collect(Collectors.toList()));
+        model.addAttribute("characteristics", itemDto.getCharacteristics());
+        model.addAttribute("selectedCategory",
+                categoryService.getById(itemDto.getCategoryId()));
+        return "edit_item";
     }
 
-    @RequestMapping(value = "/delete/{id}")
-    public RedirectView delete(Model model, @PathVariable long id) {
-        itemService.delete(id);
-        return new RedirectView("/items");
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity delete(@PathVariable long id) {
+        if (itemService.delete(id)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.badRequest().body("Item cannot be deleted as it is ordered");
+        }
     }
 }

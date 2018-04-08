@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,9 +14,4 @@ public class CharacteristicDto {
     private String name;
     private String type;
     private String value;
-
-//    //!!!!!!!!!!!
-//    @JoinTable(name = "category_characteristic",
-//    joinColumns = @JoinColumn(name = "is_required"))
-//    private boolean isRequired;
 }

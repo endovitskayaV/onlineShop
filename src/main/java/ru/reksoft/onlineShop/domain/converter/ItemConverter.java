@@ -6,7 +6,6 @@ import ru.reksoft.onlineShop.domain.entity.CharacteristicEntity;
 import ru.reksoft.onlineShop.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.domain.repository.CategoryRepository;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
-import ru.reksoft.onlineShop.model.dto.NewItemDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 
 import java.util.ArrayList;
@@ -19,24 +18,28 @@ import java.util.stream.Collectors;
 public class ItemConverter {
     private CategoryRepository categoryRepository;
     private CategoryConverter categoryConverter;
+    private CharacteristicConverter characteristicConverter;
 
     @Autowired
-    public ItemConverter(CategoryRepository categoryRepository, CategoryConverter categoryConverter) {
+    public ItemConverter(CategoryRepository categoryRepository,
+                         CategoryConverter categoryConverter,
+                         CharacteristicConverter characteristicConverter) {
         this.categoryRepository = categoryRepository;
         this.categoryConverter = categoryConverter;
+        this.characteristicConverter = characteristicConverter;
     }
 
     public ItemDto toDto(ItemEntity itemEntity) {
         if (itemEntity == null) {
             return null;
         } else {
-            List<CharacteristicDto> characteristicDtoList = itemEntity.getCharacteristicValueMap()
+            List<CharacteristicDto> characteristicDtos = itemEntity.getCharacteristicValue()
                     .keySet().stream()
-                    .map(EntityToDto::toDto)
+                    .map(characteristicConverter::toDto)
                     .collect(Collectors.toList());
-            List<String> values = new ArrayList<>(itemEntity.getCharacteristicValueMap().values());
+            List<String> values = new ArrayList<>(itemEntity.getCharacteristicValue().values());
             for (int i = 0; i < values.size(); i++) {
-                characteristicDtoList.get(i).setValue(values.get(i));
+                characteristicDtos.get(i).setValue(values.get(i));
             }
             return ItemDto.builder()
                     .id(itemEntity.getId())
@@ -45,61 +48,34 @@ public class ItemConverter {
                     .description(itemEntity.getDescription())
                     .storage(itemEntity.getStorage())
                     .price(itemEntity.getPrice())
-                    .category(categoryConverter.toDto(itemEntity.getCategory()))
-                    .characteristicList(characteristicDtoList)
+                    .categoryId(categoryConverter.toDto(itemEntity.getCategory()).getId())
+                    .characteristics(characteristicDtos)
                     .build();
         }
     }
 
-
     public ItemEntity toEntity(ItemDto itemDto) {
-        if (itemDto == null) return null;
-        return ItemEntity.builder()
-                .id(itemDto.getId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .storage(itemDto.getStorage())
-                .price(itemDto.getPrice())
-                .producer(itemDto.getProducer())
-                .category(categoryConverter.toEntity(itemDto.getCategory()))
-                .characteristicValueMap(itemDto.getCharacteristicList()
-                        .stream().collect((Collectors.toMap(x ->
-                                        (CharacteristicEntity
-                                                .builder()
-                                                .id(x.getId())
-                                                .name(x.getName())
-                                                .type(x.getType())
-                                                .build()),
-                                CharacteristicDto::getValue))))
-                .build();
-
-    }
-
-
-    public ItemEntity toEntity(NewItemDto newItemDto) {
-        if (newItemDto == null) {
+        if (itemDto == null) {
             return null;
         } else {
             Map<CharacteristicEntity, String> map = new HashMap<>();
-            newItemDto.setCharacteristics(
-                    newItemDto.getCharacteristics().stream()
+            itemDto.setCharacteristics(
+                    itemDto.getCharacteristics().stream()
                             .filter(characteristicDto -> !characteristicDto.getValue().equals(""))
                             .collect(Collectors.toList()));
-            newItemDto.getCharacteristics().forEach(
-                    characteristicDto -> map.put(DtoToEntity.toEntity(characteristicDto),
-                            characteristicDto.getValue())
-            );
+            itemDto.getCharacteristics().forEach(
+                    characteristicDto -> map.put(characteristicConverter.toEntity(characteristicDto),
+                            characteristicDto.getValue()));
             return ItemEntity.builder()
-                    .name(newItemDto.getName())
-                    .producer(newItemDto.getProducer())
-                    .description(newItemDto.getDescription())
-                    .storage(newItemDto.getStorage())
-                    .price(newItemDto.getPrice())
-                    .category(categoryRepository.findById(newItemDto.getCategoryId()).orElse(null))
-                    .characteristicValueMap(map)
+                    .id(itemDto.getId())
+                    .name(itemDto.getName())
+                    .producer(itemDto.getProducer())
+                    .description(itemDto.getDescription())
+                    .storage(itemDto.getStorage())
+                    .price(itemDto.getPrice())
+                    .category(categoryRepository.findById(itemDto.getCategoryId()).orElse(null))
+                    .characteristicValue(map)
                     .build();
         }
-
     }
-
 }

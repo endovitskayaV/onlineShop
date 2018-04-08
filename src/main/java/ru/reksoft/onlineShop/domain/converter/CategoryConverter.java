@@ -10,31 +10,20 @@ import ru.reksoft.onlineShop.model.dto.CategoryDto;
 import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
 public class CategoryConverter {
-    private CategoryRepository categoryRepository;
     private CharacteristicRepository characteristicRepository;
+    private CharacteristicConverter characteristicConverter;
 
     @Autowired
-    public CategoryConverter(CategoryRepository categoryRepository, CharacteristicRepository characteristicRepository) {
-        this.categoryRepository = categoryRepository;
+    public CategoryConverter(CharacteristicRepository characteristicRepository,
+                             CharacteristicConverter characteristicConverter) {
         this.characteristicRepository = characteristicRepository;
+        this.characteristicConverter = characteristicConverter;
     }
-
-    public CategoryEntity toEntity(CategoryDto categoryDto) {
-        if (categoryDto == null) return null;
-        return CategoryEntity.builder()
-                .id(categoryDto.getId())
-                .name(categoryDto.getName())
-                .description(categoryDto.getDescription())
-                .rating(categoryDto.getRating())
-                .characteristicRequiredMap(categoryDto.getCharacteristicRequiredMap().entrySet()
-                        .stream().collect((Collectors.toMap(x -> DtoToEntity.toEntity(x.getKey()), Map.Entry::getValue))))
-                .build();
-    }
-
 
     public CategoryEntity toEntity(NewCategoryDto newCategoryDto) {
         if (newCategoryDto == null) {
@@ -42,18 +31,17 @@ public class CategoryConverter {
         } else {
             Map<CharacteristicEntity, Boolean> map = new HashMap<>();
             newCategoryDto.getCharacteristicIds()
-                    .forEach(x -> map
-                            .put(characteristicRepository.findById(x).orElse(null), true));
+                    .forEach(characteristicId -> map
+                            .put(characteristicRepository.findById(characteristicId)
+                                    .orElse(null), true));
             return CategoryEntity.builder()
                     .name(newCategoryDto.getName())
                     .description(newCategoryDto.getDescription())
                     .rating(newCategoryDto.getRating())
-                    .characteristicRequiredMap(map)
+                    .characteristicRequired(map)
                     .build();
         }
-
     }
-
 
     public CategoryDto toDto(CategoryEntity categoryEntity) {
         if (categoryEntity == null) return null;
@@ -62,11 +50,12 @@ public class CategoryConverter {
                 .name(categoryEntity.getName())
                 .description(categoryEntity.getDescription())
                 .rating(categoryEntity.getRating())
-                .characteristicRequiredMap(categoryEntity.getCharacteristicRequiredMap().entrySet()
-                        .stream().collect(Collectors.toMap(x ->
-                                        EntityToDto.toDto(x.getKey()),
-                                Map.Entry::getValue)))
+                .characteristics(categoryEntity.getCharacteristicRequired().entrySet().stream()
+                        .filter(Map.Entry::getValue)
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                        .keySet().stream()
+                        .map(characteristicConverter::toDto)
+                        .collect(Collectors.toList()))
                 .build();
     }
-
 }

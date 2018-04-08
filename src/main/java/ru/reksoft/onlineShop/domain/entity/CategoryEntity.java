@@ -14,6 +14,9 @@ import java.util.Map;
 @Entity
 @Builder
 @Table(name = "category")
+/*
+* eg: food, smartphones, cloth, etc
+* */
 public class CategoryEntity {
     @Id
     @Column(name = "id", nullable = false)
@@ -26,12 +29,20 @@ public class CategoryEntity {
     private String description;
 
     @Column(name = "rating", nullable = false)
+    /*
+    * Category popularity
+    * */
     private int rating;
 
-
     @ElementCollection
-    @CollectionTable(name ="category_characteristic", joinColumns = @JoinColumn(name = "category_id"))
+    @CollectionTable(name = "category_characteristic", joinColumns = @JoinColumn(name = "category_id"))
     @MapKeyJoinColumn(name = "characteristic_id")
     @Column(name = "required")
-    private Map<CharacteristicEntity, Boolean> characteristicRequiredMap;
+    /*
+     * Map contains characteristic and value
+     * that shows if the characteristic is required for this category.
+     * In db it is stored in additional table:
+     * PK(characteristic_id, category_id), required
+     * */
+    private Map<CharacteristicEntity, Boolean> characteristicRequired;
 }

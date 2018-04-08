@@ -15,9 +15,11 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+/*
+* eg: color, weight, etc
+* */
 public class CharacteristicEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private long id;
 
@@ -25,6 +27,10 @@ public class CharacteristicEntity {
     private String name;
 
     @Column(name = "type", nullable = false)
+    /*
+    * Unit of characteristic`s measure
+    * eg: metres, gramme, etc
+    * */
     private String type;
 
 }

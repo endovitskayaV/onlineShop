@@ -27,9 +27,8 @@ public class CategoryController {
     @Autowired
     public CategoryController(CategoryService categoryService, CharacteristicService characteristicService) {
         this.categoryService = categoryService;
-        this.characteristicService=characteristicService;
+        this.characteristicService = characteristicService;
     }
-
 
     @GetMapping("/{id}")
     @ResponseBody
@@ -37,10 +36,9 @@ public class CategoryController {
         return categoryService.getById(id);
     }
 
-
     @GetMapping("/add")
     public String add(Model model) {
-       NewCategoryDto newCategoryDto=NewCategoryDto.builder()
+        NewCategoryDto newCategoryDto = NewCategoryDto.builder()
                 .name("")
                 .description("")
                 .build();
@@ -53,11 +51,10 @@ public class CategoryController {
     public ResponseEntity add(NewCategoryDto category) {
         long id = categoryService.add(category);
         if (id == -1) {
-            return new ResponseEntity<>("Category '" + category.getName() +"' already exists!",
-                    new HttpHeaders(),
-                    HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .badRequest().body("Category '" + category.getName() + "' already exists!");
         } else {
-            return ResponseEntity.ok(3);
+            return ResponseEntity.ok(id);
         }
     }
 }

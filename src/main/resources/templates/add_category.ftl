@@ -23,7 +23,7 @@
             </div>
             <div class="row">
                 <div class="input-field col s3">
-                    <input id="category_description" required="required" name="category_description" type="text" value="${category.description}">
+                    <input id="category_description"  name="category_description" type="text" value="${category.description}">
                     <label for="description">Description</label>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                       <#assign i++>
                   </#list>
                 </select>
-                <label>Materialize Multiple Select</label>
+                <label for="category_select">Characteristics</label>
             </div>
             </div>
     </div>

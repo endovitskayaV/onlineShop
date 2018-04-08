@@ -36,16 +36,13 @@ public class CategoryService {
     }
 
     public long add(NewCategoryDto newCategoryDto) {
-        return 1;
-//        if (categoryRepository.findByName(newCategoryDto.getName()) != null) {
-//            return -1;
-//        } else {
-//            CategoryEntity categoryEntity = categoryConverter.toEntity(newCategoryDto);
-//            long c=categoryRepository.count();
-//            categoryEntity.setId(10);
-//            CategoryEntity categoryEntity1=categoryRepository.save(categoryEntity);
-//            return categoryEntity1.getId();
-//        }
+        if (categoryRepository.findByName(newCategoryDto.getName()) != null) {
+            return -1;
+        } else {
+            CategoryEntity categoryEntity = categoryConverter.toEntity(newCategoryDto);
+            categoryEntity.setId(categoryRepository.count()+1);
+            return categoryRepository.save(categoryEntity).getId();
+        }
 
     }
 }

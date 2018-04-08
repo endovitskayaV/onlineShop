@@ -15,6 +15,9 @@ import java.util.Map;
 @Builder
 @Entity
 @Table(name = "item")
+/*
+ * Item that is bought by customers and sold by sellers
+ * */
 public class ItemEntity {
     @Id
     @Column(name = "id", nullable = false)
@@ -27,6 +30,9 @@ public class ItemEntity {
     private String producer;
 
     @Column(name = "storage", nullable = false)
+    /*
+     * Quantity of items in stock
+     * */
     private int storage;
 
     @Column(name = "description", nullable = false)
@@ -41,9 +47,14 @@ public class ItemEntity {
     private CategoryEntity category;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name ="characteristic_item",joinColumns = @JoinColumn(name = "item_id"))
+    @CollectionTable(name = "characteristic_item", joinColumns = @JoinColumn(name = "item_id"))
     @MapKeyJoinColumn(name = "characteristic_id")
     @Column(name = "value")
-    private Map<CharacteristicEntity, String> characteristicValueMap;
+    /*
+     * Map that contains characteristic and its value
+     * In db it is stored in additional table:
+     * PK(characteristic_id, item_id), value
+     * */
+    private Map<CharacteristicEntity, String> characteristicValue;
 
 }

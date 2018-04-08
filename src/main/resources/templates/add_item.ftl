@@ -48,13 +48,13 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <select required id="category" name="category" onchange="loadCharacteristics(this)">
+                            <select required id="categoryId" name="categoryId" onchange="loadCharacteristics(this)">
                                 <option selected disabled value=''>Choose your option</option>
               <#list categories as category>
-            <option id="${category.id}" name="categoryId" value="${category.id}">${category.name}</option>
+            <option id="${category.id}"  value="${category.id}">${category.name}</option>
               </#list>
                             </select>
-                            <label for="category">Category</label>
+                            <label for="categoryId">Category</label>
                         </div>
                         <div style="margin-top: 30px" class="input-field col s1">
                             <a class="modal-trigger" href="#category_modal">

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.domain.converter.ItemConverter;
 import ru.reksoft.onlineShop.domain.entity.ItemEntity;
-import ru.reksoft.onlineShop.model.dto.NewItemDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.domain.repository.ItemRepository;
 
@@ -24,7 +23,6 @@ public class ItemService {
     }
 
     public List<ItemDto> getAll() {
-        List<ItemEntity> itemEntities = itemRepository.findAll();
         return itemRepository.findAll()
                 .stream()
                 .map(itemConverter::toDto)
@@ -40,21 +38,24 @@ public class ItemService {
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
-    public long edit(NewItemDto newItemDto) {
-        if (itemRepository.findById(newItemDto.getCategoryId()).orElse(null) != null)
-            return itemRepository.save(itemConverter.toEntity(newItemDto)).getId();
-        ItemEntity itemEntity = itemConverter.toEntity(newItemDto);
-        itemEntity.setId(itemRepository.count() + 1);
-        ItemEntity itemEntity1 = itemRepository.save(itemEntity);
-
-        return itemEntity1.getId();
+    public long edit(ItemDto itemDto) {
+//        if (itemRepository.findById(editableItemDto.getCategoryId()).orElse(null) != null)
+//            return itemRepository.save(itemConverter.toEntity(editableItemDto)).getId();
+//        ItemEntity itemEntity = itemConverter.toEntity(editableItemDto);
+//        itemEntity.setId(itemRepository.count() + 1);
+//        ItemEntity itemEntity1 = itemRepository.save(itemEntity);
+//
+//        return itemEntity1.getId();
+        return 1;
     }
 
-    public long add(NewItemDto newItemDto) {
-        if (itemRepository.findByNameAndProducer(newItemDto.getName(), newItemDto.getProducer()) != null) {
+    public long add(ItemDto itemDto) {
+        if (itemRepository.
+                findByNameAndProducer(itemDto.getName(),
+                        itemDto.getProducer()) != null) {
             return -1;
         }
-        ItemEntity newItemEntity = itemConverter.toEntity(newItemDto);
+        ItemEntity newItemEntity = itemConverter.toEntity(itemDto);
         newItemEntity.setId(itemRepository.count() + 1);
         return itemRepository.save(newItemEntity).getId();
     }

@@ -2,11 +2,9 @@ package ru.reksoft.onlineShop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.reksoft.onlineShop.domain.entity.CharacteristicEntity;
-import ru.reksoft.onlineShop.domain.repository.ItemRepository;
+import ru.reksoft.onlineShop.domain.converter.CharacteristicConverter;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.domain.repository.CharacteristicRepository;
-import ru.reksoft.onlineShop.domain.converter.EntityToDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,23 +12,18 @@ import java.util.stream.Collectors;
 @Service
 public class CharacteristicService {
     private CharacteristicRepository characteristicRepository;
-    private ItemRepository itemRepository;
+    private CharacteristicConverter characteristicConverter;
 
     @Autowired
-    public CharacteristicService(CharacteristicRepository characteristicRepository, ItemRepository itemRepository){
+    public CharacteristicService(CharacteristicRepository characteristicRepository,
+                                 CharacteristicConverter characteristicConverter) {
         this.characteristicRepository = characteristicRepository;
-        this.itemRepository=itemRepository;
+        this.characteristicConverter = characteristicConverter;
     }
 
-    public List<CharacteristicDto> getAll(){
+    public List<CharacteristicDto> getAll() {
         return characteristicRepository.findAll().stream()
-                .map(EntityToDto::toDto).collect(Collectors.toList());
-    }
-
-
-    public CharacteristicDto getById(long id){
-        CharacteristicEntity characteristicEntity=characteristicRepository.findById(id).orElse(null);
-        return EntityToDto.toDto(characteristicRepository.findById(id).orElse(null));
+                .map(characteristicConverter::toDto).collect(Collectors.toList());
     }
 
 }

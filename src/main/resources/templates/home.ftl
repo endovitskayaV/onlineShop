@@ -20,7 +20,7 @@
     </div>
 
 
-<#if itemsSize<=0>
+<#if  items?size==0>
   <div class="col s2 offset-s1 card horizontal">
       <div class="card-stacked">
           <div class="card-content">
@@ -34,7 +34,7 @@
         <div class="row">
             <div class="col s8 offset-s1">
     <#list items as item>
-        <div class="card horizontal hoverable">
+        <div id="${item.id}" class="card horizontal hoverable">
             <div class="card-image">
                 <img width="60" height="200" src="../img/meizu.jpg">
             </div>
@@ -47,13 +47,13 @@
                 <div class="card-action">
                     <div class="row">
                         <div class="input-field col s1">
-                            <a href="/basket" class="waves-effect waves-light btn">buy</a>
+                            <a href="" class="waves-effect waves-light btn">buy</a>
                         </div>
                         <div class="input-field col s1 offset-s7">
                             <a href="/items/edit/${item.id}"> <i class="material-icons cl-4db6a sz-30">edit</i></a>
                         </div>
                         <div class="input-field col s1">
-                            <a href="/items/delete/${item.id}"> <i
+                            <a href="javascript: deleteItem(${item.id})"> <i
                                     class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
                             </a>
                         </div>
@@ -65,6 +65,9 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="delete-modal" class="modal modal-content">
 </div>
 
 <script type="text/javascript" src="js/homeHandler.js"></script>

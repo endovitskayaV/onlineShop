@@ -2,7 +2,6 @@ function addCategory(id) {
     var element = document.getElementById(id);
     var instance = M.FormSelect.getInstance(element);
     var selectedValues = instance.getSelectedValues();
-    // var query=document.location.origin+"/categories/add?id="+$("#id").val()+"&name="+$("#name").val()+"&description="+$("#description").val()+"&rating="+$("#rating").val();
     var i = 0;
     var query = "name=" + $("#category_name").val() + "&description=" + $("#category_description").val() + "&rating=" + $("#category_rating").val();
 
@@ -18,12 +17,8 @@ function addCategory(id) {
         data: query,
         success: function (data) {
             $.get("/categories/" + data, function (data) {
-                var append='<option  selected id="'+data.id+'"'+
-                    ' name="'+data.name+'"' +
-                    ' value="'+data.id+'">ddddd</option>';
-                $('#category').append(append);
-                $('#category').focus();
-                $(data.id).select();
+                var select = $('#categoryId');
+                select.append('<option>mama</option>');
                 var elem = document.getElementById('category_modal');
                 var instance = M.Modal.getInstance(elem);
                 instance.close();

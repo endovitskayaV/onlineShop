@@ -13,6 +13,9 @@ import javax.persistence.*;
 @Entity
 @Builder
 @Table(name="status")
+/*
+ * Whether it is send or get by customer, etc
+ * */
 public class StatusEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

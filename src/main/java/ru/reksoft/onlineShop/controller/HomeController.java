@@ -15,11 +15,11 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
-    public HomeController(){
+    public HomeController() {
     }
 
     @GetMapping("/")
-    public RedirectView home(Model model) {
+    public RedirectView home() {
         return new RedirectView("/items");
     }
 }

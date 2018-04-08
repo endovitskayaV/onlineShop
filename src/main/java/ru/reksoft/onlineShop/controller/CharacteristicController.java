@@ -28,17 +28,12 @@ public class CharacteristicController {
 
     @GetMapping
     @ResponseBody
-    public Set<CharacteristicDto> getCharacteristic(long categoryId) {
+    public List<CharacteristicDto> getCharacteristic(long categoryId) {
         CategoryDto categoryDto = categoryService.getById(categoryId);
         if (categoryDto == null) {
             return null;
+        } else {
+            return categoryDto.getCharacteristics();
         }
-        Set<CharacteristicDto> categoryDtos =
-                categoryDto.getCharacteristicRequiredMap().entrySet().stream()
-                        .filter(Map.Entry::getValue) //select required characteristics
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-                        .keySet(); //extract characteristics from Map <Characteristic, Boolean>
-
-        return categoryDtos;
     }
 }

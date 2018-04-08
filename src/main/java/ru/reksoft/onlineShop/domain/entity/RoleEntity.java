@@ -13,6 +13,9 @@ import javax.persistence.*;
 @Entity
 @Builder
 @Table(name = "role_info")
+/*
+* eg: seller, customer, etc
+* */
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

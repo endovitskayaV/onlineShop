@@ -1,8 +1,9 @@
 function loadCharacteristics(element) {
     var categoryId = (element[element.selectedIndex].id);
-        var characteristicsDiv = $('#characteristicsDiv');
-        var i = $("#counter").val();
-    $.each(data, function (key, characteristic) {
+    var characteristicsDiv = $('#characteristicsDiv');
+    var i = $("#counter").val();
+    $.get("/categories/" + categoryId, function (data) {
+        $.each(data, function (key, characteristic) {
             var newInput = '<input type="number" name="characteristics[' + i + '].id" class="validate" hidden="hidden" value="' + characteristic.id + '"> ' +
                 '<input type="text" name="characteristics[' + i + '].type" class="validate" hidden="hidden" value="' + characteristic.type + '"> ' +
                 '<input type="text" name="characteristics[' + i + '].name" class="validate" hidden="hidden" value="' + characteristic.name + '"> ' +
@@ -13,9 +14,8 @@ function loadCharacteristics(element) {
                 ' <span class="helper-text">' + characteristic.type + '</span>' +
                 '                </div>' +
                 '            </div>';
-            characteristicDiv.append(newInput);
+            characteristicsDiv.append(newInput);
             i++;
         });
-
-
+    });
 }

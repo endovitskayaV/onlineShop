@@ -28,19 +28,30 @@ public class OrderEntity {
     @ManyToOne
     @JoinColumn(name = "status_id")
     @NotNull
+    /*
+     * Whether it is send or get by customer, etc
+     * */
     private StatusEntity status;
 
     @Column(name = "date")
+    /*
+     * Date of an order
+     * */
     private Date date;
 
     @Column(nullable = false)
     private String deliveryAddress;
 
     @ElementCollection
-    @CollectionTable(name ="order_info_item", joinColumns = @JoinColumn(name = "order_id"))
+    @CollectionTable(name = "order_info_item", joinColumns = @JoinColumn(name = "order_id"))
     @MapKeyJoinColumn(name = "item_id")
     @Column(name = "quantity")
-    private Map<ItemEntity, Integer> itemQuantityMap;
+    /*
+     * Map that contains item and its quantity, chosen by customer
+     * In db it is stored in additional table:
+     * PK(order_id, item_id), quantity
+     * */
+    private Map<ItemEntity, Integer> itemQuantity;
 
 
 }

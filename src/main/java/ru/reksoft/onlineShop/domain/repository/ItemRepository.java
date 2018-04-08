@@ -9,5 +9,6 @@ import java.util.Map;
 
 public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
     List<ItemEntity> findAllByCategoryId(long categoryId);
+
     ItemEntity findByNameAndProducer(String name, String producer);
 }
