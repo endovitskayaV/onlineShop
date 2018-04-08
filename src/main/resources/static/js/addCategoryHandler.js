@@ -18,7 +18,9 @@ function addCategory(id) {
         success: function (data) {
             $.get("/categories/" + data, function (data) {
                 var select = $('#categoryId');
-                select.append('<option>mama</option>');
+                select.append('<option id="'+data.id+'" value="'+data.id+
+                    '">'+data.name+'</option>');
+                $('select').formSelect();
                 var elem = document.getElementById('category_modal');
                 var instance = M.Modal.getInstance(elem);
                 instance.close();
