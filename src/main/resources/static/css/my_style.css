@@ -12,6 +12,10 @@ body {
    font-size: 30px;
 }
 
+
+.material-icons.sz-20 {
+    font-size: 20px;
+}
 .material-icons.sz-33 {
     font-size: 33px;
 }

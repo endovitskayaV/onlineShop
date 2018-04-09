@@ -130,7 +130,7 @@ public class ItemController {
     }
 
     /**
-     * Updates item
+     * Prepares item for updating
      *
      * @param model
      * @param id    item id
@@ -159,6 +159,12 @@ public class ItemController {
         return "edit_ite";
     }
 
+    /**
+     * Updates item
+     *
+     * @param itemDto item that will be edited
+     * @return redirects to /items/{item_id}
+     */
     @PostMapping("/edit")
     public ModelAndView edit(ItemDto itemDto) {
         long id = itemService.save(itemDto);

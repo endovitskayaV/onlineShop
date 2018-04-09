@@ -7,6 +7,7 @@ import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.model.domain.repository.CategoryRepository;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
+import ru.reksoft.onlineShop.model.dto.OrderedItemDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,4 +107,5 @@ public class ItemConverter {
                     .build();
         }
     }
+
 }
