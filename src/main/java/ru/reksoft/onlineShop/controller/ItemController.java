@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ru.reksoft.onlineShop.model.dto.CategoryDto;
 import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.service.CategoryService;
@@ -33,6 +32,9 @@ public class ItemController {
         this.characteristicService = characteristicService;
     }
 
+    /**
+     * @return all items stored in database
+     */
     @GetMapping
     public String getAll(Model model) {
         List<ItemDto> items = itemService.getAll();
@@ -41,6 +43,11 @@ public class ItemController {
         return "home";
     }
 
+    /**
+     * Gets items having given category
+     *
+     * @return "home" template
+     */
     @GetMapping(params = "category")
     public String getByCategory(Model model, String category) {
         List<ItemDto> items = itemService.getByCategoryId((categoryService.getByName(category)).getId());
@@ -49,6 +56,12 @@ public class ItemController {
         return "home";
     }
 
+    /**
+     * Gets item by its id
+     *
+     * @param id item id
+     * @return "item_info" template or "error" template item not found
+     */
     @GetMapping("{id}")
     public String getById(Model model, @PathVariable long id) {
         ItemDto itemDto = itemService.getById(id);

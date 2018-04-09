@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.domain.entity;
+package ru.reksoft.onlineShop.model.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,15 +7,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * Whether it is sent or get by customer or is shifting , etc
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Builder
 @Table(name="status")
-/*
- * Whether it is send or get by customer, etc
- * */
 public class StatusEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

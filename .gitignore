@@ -2,3 +2,6 @@
 .idea
 */*.iml
 lib
+.gradle/
+build/
+out/

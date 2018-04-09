@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.domain.entity;
+package ru.reksoft.onlineShop.model.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,15 +9,15 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 
+/**
+ * Item that is bought by customers and sold by sellers
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "item")
-/*
- * Item that is bought by customers and sold by sellers
- * */
 public class ItemEntity {
     @Id
     @Column(name = "id", nullable = false)
@@ -29,10 +29,10 @@ public class ItemEntity {
     @Column(name = "producer", nullable = false)
     private String producer;
 
-    @Column(name = "storage", nullable = false)
-    /*
+    /**
      * Quantity of items in stock
-     * */
+     */
+    @Column(name = "storage", nullable = false)
     private int storage;
 
     @Column(name = "description", nullable = false)
@@ -41,20 +41,29 @@ public class ItemEntity {
     @Column(name = "price", nullable = false)
     private int price;
 
-    @ManyToOne()
+    /**
+     * item category
+     * eg: smartphone, food, health, etc
+     *
+     * @see CategoryEntity
+     */
+    @ManyToOne
     @JoinColumn(name = "category_id")
     @NotNull
     private CategoryEntity category;
 
+
+    /**
+     * Map that contains characteristic and its value
+     * In db it is stored in additional table:
+     * PK(characteristic_id, item_id), value
+     *
+     * @see CharacteristicEntity
+     */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "characteristic_item", joinColumns = @JoinColumn(name = "item_id"))
     @MapKeyJoinColumn(name = "characteristic_id")
     @Column(name = "value")
-    /*
-     * Map that contains characteristic and its value
-     * In db it is stored in additional table:
-     * PK(characteristic_id, item_id), value
-     * */
-    private Map<CharacteristicEntity, String> characteristicValue;
+    private Map<CharacteristicEntity, String> characteristicsValues;
 
 }

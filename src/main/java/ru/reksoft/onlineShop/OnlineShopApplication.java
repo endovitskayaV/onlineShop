@@ -5,6 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
+/**
+ * main class
+ * manages run configurations
+ */
 @SpringBootApplication
 public class OnlineShopApplication extends SpringBootServletInitializer {
 
@@ -13,6 +17,9 @@ public class OnlineShopApplication extends SpringBootServletInitializer {
         return application.sources(OnlineShopApplication.class);
     }
 
+    /**
+     * Runs whole application
+     */
     public static void main(String[] args){
         SpringApplication.run(OnlineShopApplication.class, args);
     }

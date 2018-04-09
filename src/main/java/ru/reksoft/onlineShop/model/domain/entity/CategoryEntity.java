@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.domain.entity;
+package ru.reksoft.onlineShop.model.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Map;
 
+/**
+ * eg: food, smartphones, cloth, etc
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Builder
 @Table(name = "category")
-/*
-* eg: food, smartphones, cloth, etc
-* */
 public class CategoryEntity {
     @Id
     @Column(name = "id", nullable = false)
@@ -28,21 +28,23 @@ public class CategoryEntity {
     @Column(name = "description")
     private String description;
 
+    /**
+     * Category popularity
+     */
     @Column(name = "rating", nullable = false)
-    /*
-    * Category popularity
-    * */
     private int rating;
 
+    /**
+     * Map contains characteristic and value
+     * that shows if the characteristic is required for this category.
+     *
+     * @see CharacteristicEntity
+     * In db it is stored in additional table:
+     * PK(characteristic_id, category_id), required
+     */
     @ElementCollection
     @CollectionTable(name = "category_characteristic", joinColumns = @JoinColumn(name = "category_id"))
     @MapKeyJoinColumn(name = "characteristic_id")
     @Column(name = "required")
-    /*
-     * Map contains characteristic and value
-     * that shows if the characteristic is required for this category.
-     * In db it is stored in additional table:
-     * PK(characteristic_id, category_id), required
-     * */
-    private Map<CharacteristicEntity, Boolean> characteristicRequired;
+    private Map<CharacteristicEntity, Boolean> characteristicsRequired;
 }

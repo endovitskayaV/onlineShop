@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.domain.entity;
+package ru.reksoft.onlineShop.model.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,15 +7,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * eg: seller, customer, etc
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Builder
 @Table(name = "role_info")
-/*
-* eg: seller, customer, etc
-* */
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
