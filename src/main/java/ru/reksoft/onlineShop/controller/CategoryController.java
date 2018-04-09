@@ -38,6 +38,7 @@ public class CategoryController {
     /**
      * Prepares new category for adding
      *
+     * @param model
      * @return "add_category" template
      */
     @GetMapping("/add")

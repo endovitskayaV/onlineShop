@@ -33,6 +33,9 @@ public class ItemController {
     }
 
     /**
+     * Gets all items from database, prepares model for template
+     *
+     * @param model
      * @return all items stored in database
      */
     @GetMapping
@@ -44,8 +47,9 @@ public class ItemController {
     }
 
     /**
-     * Gets items having given category
+     * Gets items having given category, prepares model for template
      *
+     * @param model
      * @return "home" template
      */
     @GetMapping(params = "category")
@@ -57,8 +61,9 @@ public class ItemController {
     }
 
     /**
-     * Gets item by its id
+     * Gets item by its id, prepares model for template
      *
+     * @param model
      * @param id item id
      * @return "item_info" template or "error" template item not found
      */
@@ -76,6 +81,12 @@ public class ItemController {
         }
     }
 
+    /**
+     * Prepares item for adding, model for template
+     *
+     * @param  model
+     * @return "add_item" template
+     */
     @GetMapping("add")
     public String add(Model model) {
         ItemDto itemDto = ItemDto.builder()
@@ -97,6 +108,13 @@ public class ItemController {
         return "add_item";
     }
 
+    /**
+     * Inserts new item to database
+     *
+     * @param modelMap
+     * @param itemDto item that will be inserted to database
+     * @return redirects to /items or to /error if item can not be added
+     */
     @PostMapping("/add")
     public ModelAndView add(ModelMap modelMap, ItemDto itemDto) {
         long id = itemService.add(itemDto);
@@ -111,6 +129,14 @@ public class ItemController {
 
     }
 
+    /**
+     * Updates item
+     *
+     * @param model
+     * @param id item id
+     * @return "edit_item" template
+     * or "error" template if item id does not exist
+     */
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(Model model, @PathVariable long id) {
         ItemDto itemDto = itemService.getById(id);
@@ -126,6 +152,14 @@ public class ItemController {
         return "edit_item";
     }
 
+    /**
+     * Deletes item by its id
+     *
+     * @param id item id
+     * @return ResponseEntity.noContent()
+     * or ResponseEntity.badRequest() if item cannot be added
+     * @see ResponseEntity
+     */
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity delete(@PathVariable long id) {
         if (itemService.delete(id)) {
