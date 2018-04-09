@@ -55,7 +55,7 @@ public class CategoryConverter {
                     .name(newCategoryDto.getName())
                     .description(newCategoryDto.getDescription())
                     .rating(newCategoryDto.getRating())
-                    .characteristicRequired(characteristicRequired)
+                    .characteristicsRequired(characteristicRequired)
                     .build();
         }
     }

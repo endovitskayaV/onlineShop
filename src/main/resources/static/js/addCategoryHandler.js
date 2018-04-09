@@ -2,9 +2,9 @@ function addCategory(id) {
     var element = document.getElementById(id);
     var instance = M.FormSelect.getInstance(element);
     var selectedValues = instance.getSelectedValues();
-    var i = 0;
     var query = "name=" + $("#category_name").val() + "&description=" + $("#category_description").val() + "&rating=" + $("#category_rating").val();
 
+    var i = 0;
     $.each(selectedValues, function (key, value) {
         query += '&characteristicIds[' + i + ']=' + selectedValues[i];
         i++;

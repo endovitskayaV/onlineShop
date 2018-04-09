@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.model.domain.converter.ItemConverter;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
-import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.domain.repository.ItemRepository;
+import ru.reksoft.onlineShop.model.dto.ItemDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,11 +87,15 @@ public class ItemService {
                         itemDto.getProducer()) != null) {
             return -1;
         }
+       return save(itemDto);
+    }
+
+
+    public long save(ItemDto itemDto){
         ItemEntity newItemEntity = itemConverter.toEntity(itemDto);
         newItemEntity.setId(itemRepository.count() + 1); //generate id
         return itemRepository.save(newItemEntity).getId();
     }
-
     /**
      * Deletes given item from database
      *

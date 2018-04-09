@@ -7,8 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
+import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.CharacteristicService;
 import ru.reksoft.onlineShop.service.ItemService;
@@ -64,7 +64,7 @@ public class ItemController {
      * Gets item by its id, prepares model for template
      *
      * @param model
-     * @param id item id
+     * @param id    item id
      * @return "item_info" template or "error" template item not found
      */
     @GetMapping("{id}")
@@ -84,7 +84,7 @@ public class ItemController {
     /**
      * Prepares item for adding, model for template
      *
-     * @param  model
+     * @param model
      * @return "add_item" template
      */
     @GetMapping("add")
@@ -112,7 +112,7 @@ public class ItemController {
      * Inserts new item to database
      *
      * @param modelMap
-     * @param itemDto item that will be inserted to database
+     * @param itemDto  item that will be inserted to database
      * @return redirects to /items or to /error if item can not be added
      */
     @PostMapping("/add")
@@ -133,7 +133,7 @@ public class ItemController {
      * Updates item
      *
      * @param model
-     * @param id item id
+     * @param id    item id
      * @return "edit_item" template
      * or "error" template if item id does not exist
      */
@@ -149,7 +149,21 @@ public class ItemController {
         model.addAttribute("characteristics", itemDto.getCharacteristics());
         model.addAttribute("selectedCategory",
                 categoryService.getById(itemDto.getCategoryId()));
-        return "edit_item";
+
+        NewCategoryDto newCategoryDto = NewCategoryDto.builder()
+                .name("")
+                .description("")
+                .build();
+        model.addAttribute("category", newCategoryDto);
+        model.addAttribute("characteristics", characteristicService.getAll());
+        return "edit_ite";
+    }
+
+    @PostMapping("/edit")
+    public ModelAndView edit(ItemDto itemDto) {
+        long id = itemService.save(itemDto);
+        return new ModelAndView("redirect:/items/" + id);
+
     }
 
     /**
