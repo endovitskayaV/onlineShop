@@ -14,6 +14,7 @@ import java.util.Map;
  * @see StatusEntity
  */
 @Data
+@EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

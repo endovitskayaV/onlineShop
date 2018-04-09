@@ -1,9 +1,6 @@
 package ru.reksoft.onlineShop.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
 
 /**
@@ -12,6 +9,7 @@ import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
  * @see CharacteristicEntity
  */
 @Data
+@EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

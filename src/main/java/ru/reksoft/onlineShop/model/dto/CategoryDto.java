@@ -1,9 +1,6 @@
 package ru.reksoft.onlineShop.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.reksoft.onlineShop.model.domain.entity.CategoryEntity;
 
 import java.util.List;
@@ -14,6 +11,7 @@ import java.util.List;
  * @see CategoryEntity
  */
 @Data
+@EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
