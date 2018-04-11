@@ -6,12 +6,13 @@ import ru.reksoft.onlineShop.model.domain.converter.ItemConverter;
 import ru.reksoft.onlineShop.model.domain.converter.OrderConverter;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.model.domain.entity.OrderEntity;
+import ru.reksoft.onlineShop.model.domain.repository.ItemRepository;
 import ru.reksoft.onlineShop.model.domain.repository.OrderRepository;
 import ru.reksoft.onlineShop.model.domain.repository.StatusRepository;
 import ru.reksoft.onlineShop.model.domain.repository.UserRepository;
-import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,18 +25,21 @@ public class OrderService {
     private StatusRepository statusRepository;
     private UserRepository userRepository;
     private ItemConverter itemConverter;
+    private ItemRepository itemRepository;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,
                         OrderConverter orderConverter,
                         StatusRepository statusRepository,
                         UserRepository userRepository,
-                        ItemConverter itemConverter) {
+                        ItemConverter itemConverter,
+                        ItemRepository itemRepository) {
         this.orderRepository = orderRepository;
         this.orderConverter = orderConverter;
         this.statusRepository = statusRepository;
         this.userRepository = userRepository;
         this.itemConverter = itemConverter;
+        this.itemRepository = itemRepository;
     }
 
     public OrderDto getById(long id) {
@@ -51,15 +55,31 @@ public class OrderService {
                 .map(orderConverter::toDto).collect(Collectors.toList());
     }
 
-    public void createBasket(long userId, ItemDto itemDto) {
-        Map<ItemEntity, Integer> itemsQuantity = new HashMap<>(1);
-        itemsQuantity.put(itemConverter.toEntity(itemDto), 1);
-        orderRepository.save(OrderEntity.builder()
-                .id(orderRepository.count() + 1)
-                .status(statusRepository.findById(1L).get())
-                .user(userRepository.findById(userId).get())
-                .itemsQuantity(itemsQuantity)
-                .build());
+    public void addToBasket(long userId, long itemId) {
+        OrderEntity basket = orderRepository.findByStatusIdAndUserId(1, userId);
+        if (basket == null) {
+            //create new basket
+            Map<ItemEntity, Integer> itemsQuantity = new HashMap<>(1);
+            itemsQuantity.put(itemRepository.findById(itemId).get(), 1); //1 item by default
+            orderRepository.save(OrderEntity.builder()
+                    .id(orderRepository.count() + 1)
+                    .status(statusRepository.findById(1L).get())
+                    .user(userRepository.findById(userId).get())
+                    .itemsQuantity(itemsQuantity)
+                    .build());
+        } else {
+            //add item to basket
+            ItemEntity addableItem = itemRepository.findById(itemId).get();
+            Map<ItemEntity, Integer> itemsQuantity = basket.getItemsQuantity();
+            if (itemsQuantity.keySet().stream()
+                    .anyMatch(itemEntity -> itemEntity.equals(addableItem))) {
+                itemsQuantity.put(addableItem, itemsQuantity.get(addableItem) + 1);
+            } else {
+                itemsQuantity.put(itemRepository.findById(itemId).get(), 1);
+            }
+            basket.setItemsQuantity(itemsQuantity);
+            orderRepository.save(basket);
+        }
     }
 }
 

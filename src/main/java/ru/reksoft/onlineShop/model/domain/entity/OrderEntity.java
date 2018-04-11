@@ -23,13 +23,11 @@ import java.util.Map;
 @Table(name = "order_info")
 public class OrderEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @NotNull
     private UserEntity user;
 
     /**
@@ -39,7 +37,6 @@ public class OrderEntity {
      */
     @ManyToOne
     @JoinColumn(name = "status_id")
-    @NotNull
     private StatusEntity status;
 
     /**

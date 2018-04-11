@@ -40,14 +40,14 @@
             </div>
             <div class="card-stacked">
                 <div class="card-content">
-                    <p class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
+                    <p class="flow-text"><a href="javascript: addItemToBasket(${item.id})">${item.producer} ${item.name}</a></p>
                     <p> ${item.price} rub</p>
                     <p>${item.storage} ps</p>
                 </div>
                 <div class="card-action">
                     <div class="row">
                         <div class="input-field col s1">
-                            <a href="" class="waves-effect waves-light btn">buy</a>
+                            <a href="/basket/add?itemId=${item.id}" class="waves-effect waves-light btn">buy</a>
                         </div>
                         <div class="input-field col s1 offset-s7">
                             <a href="/items/edit/${item.id}"> <i class="material-icons cl-4db6a sz-30">edit</i></a>
@@ -67,7 +67,7 @@
     </div>
 </div>
 
-<div id="delete-modal" class="modal modal-content">
+<div id="info-modal" class="modal modal-content">
 </div>
 
 <script type="text/javascript" src="js/homeHandler.js"></script>

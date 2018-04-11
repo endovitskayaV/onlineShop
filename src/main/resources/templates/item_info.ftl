@@ -31,7 +31,7 @@
                             <p><span class="card-title">${item.producer} ${item.name}</span></p>
                             <p> ${item.price} rub</p>
                             <p>${item.storage} ps</p>
-                            <p><a style="margin-top: 30px; margin-bottom: 30px" href=""
+                            <p><a style="margin-top: 30px; margin-bottom: 30px" href="/basket/add?itemId=${item.id}"
                                   class="waves-effect waves-light btn">buy</a></p>
                         </div>
                         <div class="card-action">
