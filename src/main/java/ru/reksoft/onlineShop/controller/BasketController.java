@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
 import ru.reksoft.onlineShop.model.dto.OrderedItemDto;
@@ -27,10 +29,9 @@ public class BasketController {
         this.itemService = itemService;
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public ResponseEntity add(long itemId) {
-        //TODO: get user id
-        long userId = 3;
+        long userId = 1; //TODO: get user id
         orderService.addToBasket(userId, itemId);
         //TODO: return order id and ask user whether to go to basket page or not
         return ResponseEntity.noContent().build();
@@ -38,10 +39,8 @@ public class BasketController {
 
     @GetMapping
     public String getBasket(Model model) {
-        //TODO: get user id
-        long userId = 1;
-        // 1- in basket
-        OrderDto orderDto = orderService.getByStatusIdAndUserId(1, userId);
+        long userId = 1; //TODO: get user id
+        OrderDto orderDto = orderService.getByStatusIdAndUserId(1, userId);  // 1- in basket
         List<ItemDto> items = new ArrayList<>();
         orderDto.getItems()
                 .forEach(orderedItem -> items.add(itemService.getById(orderedItem.getItemId())));
@@ -49,18 +48,17 @@ public class BasketController {
         List<Integer> quatities = new ArrayList<>();
         orderDto.getItems().forEach(orderedItem -> quatities.add(orderedItem.getQuantity()));
         model.addAttribute("quantities", quatities);
+        model.addAttribute("basketId", orderDto.getId());
         return "basket";
     }
 
 
-    @GetMapping("/{id}/edit")
-    public RedirectView edit(@PathVariable long id, OrderedItemDto orderedItemDto) {
-        OrderDto orderDto = orderService.getByStatusIdAndUserId(1, 1);
-        //////////////////////
-        orderDto.getItems().stream()
-                .filter(orderedItem -> orderedItem.equals(orderedItemDto))
-                .findFirst().orElse(null);
+    @PostMapping("/edit/{id}")
+    public ResponseEntity edit(@PathVariable long id, OrderedItemDto orderedItemDto) {
+        int quantity = orderService.increaseItemQuantity(id, orderedItemDto);
+        return quantity == -1 ?
+                ResponseEntity.ok().build():
+                ResponseEntity.badRequest().body(quantity);
 
-        return new RedirectView("/basket");
     }
 }

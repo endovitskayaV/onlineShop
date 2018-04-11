@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../css/my_style.css"/>
     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
@@ -31,7 +32,7 @@
                             <p><span class="card-title">${item.producer} ${item.name}</span></p>
                             <p> ${item.price} rub</p>
                             <p>${item.storage} ps</p>
-                            <p><a style="margin-top: 30px; margin-bottom: 30px" href="/basket/add?itemId=${item.id}"
+                            <p><a style="margin-top: 30px; margin-bottom: 30px" href="javascript: addItemToBasket(${item.id})"
                                   class="waves-effect waves-light btn">buy</a></p>
                         </div>
                         <div class="card-action">
@@ -67,6 +68,10 @@
     </div>
 </div>
 
+<div id="info-modal" class="modal modal-content">
+</div>
+
+<script type="text/javascript" src="../js/addToBasket.js"></script>
 <script type="text/javascript" src="../js/itemInfoHandler.js"></script>
 <script type="text/javascript" src="../js/materialize.min.js"></script>
 </body>

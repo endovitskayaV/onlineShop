@@ -19,7 +19,7 @@
             <div class="btn left"><i class="material-icons">search</i></div>
         </div>
         <div class="input-field col s1 offset-s2">
-            <div class="right"><a href="/basket"> <i class="material-icons cl-4db6a sz-36">shopping_cart</i></div>
+            <div class="right"><a href="/basket"> <i class="material-icons cl-4db6a sz-36">shopping_cart</i></a></div>
         </div>
     </div>
     <div class="divider z-depth-3"></div>

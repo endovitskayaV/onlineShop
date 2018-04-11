@@ -11,8 +11,8 @@ import ru.reksoft.onlineShop.model.domain.repository.OrderRepository;
 import ru.reksoft.onlineShop.model.domain.repository.StatusRepository;
 import ru.reksoft.onlineShop.model.domain.repository.UserRepository;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
+import ru.reksoft.onlineShop.model.dto.OrderedItemDto;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +79,20 @@ public class OrderService {
             }
             basket.setItemsQuantity(itemsQuantity);
             orderRepository.save(basket);
+        }
+    }
+
+    public int increaseItemQuantity(long basketId, OrderedItemDto orderedItemDto) {
+        OrderEntity basket = orderRepository.findById(basketId).get();
+        Map<ItemEntity, Integer> itemsQuantity = basket.getItemsQuantity();
+        ItemEntity itemEntity = itemRepository.findById(orderedItemDto.getItemId()).get();
+        if (itemEntity.getStorage() < orderedItemDto.getQuantity()) {
+            return itemEntity.getStorage();
+        } else {
+            itemsQuantity.put(itemEntity, orderedItemDto.getQuantity());
+            basket.setItemsQuantity(itemsQuantity);
+            orderRepository.save(basket);
+            return -1;
         }
     }
 }

@@ -20,23 +20,6 @@ function deleteItem(id) {
 }
 
 
-function addItemToBasket(id) {
-    $.get("basket/add?itemId="+id, function() {
-        alert( "success" );
-    })
-        .done(function() {
-            alert( "second success" );
-        })
-        .fail(function() {
-            alert( "error" );
-        })
-        .always(function() {
-            alert( "finished" );
-        });
-
-}
-
-
 function showModal(message) {
     var modalDiv = $('#info-modal');
     modalDiv.html("");

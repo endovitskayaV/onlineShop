@@ -11,14 +11,6 @@
 <body>
 <#include "header.ftl">
 <div class="row" style="margin-top: 100px">
-    <div class="col s3">
-        <div class="collection z-depth-1 hoverable">
-    <#list categories as category>
-        <div><a href="/items?category=${category.name}" class="collection-item">${category.name}</a></div>
-    </#list>
-        </div>
-    </div>
-
 
 <#if  items?size==0>
   <div class="col s2 offset-s1 card horizontal">
@@ -29,12 +21,15 @@
       </div>
   </div>
 </#if>
+ <#assign count=items?size>
+    <p id="count">${count}</p>
+
+ <#assign overall=0>
+ <#assign i=0>
 
     <div class="col s8">
         <div class="row">
-        <div class="col s8 offset-s1">
-            <#assign overall=0>
-             <#assign i=0>
+            <div class="col s8 offset-s4">
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
             <div class="card-image">
@@ -43,48 +38,54 @@
             <div class="card-stacked">
                 <div class="card-content">
                     <p class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
-                    <p> ${item.price} rub</p>
-                    <div class="row">
-                        <a href="">
-                        <i class="material-icons cl-4db6a sz-20">add</i></a>
-                    <input id="quantity" name="quantity" type="number" min="1" value="${quantities[i]}">
-                    <label for="quantity">Quantity</label>
-                        <a href="">
-                            <i class="material-icons cl-4db6a sz-20">minus</i></a>
+                    <div id="price-${item.id}"> ${item.price?string["0"]} </div>
+                    rub
+                    <div class="input-field col s3 offset-s1">
+                        <input id="quantity-${item.id}" name="quantity" type="number" min="1"
+                               value="${quantities[i]?string["0"]}"
+                               onchange="increaseItemQuantity(${basketId},${item.id})">
+                        <label for="quantity">Quantity</label>
                     </div>
+
                     <#assign sum=item.price*quantities[i]>
                     <#assign overall=overall+sum>
-                    <p> ${sum} rub</p>
+                    <p name="sum-${i}" id="sum-${item.id}"> ${sum?string["0"]} </p>rub
+                     <#assign i=i+1>
                 </div>
-            </div>
-            <div class="card-action">
-                <div class="row">
-                    <div class="input-field col s1">
-                        <a href="" class="waves-effect waves-light btn">buy</a>
-                    </div>
-                    <div class="input-field col s1">
-                        <a href=""> <i class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
-                        </a>
+                <div class="card-action">
+                    <div class="row">
+                        <div class="input-field col s1">
+                            <a href="javascript: deleteItem(${item.id})"> <i
+                                    class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-        <#assign i=i+1>
     </#list>
-            <div class="card">
-                <div class="card-content">
-                    <p> ${overall} rub</p>
+
+                <div class="card">
+                    <div class="card-content">
+                        <div id="overall"> ${overall} </div>rub
+                        <p>
+                            <button>Order</button>
+                        </p>
+                    </div>
                 </div>
+
+
             </div>
         </div>
     </div>
-</div>
+
+
 </div>
 
-<div id="delete-modal" class="modal modal-content">
-</div>
 
+<div id="info-modal" class="modal modal-content">
+</div>
+<script type="text/javascript" src="js/basketHandler.js"></script>
 <script type="text/javascript" src="js/homeHandler.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>
 </body>
