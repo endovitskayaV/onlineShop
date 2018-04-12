@@ -10,34 +10,38 @@
 
 <body>
 <#include "header.ftl">
-<div class="row" style="margin-top: 100px">
+
+<div id="top" class="row" style="margin-top: 100px">
 
 <#if  items?size==0>
-  <div class="col s2 offset-s1 card horizontal">
+  <div class="col s2 offset-s4 card horizontal">
       <div class="card-stacked">
           <div class="card-content">
               <p>No items</p>
           </div>
       </div>
   </div>
-</#if>
- <#assign count=items?size>
-    <p id="count">${count}</p>
+<#else>
 
- <#assign overall=0>
- <#assign i=0>
+    <#assign count=items?size>
+    <p hidden="hidden"  id="count">${count}</p>
+
+    <#assign overall=0>
+    <#assign i=0>
 
     <div class="col s8">
         <div class="row">
             <div class="col s8 offset-s4">
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
+
             <div class="card-image">
                 <img width="60" height="200" src="../img/meizu.jpg">
             </div>
+            <div id="anyCardLeft">
             <div class="card-stacked">
                 <div class="card-content">
-                    <p class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
+                    <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
                     <div id="price-${item.id}"> ${item.price?string["0"]} </div>
                     rub
                     <div class="input-field col s3 offset-s1">
@@ -55,12 +59,13 @@
                 <div class="card-action">
                     <div class="row">
                         <div class="input-field col s1">
-                            <a href="javascript: deleteItem(${item.id})"> <i
+                            <a href="javascript: deleteItem(${basketId},${item.id})"> <i
                                     class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
                             </a>
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </#list>
@@ -79,6 +84,7 @@
         </div>
     </div>
 
+</#if>
 
 </div>
 
@@ -86,7 +92,6 @@
 <div id="info-modal" class="modal modal-content">
 </div>
 <script type="text/javascript" src="js/basketHandler.js"></script>
-<script type="text/javascript" src="js/homeHandler.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>
 </body>
 </html>

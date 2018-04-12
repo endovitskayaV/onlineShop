@@ -2,7 +2,6 @@ package ru.reksoft.onlineShop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.reksoft.onlineShop.model.domain.converter.ItemConverter;
 import ru.reksoft.onlineShop.model.domain.converter.OrderConverter;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.model.domain.entity.OrderEntity;
@@ -24,7 +23,6 @@ public class OrderService {
     private OrderConverter orderConverter;
     private StatusRepository statusRepository;
     private UserRepository userRepository;
-    private ItemConverter itemConverter;
     private ItemRepository itemRepository;
 
     @Autowired
@@ -32,13 +30,11 @@ public class OrderService {
                         OrderConverter orderConverter,
                         StatusRepository statusRepository,
                         UserRepository userRepository,
-                        ItemConverter itemConverter,
                         ItemRepository itemRepository) {
         this.orderRepository = orderRepository;
         this.orderConverter = orderConverter;
         this.statusRepository = statusRepository;
         this.userRepository = userRepository;
-        this.itemConverter = itemConverter;
         this.itemRepository = itemRepository;
     }
 
@@ -87,12 +83,35 @@ public class OrderService {
         Map<ItemEntity, Integer> itemsQuantity = basket.getItemsQuantity();
         ItemEntity itemEntity = itemRepository.findById(orderedItemDto.getItemId()).get();
         if (itemEntity.getStorage() < orderedItemDto.getQuantity()) {
-            return itemEntity.getStorage();
+            return itemEntity.getStorage(); //cannot increase item quantity
         } else {
             itemsQuantity.put(itemEntity, orderedItemDto.getQuantity());
             basket.setItemsQuantity(itemsQuantity);
             orderRepository.save(basket);
-            return -1;
+            return 1;
+        }
+    }
+
+
+    public boolean deleteItem(long basketId, long itemId) {
+        OrderEntity basket = orderRepository.findById(basketId).get();
+        Map<ItemEntity, Integer> itemsQuantity = basket.getItemsQuantity();
+        ItemEntity foundItemEntity = itemRepository.findById(itemId).get();
+
+        if (itemsQuantity.keySet().stream()
+                .noneMatch(itemEntity -> itemEntity.equals(foundItemEntity))) {
+            return false;
+        } else {
+
+            itemsQuantity.remove(foundItemEntity);
+
+            if (itemsQuantity.size() == 0) { //whether to delete whole basket
+                orderRepository.delete(basket);
+            } else {
+                basket.setItemsQuantity(itemsQuantity);
+                orderRepository.save(basket);
+            }
+            return true;
         }
     }
 }

@@ -1,26 +1,14 @@
 function increaseItemQuantity(basketId, itemId) {
 
     $.post(document.location.origin + "/basket/edit/" + basketId,
-        {itemId: itemId, quantity: $("#quantity").val()},
+
+        {itemId: itemId, quantity: $("#quantity-" + itemId).val()},
+
         function () {
-            var quantity = $("#quantity-"+itemId).val();
-            var p=$("#price-"+itemId).text();
-            var price = parseInt(p);
-            var newSum = quantity * price;
-            $("#sum-"+itemId).html("").append(newSum);
-
-            var overall=0;
-            var c= $("#count").text();
-            var count = parseInt(c);
-            for (var i = 0; i < count; i++) {
-                var str="[name='sum-"+i+"']";
-                var s1= $(str);
-                  var s=s1.text();
-                var sum = parseInt(s);
-                overall=overall+sum;
-            }
-            $("#overall").html("").append(overall);
-
+            $("#sum-" + itemId).html("").append(
+                $("#quantity-" + itemId).val() * parseInt($("#price-" + itemId).text())
+            );
+            setOverall();
         })
         .fail(function (data) {
             $("#quantity").val(data.responseJSON);
@@ -32,6 +20,39 @@ function increaseItemQuantity(basketId, itemId) {
 }
 
 
+function deleteItem(basketId, itemId) {
+    $.ajax({
+        url: document.location.origin + '/basket/delete/' + basketId + '/' + itemId,
+        type: "DELETE",
+        contentType: "application/x-www-form-urlencoded",
+        success: function (data) {
+            $('#' + itemId).html("");
+            setOverall();
+            if ($('#anyCardLeft').text() === "") {
+                $('#overall').html("");
+                $('#top').html("").append('<div class="col s2 offset-s4 card horizontal">\n' +
+                    '      <div class="card-stacked">\n' +
+                    '          <div class="card-content">\n' +
+                    '              <p>No items</p>\n' +
+                    '          </div>\n' +
+                    '      </div>\n' +
+                    '  </div>');
+            }
+            showModal('<div class="row">' +
+                '          <div class="card-content">' +
+                '             <p class="center-align">Deleted</p>' +
+                '      </div></div></div>');
+        },
+        error: function (data) {
+            showModal('<div class="row">' +
+                '          <div class="card-content">' +
+                '             <p class="center-align">' + data.responseText +
+                '</p></div></div>');
+        }
+    });
+}
+
+
 function showModal(message) {
     var modalDiv = $('#info-modal');
     modalDiv.html("");
@@ -39,4 +60,16 @@ function showModal(message) {
     var elem = document.getElementById('info-modal');
     var instance = M.Modal.init(elem);
     instance.open();
+}
+
+function setOverall() {
+    var overall = 0;
+    var count = parseInt($("#count").text());
+    for (var i = 0; i < count; i++) {
+        var sum = parseInt($("[name='sum-" + i + "']").text());
+        if (!isNaN(sum)) {
+            overall = overall + sum;
+        }
+    }
+    $("#overall").html("").append(overall);
 }

@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
 import ru.reksoft.onlineShop.model.dto.OrderedItemDto;
@@ -41,14 +38,18 @@ public class BasketController {
     public String getBasket(Model model) {
         long userId = 1; //TODO: get user id
         OrderDto orderDto = orderService.getByStatusIdAndUserId(1, userId);  // 1- in basket
-        List<ItemDto> items = new ArrayList<>();
-        orderDto.getItems()
-                .forEach(orderedItem -> items.add(itemService.getById(orderedItem.getItemId())));
-        model.addAttribute("items", items);
-        List<Integer> quatities = new ArrayList<>();
-        orderDto.getItems().forEach(orderedItem -> quatities.add(orderedItem.getQuantity()));
-        model.addAttribute("quantities", quatities);
-        model.addAttribute("basketId", orderDto.getId());
+        if(orderDto!=null) {
+            List<ItemDto> items = new ArrayList<>();
+            orderDto.getItems()
+                    .forEach(orderedItem -> items.add(itemService.getById(orderedItem.getItemId())));
+            model.addAttribute("items", items);
+            List<Integer> quatities = new ArrayList<>();
+            orderDto.getItems().forEach(orderedItem -> quatities.add(orderedItem.getQuantity()));
+            model.addAttribute("quantities", quatities);
+            model.addAttribute("basketId", orderDto.getId());
+        }else{
+            model.addAttribute("items", new ArrayList<>());
+        }
         return "basket";
     }
 
@@ -56,9 +57,16 @@ public class BasketController {
     @PostMapping("/edit/{id}")
     public ResponseEntity edit(@PathVariable long id, OrderedItemDto orderedItemDto) {
         int quantity = orderService.increaseItemQuantity(id, orderedItemDto);
-        return quantity == -1 ?
-                ResponseEntity.ok().build():
+        return quantity == 1 ?
+                ResponseEntity.ok().build() :
                 ResponseEntity.badRequest().body(quantity);
 
+    }
+
+    @DeleteMapping("/delete/{basketId}/{itemId}")
+    public ResponseEntity delete(@PathVariable long basketId, @PathVariable long itemId) {
+       return orderService.deleteItem(basketId, itemId)?
+               ResponseEntity.ok().build():
+               ResponseEntity.badRequest().build();
     }
 }
