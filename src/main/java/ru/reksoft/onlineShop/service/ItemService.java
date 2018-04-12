@@ -96,6 +96,7 @@ public class ItemService {
         newItemEntity.setId(itemRepository.count() + 1); //generate id
         return itemRepository.save(newItemEntity).getId();
     }
+
     /**
      * Deletes given item from database
      *

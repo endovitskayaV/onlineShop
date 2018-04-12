@@ -73,3 +73,32 @@ function setOverall() {
     }
     $("#overall").html("").append(overall);
 }
+
+
+function makeOrder() {
+    var query = [];
+    $("input[id*='itemId']").each(function () {
+        var itemId = $(this).val();
+        query.push({itemId: itemId , quantity: $("#quantity-" + itemId).val()});
+    });
+
+
+    $.ajax({
+        url: '/orders/add',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            id: $("#id").val(),
+            userId: 0,
+            statusId: 1,
+            date: 1488931200000,
+            deliveryAddress: "someAddress",
+            items: query
+        }),
+
+        success: function (data) {
+            location.href = document.location.origin +'/orders/finish/'+data;
+        }
+
+    });
+}

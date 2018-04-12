@@ -3,6 +3,7 @@ package ru.reksoft.onlineShop.model.dto;
 import lombok.*;
 import ru.reksoft.onlineShop.model.domain.entity.OrderEntity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

@@ -12,6 +12,7 @@ import ru.reksoft.onlineShop.model.domain.repository.UserRepository;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
 import ru.reksoft.onlineShop.model.dto.OrderedItemDto;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class OrderService {
         return orderConverter.toDto(orderRepository.findByStatusIdAndUserId(statusId, userId));
     }
 
-    public List<OrderDto> getAllUserId(long userId) {
+    public List<OrderDto> getAll(long userId) {
         return orderRepository.findAllByUserId(userId).stream()
                 .map(orderConverter::toDto).collect(Collectors.toList());
     }
@@ -59,7 +60,7 @@ public class OrderService {
             itemsQuantity.put(itemRepository.findById(itemId).get(), 1); //1 item by default
             orderRepository.save(OrderEntity.builder()
                     .id(orderRepository.count() + 1)
-                    .status(statusRepository.findById(1L).get())
+                    .status(statusRepository.findById(1L).get()) //1- in basket
                     .user(userRepository.findById(userId).get())
                     .itemsQuantity(itemsQuantity)
                     .build());
@@ -92,7 +93,6 @@ public class OrderService {
         }
     }
 
-
     public boolean deleteItem(long basketId, long itemId) {
         OrderEntity basket = orderRepository.findById(basketId).get();
         Map<ItemEntity, Integer> itemsQuantity = basket.getItemsQuantity();
@@ -113,6 +113,21 @@ public class OrderService {
             }
             return true;
         }
+    }
+
+
+    public long basketToOrder(long orderId) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).get();
+        orderEntity.setStatus(statusRepository.findById(2L).get()); //2- unfinished order
+        return orderRepository.save(orderEntity).getId();
+    }
+
+    public void finishOrder(OrderDto orderDto) {
+        OrderEntity orderEntity = orderRepository.findById(orderDto.getId()).get();
+        orderEntity.setStatus(statusRepository.findById(3L).get()); //3- finished order
+        orderEntity.setDate(new Date());
+        orderEntity.setDeliveryAddress(orderDto.getDeliveryAddress());
+        orderRepository.save(orderEntity);
     }
 }
 

@@ -22,7 +22,7 @@
         <div id="${item.id}" class="card horizontal hoverable">
 
             <div class="card-image">
-                <img width="60" height="200" src="../img/meizu.jpg">
+                <img width="60" height="200" src="../../img/meizu.jpg">
             </div>
             <div id="anyCardLeft">
                 <div class="card-stacked">
@@ -51,8 +51,13 @@
                     <div class="card-content">
                         <div id="overall"> ${overall} </div>rub
                         <div>
-                            ${order.deliveryAddress}
+                            <input id="deliveryAddress" name="deliveryAddress" type="text"
+                                   value="${order.deliveryAddress}">
+                            <label for="deliveryAddress">Delivery address</label>
                         </div>
+                        <p>
+                            <a href="javascript: confirmOrder()" class="waves-effect waves-light btn">Order</a>
+                        </p>
                     </div>
                 </div>
 

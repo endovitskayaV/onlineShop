@@ -13,15 +13,18 @@
 
 <div id="top" class="row" style="margin-top: 100px">
 
+
 <#if  items?size==0>
-  <div class="col s2 offset-s4 card horizontal">
-      <div class="card-stacked">
-          <div class="card-content">
-              <p>No items</p>
-          </div>
-      </div>
-  </div>
+    <div class="col s2 offset-s4 card horizontal">
+        <div class="card-stacked">
+            <div class="card-content">
+                <p>No items</p>
+            </div>
+        </div>
+    </div>
 <#else>
+<label for="id"></label>
+    <input id="id" hidden="hidden" type="number" value="${basketId}">
 
     <#assign count=items?size>
     <p hidden="hidden"  id="count">${count}</p>
@@ -39,33 +42,35 @@
                 <img width="60" height="200" src="../img/meizu.jpg">
             </div>
             <div id="anyCardLeft">
-            <div class="card-stacked">
-                <div class="card-content">
-                    <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
-                    <div id="price-${item.id}"> ${item.price?string["0"]} </div>
-                    rub
-                    <div class="input-field col s3 offset-s1">
-                        <input id="quantity-${item.id}" name="quantity" type="number" min="1"
-                               value="${quantities[i]?string["0"]}"
-                               onchange="increaseItemQuantity(${basketId},${item.id})">
-                        <label for="quantity">Quantity</label>
-                    </div>
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <label for="itemId"></label>
+                        <input id="itemId" hidden="hidden" type="number" value="${item.id}">
+                        <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
+                        <div id="price-${item.id}"> ${item.price?string["0"]} </div>
+                        rub
+                        <div class="input-field col s3 offset-s1">
+                            <input id="quantity-${item.id}" name="quantity" type="number" min="1"
+                                   value="${quantities[i]?string["0"]}"
+                                   onchange="increaseItemQuantity(${basketId},${item.id})">
+                            <label for="quantity">Quantity</label>
+                        </div>
 
                     <#assign sum=item.price*quantities[i]>
                     <#assign overall=overall+sum>
-                    <p name="sum-${i}" id="sum-${item.id}"> ${sum?string["0"]} </p>rub
+                        <p name="sum-${i}" id="sum-${item.id}"> ${sum?string["0"]} </p>rub
                      <#assign i=i+1>
-                </div>
-                <div class="card-action">
-                    <div class="row">
-                        <div class="input-field col s1">
-                            <a href="javascript: deleteItem(${basketId},${item.id})"> <i
-                                    class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
-                            </a>
+                    </div>
+                    <div class="card-action">
+                        <div class="row">
+                            <div class="input-field col s1">
+                                <a href="javascript: deleteItem(${basketId},${item.id})"> <i
+                                        class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     </#list>
@@ -74,7 +79,7 @@
                     <div class="card-content">
                         <div id="overall"> ${overall} </div>rub
                         <p>
-                            <button>Order</button>
+                            <a href="javascript: makeOrder()" class="waves-effect waves-light btn">Order</a>
                         </p>
                     </div>
                 </div>
