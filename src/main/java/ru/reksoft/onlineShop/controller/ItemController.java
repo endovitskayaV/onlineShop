@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
@@ -13,6 +14,7 @@ import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.CharacteristicService;
 import ru.reksoft.onlineShop.service.ItemService;
+import ru.reksoft.onlineShop.validator.MyValidator;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -25,14 +27,17 @@ public class ItemController {
     private ItemService itemService;
     private CategoryService categoryService;
     private CharacteristicService characteristicService;
+    private MyValidator myValidator;
 
     @Autowired
     public ItemController(ItemService itemService,
                           CategoryService categoryService,
-                          CharacteristicService characteristicService) {
+                          CharacteristicService characteristicService,
+                          MyValidator myValidator) {
         this.itemService = itemService;
         this.categoryService = categoryService;
         this.characteristicService = characteristicService;
+        this.myValidator=myValidator;
     }
 
     /**
@@ -121,7 +126,9 @@ public class ItemController {
     @PostMapping("/add")
     public ModelAndView add(ModelMap modelMap, @Valid ItemDto itemDto, BindingResult bindingResult) {
 
-
+        itemDto.getCharacteristics()
+                .forEach(characteristicDto ->
+                        myValidator.validate(characteristicDto, bindingResult)); //((Errors)bindingResult.getGlobalError())));
         if (!bindingResult.hasErrors()) {
             long id = itemService.add(itemDto);
             if (id == -1) {

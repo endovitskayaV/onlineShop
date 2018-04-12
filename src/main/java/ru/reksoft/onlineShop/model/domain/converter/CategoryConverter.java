@@ -2,13 +2,14 @@ package ru.reksoft.onlineShop.model.domain.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.model.domain.entity.CategoryEntity;
 import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
 import ru.reksoft.onlineShop.model.domain.repository.CharacteristicRepository;
 import ru.reksoft.onlineShop.model.dto.CategoryDto;
+import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -75,11 +76,14 @@ public class CategoryConverter {
                     .name(categoryEntity.getName())
                     .description(categoryEntity.getDescription())
                     .rating(categoryEntity.getRating())
-                    .characteristics(categoryEntity.getCharacteristicsRequired().entrySet().stream()
-                            .filter(Map.Entry::getValue) //get only required characteristics (value==true)
-                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                    .characteristics(categoryEntity.getCharacteristicsRequired()//.entrySet().stream()
+                            // .filter(Map.Entry::getValue) //get only required characteristics (value==true)
+                            // .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
                             .keySet().stream() //select keys - characteristics
-                            .map(characteristicConverter::toDto)
+                            .map(characteristicEntity ->
+                                    characteristicConverter
+                                            .toDto(characteristicEntity,
+                                                    categoryEntity.getCharacteristicsRequired().get(characteristicEntity)))
                             .collect(Collectors.toList()))
                     .build();
         }

@@ -9,6 +9,10 @@ function loadCharacteristics(element) {
                 ' hidden="hidden" value="' + characteristic.id + '"> ' +
                 '<input type="text" name="characteristics[' + i + '].type" ' +
                 ' hidden="hidden" value="' + characteristic.type + '"> ' +
+
+                '<input  name="characteristics[' + i + '].required" ' +
+                ' hidden="hidden" value="' + characteristic.required + '"> ' +
+
                 '<input type="text" name="characteristics[' + i + '].name" ' +
                 'hidden="hidden" value="' + characteristic.name + '"> ' +
                 '    <div class="row">\n' +

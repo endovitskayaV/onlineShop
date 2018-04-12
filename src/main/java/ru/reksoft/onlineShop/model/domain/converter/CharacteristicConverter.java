@@ -21,7 +21,7 @@ public class CharacteristicConverter {
      * @param characteristicEntity {@link CharacteristicEntity}
      * @return characteristicDto converted from characteristicEntity or null
      */
-    public CharacteristicDto toDto(CharacteristicEntity characteristicEntity) {
+    public CharacteristicDto toDto(CharacteristicEntity characteristicEntity, boolean required) {
         if (characteristicEntity == null) {
             return null;
         } else {
@@ -29,6 +29,7 @@ public class CharacteristicConverter {
                     .id(characteristicEntity.getId())
                     .name(characteristicEntity.getName())
                     .type(characteristicEntity.getType())
+                    .required(required)
                     .build();
         }
     }

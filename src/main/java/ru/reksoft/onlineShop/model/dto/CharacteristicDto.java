@@ -30,5 +30,5 @@ public class CharacteristicDto {
   //  @NotBlank(message = "Value must contain at least one not blank character")
     private String value;
 
-  //  private boolean required;
+    private boolean required;
 }

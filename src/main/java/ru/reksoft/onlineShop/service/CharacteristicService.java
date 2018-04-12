@@ -3,6 +3,7 @@ package ru.reksoft.onlineShop.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.model.domain.converter.CharacteristicConverter;
+import ru.reksoft.onlineShop.model.domain.repository.CategoryRepository;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.model.domain.repository.CharacteristicRepository;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class CharacteristicService {
     private CharacteristicRepository characteristicRepository;
     private CharacteristicConverter characteristicConverter;
+    private CategoryRepository categoryRepository;
 
     /**
      * @param characteristicRepository repository for characteristic
@@ -24,9 +26,11 @@ public class CharacteristicService {
      */
     @Autowired
     public CharacteristicService(CharacteristicRepository characteristicRepository,
-                                 CharacteristicConverter characteristicConverter) {
+                                 CharacteristicConverter characteristicConverter,
+                                 CategoryRepository categoryRepository) {
         this.characteristicRepository = characteristicRepository;
         this.characteristicConverter = characteristicConverter;
+        this.categoryRepository=categoryRepository;
     }
 
     /**
@@ -36,7 +40,21 @@ public class CharacteristicService {
      */
     public List<CharacteristicDto> getAll() {
         return characteristicRepository.findAll().stream()
-                .map(characteristicConverter::toDto).collect(Collectors.toList());
+                .map(characteristicEntity ->
+                        characteristicConverter
+                                .toDto(characteristicEntity, false))
+                .collect(Collectors.toList());
+    }
+
+
+    public List<CharacteristicDto> getAllByCategoryId(long categoryId) {
+        return characteristicRepository.findAll().stream()
+                .map(characteristicEntity ->
+                        characteristicConverter
+                                .toDto(characteristicEntity,
+                                        categoryRepository.findById(categoryId).orElse(null)
+                                                .getCharacteristicsRequired().get(characteristicEntity)))
+                .collect(Collectors.toList());
     }
 
 }

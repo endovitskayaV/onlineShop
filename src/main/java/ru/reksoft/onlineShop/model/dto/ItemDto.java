@@ -2,6 +2,7 @@ package ru.reksoft.onlineShop.model.dto;
 
 import lombok.*;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
+import ru.reksoft.onlineShop.validator.ValidCharacteristic;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -24,9 +25,12 @@ public class ItemDto {
     @NotBlank(message = "Name must contain at least one not blank character")
     private String name;
 
-    @NotBlank(message = "Producer must contain at least one not blank character")
+   // @ValidCharacteristic(required = required)
+    //@NotBlank(message = "Producer must contain at least one not blank character")
+ //   @CustomValidator(class = Validator.class)
     private String producer;
 
+    private  String required;
     /**
      * Quantity of items in stock
      */

@@ -54,7 +54,9 @@ public class ItemConverter {
             //construct characteristicDtoList for entityDto
             List<CharacteristicDto> characteristicDtos = itemEntity.getCharacteristicsValues()
                     .keySet().stream() //key is characteristic
-                    .map(characteristicConverter::toDto)
+                    .map(characteristicEntity ->characteristicConverter
+                            .toDto(characteristicEntity,
+                                    itemEntity.getCategory().getCharacteristicsRequired().get(characteristicEntity)))
                     .collect(Collectors.toList());
             List<String> values = new ArrayList<>(itemEntity.getCharacteristicsValues().values());
             for (int i = 0; i < values.size(); i++) {
