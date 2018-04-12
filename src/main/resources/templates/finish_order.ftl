@@ -14,7 +14,8 @@
 <div  class="row" style="margin-top: 100px">
     <#assign overall=0>
     <#assign i=0>
-
+    <label for="id"></label>
+    <input id="id" hidden="hidden" type="number" value="${order.id}">
     <div class="col s8">
         <div class="row">
             <div class="col s8 offset-s4">
@@ -30,16 +31,16 @@
                         <label for="itemId"></label>
                         <input id="itemId" hidden="hidden" type="number" value="${item.id}">
                         <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
-                        <div id="price-${item.id}"> ${item.price?string["0"]} </div>
-                        rub
+                        <div id="price-${item.id}"> ${item.price?string["0"]}rub </div>
+
                         <div class="input-field col s3 offset-s1">
-                            <p id="quantity-${item.id}" type="number"
-                               value="${quantities[i]?string["0"]}"></p> ps
+                            <p id="quantity-${item.id}" type="number">
+                              ${quantities[i]?string["0"]} </p> ps
                         </div>
 
                     <#assign sum=item.price*quantities[i]>
                     <#assign overall=overall+sum>
-                        <p> ${sum?string["0"]} </p>rub
+                        <p> ${sum?string["0"]} rub</p>
                      <#assign i=i+1>
                     </div>
                 </div>

@@ -27,12 +27,12 @@ public class OrderController {
         this.itemService = itemService;
     }
 
-    @GetMapping
-    public String getAll(Model model) {
-        long userId = 1; //TODO: get user id
-        model.addAttribute("orders", orderService.getAll(userId));
-        return "/orders";
-    }
+//    @GetMapping
+//    public String getAll(Model model) {
+//        long userId = 1; //TODO: get user id
+//        model.addAttribute("orders", orderService.getAll(userId));
+//        return "orders";
+//    }
 
     @PostMapping(value = "/add")
     public ResponseEntity basketToOrder(@RequestBody OrderDto orderDto) {
@@ -41,7 +41,7 @@ public class OrderController {
 
     @GetMapping("/finish/{id}")
     public String finishOrder(Model model, @PathVariable long id) {
-        return getOrder(model, id) ? "finish_order" : "error";
+        return getOrder(model, id) ?"finish_order" : "error";
     }
 
     @PostMapping(value = "/finish")
