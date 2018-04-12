@@ -2,8 +2,9 @@ package ru.reksoft.onlineShop.model.dto;
 
 import lombok.*;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
-import ru.reksoft.onlineShop.validator.ValidCharacteristic;
+//import ru.reksoft.onlineShop.validator.ValidCharacteristic;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -56,5 +57,6 @@ public class ItemDto {
      * eg: color, weight, etc
      */
     @NotNull(message = "Choose category")
+    @Valid
     private List<CharacteristicDto> characteristics;
 }
