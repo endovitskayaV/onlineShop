@@ -2,7 +2,7 @@ package ru.reksoft.onlineShop.model.dto;
 
 import lombok.*;
 import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
-import ru.reksoft.onlineShop.validator.FieldsValueMatch;
+import ru.reksoft.onlineShop.validator.RequiredCharacteristicNotEmpty;
 
 import javax.validation.constraints.NotBlank;
 
@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldsValueMatch(
+@RequiredCharacteristicNotEmpty(
                 characteristicValue = "value",
                 required = "required"
         )

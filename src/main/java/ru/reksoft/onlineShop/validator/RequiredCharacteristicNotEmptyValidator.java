@@ -5,13 +5,13 @@ import org.springframework.beans.BeanWrapperImpl;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class FieldsValueMatchValidator
-        implements ConstraintValidator<FieldsValueMatch, Object> {
+public class RequiredCharacteristicNotEmptyValidator
+        implements ConstraintValidator<RequiredCharacteristicNotEmpty, Object> {
 
     private String characteristicValue;
     private String required;
 
-    public void initialize(FieldsValueMatch constraintAnnotation) {
+    public void initialize(RequiredCharacteristicNotEmpty constraintAnnotation) {
         this.characteristicValue = constraintAnnotation.characteristicValue();
         this.required = constraintAnnotation.required();
     }
@@ -22,7 +22,10 @@ public class FieldsValueMatchValidator
                 .getPropertyValue(this.characteristicValue);
         boolean fieldMatchValue = (boolean) new BeanWrapperImpl(value)
                 .getPropertyValue(required);
-        if (characteristicValue.equals("") && fieldMatchValue) return false;
-        else return true;
+        if (characteristicValue.equals("") && fieldMatchValue) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
