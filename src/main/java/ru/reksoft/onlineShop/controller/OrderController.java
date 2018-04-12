@@ -27,12 +27,13 @@ public class OrderController {
         this.itemService = itemService;
     }
 
-//    @GetMapping
-//    public String getAll(Model model) {
-//        long userId = 1; //TODO: get user id
-//        model.addAttribute("orders", orderService.getAll(userId));
-//        return "orders";
-//    }
+    @GetMapping
+    public String getAll(Model model) {
+        long userId = 1; //TODO: get user id
+        List<OrderDto> orders=orderService.getAll(userId);
+        model.addAttribute("orders", orderService.getAll(userId));
+        return "orders";
+    }
 
     @PostMapping(value = "/add")
     public ResponseEntity basketToOrder(@RequestBody OrderDto orderDto) {
@@ -62,7 +63,7 @@ public class OrderController {
             model.addAttribute("message", "No such order");
             return false;
         } else {
-            orderDto.setDeliveryAddress("");
+            if (orderDto.getDeliveryAddress()==null)  orderDto.setDeliveryAddress("");
             model.addAttribute("order", orderDto);
             List<ItemDto> items = new ArrayList<>();
             orderDto.getItems()

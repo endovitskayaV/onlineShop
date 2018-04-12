@@ -22,7 +22,7 @@ function confirmOrder() {
         }),
 
         success: function () {
-            location.href = document.location.origin + '/orders/' + orderId;
+        location.href = document.location.origin + '/orders/' + orderId;
         }
 
     });

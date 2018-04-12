@@ -18,6 +18,12 @@
     <div class="col s8">
         <div class="row">
             <div class="col s8 offset-s4">
+                <div class="card">
+                    <div class="card-content">
+                        ORDERED
+                    </div>
+                </div>
+
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
 
@@ -33,8 +39,8 @@
                         <div id="price-${item.id}"> ${item.price?string["0"]} </div>
                         rub
                         <div class="input-field col s3 offset-s1">
-                            <p id="quantity-${item.id}" type="number"
-                               value="${quantities[i]?string["0"]}"></p> ps
+                            <p id="quantity-${item.id}" type="number">
+                                ${quantities[i]?string["0"]}</p> ps
                         </div>
 
                     <#assign sum=item.price*quantities[i]>
