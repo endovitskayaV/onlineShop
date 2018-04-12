@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
@@ -13,6 +14,8 @@ import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.CharacteristicService;
 import ru.reksoft.onlineShop.service.ItemService;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,8 +100,8 @@ public class ItemController {
                 .storage(0)
                 .build();
         model.addAttribute("item", itemDto);
-        model.addAttribute("categories", categoryService.getAll());
 
+        model.addAttribute("categories", categoryService.getAll());
         NewCategoryDto newCategoryDto = NewCategoryDto.builder()
                 .name("")
                 .description("")
@@ -116,16 +119,39 @@ public class ItemController {
      * @return redirects to /items or to /error if item can not be added
      */
     @PostMapping("/add")
-    public ModelAndView add(ModelMap modelMap, ItemDto itemDto) {
-        long id = itemService.add(itemDto);
-        if (id == -1) {
-            modelMap.addAttribute("message",
-                    "Item '" + itemDto.getProducer() + " " + itemDto.getName() +
-                            "' already exists!");
-            return new ModelAndView("error", modelMap);
-        } else {
-            return new ModelAndView("redirect:/items/" + id);
+    public ModelAndView add(ModelMap modelMap, @Valid ItemDto itemDto, BindingResult bindingResult) {
+
+
+        if (!bindingResult.hasErrors()) {
+            long id = itemService.add(itemDto);
+            if (id == -1) {
+                modelMap.addAttribute("message",
+                        "Item '" + itemDto.getProducer() + " " + itemDto.getName() +
+                                "' already exists!");
+                return new ModelAndView("error", modelMap);
+            } else {
+                return new ModelAndView("redirect:/items/" + id);
+            }
+        }else{
+            List<String> errors=new ArrayList<>();
+            bindingResult.getAllErrors()
+                    .forEach(objectError -> errors.add(objectError.getDefaultMessage()));
+            modelMap.addAttribute("errors", errors) ;
+            modelMap.addAttribute("item", itemDto);
+            modelMap.addAttribute("categories", categoryService.getAll());
+            NewCategoryDto newCategoryDto = NewCategoryDto.builder()
+                    .name("")
+                    .description("")
+                    .build();
+            modelMap.addAttribute("category", newCategoryDto);
+            modelMap.addAttribute("characteristics", characteristicService.getAll());
+            return new ModelAndView("add_item");
         }
+
+
+
+
+
 
     }
 

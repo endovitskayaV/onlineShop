@@ -3,7 +3,6 @@ package ru.reksoft.onlineShop.model.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 /**
@@ -15,14 +14,17 @@ import java.util.Map;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "item")
+@Table(name = "item",
+        uniqueConstraints = {@UniqueConstraint(name = "unique_item", columnNames = {"name", "producer"})})
 public class ItemEntity {
     @Id
     @Column(name = "id", nullable = false)
     private long id;
 
+    
     @Column(name = "name", nullable = false)
     private String name;
+
 
     @Column(name = "producer", nullable = false)
     private String producer;
@@ -30,6 +32,7 @@ public class ItemEntity {
     /**
      * Quantity of items in stock
      */
+
     @Column(name = "storage", nullable = false)
     private int storage;
 
@@ -45,9 +48,9 @@ public class ItemEntity {
      *
      * @see CategoryEntity
      */
+
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @NotNull
     private CategoryEntity category;
 
 

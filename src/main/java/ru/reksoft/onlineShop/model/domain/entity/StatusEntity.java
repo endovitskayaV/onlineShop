@@ -16,7 +16,6 @@ import javax.persistence.*;
 @Table(name="status")
 public class StatusEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private long id;
 

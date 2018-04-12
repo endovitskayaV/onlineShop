@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import ru.reksoft.onlineShop.model.domain.entity.CategoryEntity;
 import ru.reksoft.onlineShop.service.CategoryService;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
@@ -24,12 +27,15 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class NewCategoryDto {
+    @NotBlank(message = "Name must contain at least one not blank character")
     private String name;
     private String description;
 
     /**
      * category popularity
      */
+    @NotNull(message = "Fill in count")
+    @Min(value = 0, message = "Rating must be greater than or equal to 0")
     private int rating;
 
     /**
@@ -38,5 +44,6 @@ public class NewCategoryDto {
      * only ids, not full CharacteristicDtos
      * as it is more convenient to send only id from web interface
      */
+    @NotNull(message = "Choose at least one characteristic")
     List<Long> characteristicIds;
 }

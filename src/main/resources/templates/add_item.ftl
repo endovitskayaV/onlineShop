@@ -9,6 +9,7 @@
 </head>
 
 <body>
+ <@spring.bind "item"/>
 <div style="margin-top: 80px" class="row">
     <div class="col s6 offset-s3">
         <div class="card hoverable">
@@ -16,39 +17,56 @@
                 <form class="container" method="post" action="/items/add">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="name" required="required" name="name" type="text" value="${item.name}">
+                              <@spring.bind "item.name"/>
                             <label for="name">Name</label>
-                        </div>
+                            <@spring.formInput "item.name"/>
+
+
+                            <@spring.showErrors ""/>
+
+                              <#if errors??>
+                                  <#list errors as error>
+                                      ${error}
+                                  </#list>
+                              </#if>
+                             <#list spring.status.errors.allErrors as error>
+                                 ${error.defaultMessage}
+                             </#list>
+
+
+                    </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="producer" required="required" name="producer" type="text"
-                                   value="${item.producer}">
+                               <@spring.formInput "item.producer"/>
                             <label for="producer">Producer</label>
+                          
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="storage" name="storage" type="number" min="0" value="${item.storage}">
+                              <@spring.formInput "item.storage"/>
                             <label for="storage">Count</label>
+                          
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="price" name="price" type="number" min="0" value="${item.price}">
+                            <@spring.formInput "item.price"/>
                             <label for="price">Price</label>
+                          
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="description" name="description" type="text"
-                                   value="${item.description}">
+                             <@spring.formInput "item.description"/>
                             <label for="description">Description</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <select required id="categoryId" name="categoryId" onchange="loadCharacteristics(this)">
+                          
+                            <select   id="categoryId" name="categoryId" onchange="loadCharacteristics(this)">
                                 <option selected disabled value=''>Choose your option</option>
               <#list categories as category>
             <option id="${category.id}"  value="${category.id}">${category.name}</option>

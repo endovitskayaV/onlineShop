@@ -3,7 +3,6 @@ package ru.reksoft.onlineShop.model.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Map;
 

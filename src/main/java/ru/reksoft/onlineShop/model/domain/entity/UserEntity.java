@@ -3,7 +3,6 @@ package ru.reksoft.onlineShop.model.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * Class represents user with email, password
@@ -18,7 +17,6 @@ import javax.validation.constraints.NotNull;
 @Table(name = "user_info")
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private long id;
 
@@ -35,7 +33,6 @@ public class UserEntity {
      */
     @ManyToOne
     @JoinColumn(name = "role_id")
-    @NotNull
     private RoleEntity role;
 
     @Column(name = "name")
