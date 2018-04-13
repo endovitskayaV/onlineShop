@@ -43,17 +43,20 @@ public class OrderService {
         return orderConverter.toDto(orderRepository.findById(id).orElse(null));
     }
 
-    public OrderDto getByStatusIdAndUserId(long statusId, long userId) {
-        return orderConverter.toDto(orderRepository.findByStatusIdAndUserId(statusId, userId));
-    }
-
-    public List<OrderDto> getAll(long userId) {
-        return orderRepository.findAllByUserId(userId).stream()
+    public List<OrderDto> getAllOrderedAndUserId(long userId) {
+        return orderRepository.findAllByUserIdAndStatusIdGreaterThan(userId, 1).stream()
                 .map(orderConverter::toDto).collect(Collectors.toList());
     }
 
+    public OrderDto getBasket(long userId) {
+        List<OrderEntity> orders = orderRepository.findAllByStatusIdAndUserId(1, userId);
+        return (orders.size() != 0) ? orderConverter.toDto(orders.get(0)) : null;
+    }
+
+
     public void addToBasket(long userId, long itemId) {
-        OrderEntity basket = orderRepository.findByStatusIdAndUserId(1, userId);
+        List<OrderEntity> orders = orderRepository.findAllByStatusIdAndUserId(1, userId);
+        OrderEntity basket = (orders.size() != 0) ? orders.get(0) : null;
         if (basket == null) {
             //create new basket
             Map<ItemEntity, Integer> itemsQuantity = new HashMap<>(1);
@@ -118,13 +121,13 @@ public class OrderService {
 
     public long basketToOrder(long orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
-        orderEntity.setStatus(statusRepository.findById(2L).get()); //2- unfinished order
+        orderEntity.setStatus(statusRepository.findById(1L).get()); //1- unfinished order
         return orderRepository.save(orderEntity).getId();
     }
 
     public void finishOrder(OrderDto orderDto) {
         OrderEntity orderEntity = orderRepository.findById(orderDto.getId()).get();
-        orderEntity.setStatus(statusRepository.findById(3L).get()); //3- finished order
+        orderEntity.setStatus(statusRepository.findById(2L).get()); //2- finished order
         orderEntity.setDate(new Date());
         orderEntity.setDeliveryAddress(orderDto.getDeliveryAddress());
         orderRepository.save(orderEntity);

@@ -11,7 +11,7 @@
 <body>
 <#include "header.ftl">
 
-<div  class="row" style="margin-top: 100px">
+<div class="row" style="margin-top: 100px">
     <#assign overall=0>
     <#assign i=0>
     <label for="id"></label>
@@ -30,17 +30,15 @@
                     <div class="card-content">
                         <label for="itemId"></label>
                         <input id="itemId" hidden="hidden" type="number" value="${item.id}">
-                        <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
-                        <div id="price-${item.id}"> ${item.price?string["0"]}rub </div>
-
-                        <div class="input-field col s3 offset-s1">
-                            <p id="quantity-${item.id}" type="number">
-                              ${quantities[i]?string["0"]} </p> ps
-                        </div>
+                        <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a>
+                        </p>
+                        <div id="price-${item.id}"> ${item.price?string["0"]} rub</div>
+                        <p id="quantity-${item.id}" type="number">
+                            Ordered: <b> ${quantities[i]?string["0"]} ps</b> &nbsp;&mdash;
 
                     <#assign sum=item.price*quantities[i]>
                     <#assign overall=overall+sum>
-                        <p> ${sum?string["0"]} rub</p>
+                            <b>${sum?string["0"]} rub </b></p>
                      <#assign i=i+1>
                     </div>
                 </div>
@@ -48,17 +46,21 @@
         </div>
     </#list>
 
-                <div class="card">
+                <div class="card hoverable">
                     <div class="card-content">
-                        <div id="overall"> ${overall} </div>rub
-                        <div>
+                        <div class="row">
+                        <div> Overall sum: <b>${overall} rub</b></div>
+
+                            <div class="col s6">
                             <input id="deliveryAddress" name="deliveryAddress" type="text"
                                    value="${order.deliveryAddress}">
                             <label for="deliveryAddress">Delivery address</label>
-                        </div>
-                        <p>
+                       </div>
+
+                        <div class="col s1 offset-s10">
                             <a href="javascript: confirmOrder()" class="waves-effect waves-light btn">Order</a>
-                        </p>
+                        </div>
+                    </div>
                     </div>
                 </div>
 

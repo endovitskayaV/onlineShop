@@ -37,16 +37,16 @@ public class BasketController {
     @GetMapping
     public String getBasket(Model model) {
         long userId = 1; //TODO: get user id
-        OrderDto orderDto = orderService.getByStatusIdAndUserId(1, userId);  // 1- in basket
-        if(orderDto!=null) {
+        OrderDto basket = orderService.getBasket(userId);
+        if(basket!=null) {
             List<ItemDto> items = new ArrayList<>();
-            orderDto.getItems()
+            basket.getItems()
                     .forEach(orderedItem -> items.add(itemService.getById(orderedItem.getItemId())));
             model.addAttribute("items", items);
             List<Integer> quatities = new ArrayList<>();
-            orderDto.getItems().forEach(orderedItem -> quatities.add(orderedItem.getQuantity()));
+            basket.getItems().forEach(orderedItem -> quatities.add(orderedItem.getQuantity()));
             model.addAttribute("quantities", quatities);
-            model.addAttribute("basketId", orderDto.getId());
+            model.addAttribute("basketId", basket.getId());
         }else{
             model.addAttribute("items", new ArrayList<>());
         }

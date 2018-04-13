@@ -11,16 +11,16 @@
 <body>
 <#include "header.ftl">
 
-<div  class="row" style="margin-top: 100px">
+<div class="row" style="margin-top: 100px">
     <#assign overall=0>
     <#assign i=0>
 
     <div class="col s8">
         <div class="row">
             <div class="col s8 offset-s4">
-                <div class="card">
+                <div class="card hoverable">
                     <div class="card-content">
-                        ORDERED
+                        <span class="cl-1b5e20">ORDERED</span>
                     </div>
                 </div>
 
@@ -35,17 +35,16 @@
                     <div class="card-content">
                         <label for="itemId"></label>
                         <input id="itemId" hidden="hidden" type="number" value="${item.id}">
-                        <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
-                        <div id="price-${item.id}"> ${item.price?string["0"]} </div>
-                        rub
-                        <div class="input-field col s3 offset-s1">
-                            <p id="quantity-${item.id}" type="number">
-                                ${quantities[i]?string["0"]}</p> ps
-                        </div>
+                        <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a>
+                        </p>
+                        <div id="price-${item.id}"> ${item.price?string["0"]} rub</div>
+                        <p id="quantity-${item.id}" type="number">
+                            Ordered: <b> ${quantities[i]?string["0"]} ps</b> &nbsp;&mdash;
+
 
                     <#assign sum=item.price*quantities[i]>
                     <#assign overall=overall+sum>
-                        <p> ${sum?string["0"]} </p>rub
+                       <b>${sum?string["0"]} rub </b> </p>
                      <#assign i=i+1>
                     </div>
                 </div>
@@ -54,11 +53,9 @@
     </#list>
 
                 <div class="card">
-                    <div class="card-content">
-                        <div id="overall"> ${overall} </div>rub
-                        <div>
-                            ${order.deliveryAddress}
-                        </div>
+                    <div class="card-content hoverable">
+                        <p> Overall sum: <b>${overall} rub</b></p>
+                        <p> Delivery address: <b>${order.deliveryAddress}</b></p>
                     </div>
                 </div>
 

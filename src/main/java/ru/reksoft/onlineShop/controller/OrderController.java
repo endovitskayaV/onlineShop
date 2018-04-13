@@ -30,8 +30,8 @@ public class OrderController {
     @GetMapping
     public String getAll(Model model) {
         long userId = 1; //TODO: get user id
-        List<OrderDto> orders=orderService.getAll(userId);
-        model.addAttribute("orders", orderService.getAll(userId));
+        List<OrderDto> orders=orderService.getAllOrderedAndUserId(userId);
+        model.addAttribute("orders", orders);
         return "orders";
     }
 

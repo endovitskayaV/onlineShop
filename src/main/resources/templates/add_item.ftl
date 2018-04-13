@@ -141,7 +141,7 @@
 
 
 <div id="category_modal" class="modal">
-    <div class="modal-content">
+    <div id="add_category" class="modal-content">
         <#include "add_category.ftl">
     </div>
 </div>

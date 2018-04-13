@@ -17,7 +17,7 @@
   <div class="col s2 offset-s1 card horizontal">
       <div class="card-stacked">
           <div class="card-content">
-              <p>No o</p>
+              <p>No orders</p>
           </div>
       </div>
   </div>
@@ -25,12 +25,12 @@
 
     <div class="col s8">
         <div class="row">
-            <div class="col s8 offset-s1">
+            <div class="col s5 offset-s6">
     <#list orders as order>
         <div id="${order.id}" class="card horizontal hoverable">
             <div class="card-stacked">
                 <div class="card-content">
-                    <p class="flow-text"><a href="/orders/${order.id}">Order №${order.id}
+                    <p><a href="/orders/${order.id}">Order №${order.id}
                         ${order.date?datetime?string('dd-MM-yyyy')}</a></p>
                 </div>
 

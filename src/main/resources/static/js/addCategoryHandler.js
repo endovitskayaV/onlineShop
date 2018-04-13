@@ -15,23 +15,28 @@ function addCategory(id) {
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
         data: query,
-        success: function (data) {
-            $.get("/categories/" + data, function (data) {
-                var select = $('#categoryId');
-                select.append('<option id="'+data.id+'" value="'+data.id+
-                    '">'+data.name+'</option>');
-                $('select').formSelect();
-                var elem = document.getElementById('category_modal');
-                var instance = M.Modal.getInstance(elem);
-                instance.close();
+        statusCode: {
+            200: function (data) {
+                $.get("/categories/" + data, function (data) {
+                    var select = $('#categoryId');
+                    select.append('<option id="' + data.id + '" value="' + data.id +
+                        '">' + data.name + '</option>');
+                    $('select').formSelect();
+                    var elem = document.getElementById('category_modal');
+                    var instance = M.Modal.getInstance(elem);
+                    instance.close();
 
-            })
-        },
-        error: function (data) {
-            var elem = document.getElementById('error-modal');
-            elem.append(data.responseText);
-            var instance = M.Modal.getInstance(elem);
-            instance.open();
+                })
+            },
+            400: function (data) {
+                var elem = document.getElementById('error-modal');
+                elem.append(data.responseText);
+                var instance = M.Modal.getInstance(elem);
+                instance.open();
+            },
+            406: function (data) {
+            }
         }
+
     })
 }

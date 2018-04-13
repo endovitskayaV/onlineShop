@@ -105,6 +105,7 @@ public class ItemController {
         model.addAttribute("categories", categoryService.getAll());
         NewCategoryDto newCategoryDto = NewCategoryDto.builder()
                 .name("")
+                .rating(0)
                 .description("")
                 .build();
         model.addAttribute("category", newCategoryDto);
@@ -140,6 +141,7 @@ public class ItemController {
             modelMap.addAttribute("categories", categoryService.getAll());
             NewCategoryDto newCategoryDto = NewCategoryDto.builder()
                     .name("")
+                    .rating(0)
                     .description("")
                     .build();
             modelMap.addAttribute("category", newCategoryDto);
@@ -179,6 +181,7 @@ public class ItemController {
 
         NewCategoryDto newCategoryDto = NewCategoryDto.builder()
                 .name("")
+                .rating(0)
                 .description("")
                 .build();
         model.addAttribute("category", newCategoryDto);

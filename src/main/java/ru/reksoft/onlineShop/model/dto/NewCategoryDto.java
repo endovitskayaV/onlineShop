@@ -29,6 +29,7 @@ import java.util.List;
 public class NewCategoryDto {
     @NotBlank(message = "Name must contain at least one not blank character")
     private String name;
+    @NotBlank(message = "Description must contain at least one not blank character")
     private String description;
 
     /**
@@ -36,7 +37,7 @@ public class NewCategoryDto {
      */
     @NotNull(message = "Fill in count")
     @Min(value = 0, message = "Rating must be greater than or equal to 0")
-    private int rating;
+    private Integer rating;
 
     /**
      * ids of characteristics that belongs to this category

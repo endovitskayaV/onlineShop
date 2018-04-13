@@ -27,7 +27,7 @@
     <input id="id" hidden="hidden" type="number" value="${basketId}">
 
     <#assign count=items?size>
-    <p hidden="hidden"  id="count">${count}</p>
+    <p hidden="hidden" id="count">${count}</p>
 
     <#assign overall=0>
     <#assign i=0>
@@ -38,32 +38,43 @@
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
 
-            <div class="card-image">
-                <img width="60" height="200" src="../img/meizu.jpg">
-            </div>
-            <div id="anyCardLeft">
-                <div class="card-stacked">
+            <div class="card-image"><img width="60" height="200" src="../img/meizu.jpg"></div>
+                <div id="anyCardLeft">
                     <div class="card-content">
                         <label for="itemId"></label>
                         <input id="itemId" hidden="hidden" type="number" value="${item.id}">
+
                         <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
-                        <div id="price-${item.id}"> ${item.price?string["0"]} </div>
-                        rub
-                        <div class="input-field col s3 offset-s1">
+
+                        <div class="row">
+                            <div class="input-field col s5">Price, rub:</div>
+                            <div class="input-field col s1">
+                                <div id="price-${item.id}"> ${item.price?string["0"]} </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                        <div class="col s4">
                             <input id="quantity-${item.id}" name="quantity" type="number" min="1"
                                    value="${quantities[i]?string["0"]}"
                                    onchange="increaseItemQuantity(${basketId},${item.id})">
-                            <label for="quantity">Quantity</label>
+                            <label for="quantity-${item.id}">Quantity</label>
                         </div>
+                        </div>
+                        <div class="row">
+                                <div class="input-field col s5">Sum, rub:</div>
+                                <div class="input-field col s1">
+                                     <#assign sum=item.price*quantities[i]>
+                                      <#assign overall=overall+sum>
+                                    <div name="sum-${i}" id="sum-${item.id}"> ${sum?string["0"]} </div>
+                                    <#assign i=i+1>
+                                </div>
+                            </div>
 
-                    <#assign sum=item.price*quantities[i]>
-                    <#assign overall=overall+sum>
-                        <p name="sum-${i}" id="sum-${item.id}"> ${sum?string["0"]} </p>rub
-                     <#assign i=i+1>
                     </div>
+
                     <div class="card-action">
                         <div class="row">
-                            <div class="input-field col s1">
+                            <div class="input-field col s1 offset-s12">
                                 <a href="javascript: deleteItem(${basketId},${item.id})"> <i
                                         class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
                                 </a>
@@ -71,16 +82,26 @@
                         </div>
                     </div>
                 </div>
-            </div>
+
         </div>
     </#list>
 
-                <div class="card">
+                <div class="card hoverable">
                     <div class="card-content">
-                        <div id="overall"> ${overall} </div>rub
-                        <p>
-                            <a href="javascript: makeOrder()" class="waves-effect waves-light btn">Order</a>
-                        </p>
+                        <div class="row">
+                            <div class="input-field col s3">
+                                <div class="left">Overall sum, rub:
+                                </div>
+                            </div>
+                            <div class="input-field col s1">
+                                <b id="overall">${overall?string["0"]}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s1 offset-s10">
+                                <a href="javascript: makeOrder()" class="waves-effect waves-light btn">Order</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
