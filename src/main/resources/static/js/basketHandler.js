@@ -1,9 +1,10 @@
 function increaseItemQuantity(basketId, itemId) {
 
     $.post(document.location.origin + "/basket/edit/" + basketId,
-
-        {itemId: itemId, quantity: $("#quantity-" + itemId).val()},
-
+        {
+            itemId: itemId,
+            quantity: $("#quantity-" + itemId).val()
+        },
         function () {
             $("#sum-" + itemId).html("").append(
                 $("#quantity-" + itemId).val() * parseInt($("#price-" + itemId).text())
@@ -11,7 +12,7 @@ function increaseItemQuantity(basketId, itemId) {
             setOverall();
         })
         .fail(function (data) {
-            $("#quantity").val(data.responseJSON);
+            $("#quantity-"+itemId).val(data.responseJSON);
             showModal('<div class="row">' +
                 '          <div class="card-content">' +
                 '             <p class="center-align">No more items in stock</p>' +

@@ -54,7 +54,12 @@ public class OrderService {
     }
 
 
-    public void addToBasket(long userId, long itemId) {
+    public boolean addToBasket(long userId, long itemId) {
+
+        ItemEntity foundItemEntity = itemRepository.findById(itemId).get();
+        if (foundItemEntity.getStorage() == 0) {
+            return false;
+        }
         List<OrderEntity> orders = orderRepository.findAllByStatusIdAndUserId(1, userId);  //1- in basket
         OrderEntity basket = (orders.size() != 0) ? orders.get(0) : null;
         if (basket == null) {
@@ -80,19 +85,23 @@ public class OrderService {
             basket.setItemsQuantity(itemsQuantity);
             orderRepository.save(basket);
         }
+        decreaseItemQuantityInStock(itemId);
+        return true;
     }
 
     public int increaseItemQuantity(long basketId, OrderedItemDto orderedItemDto) {
         OrderEntity basket = orderRepository.findById(basketId).get();
         Map<ItemEntity, Integer> itemsQuantity = basket.getItemsQuantity();
         ItemEntity itemEntity = itemRepository.findById(orderedItemDto.getItemId()).get();
-        if (itemEntity.getStorage() < orderedItemDto.getQuantity()) {
-            return itemEntity.getStorage(); //cannot increase item quantity
+      //  if (itemEntity.getStorage() < orderedItemDto.getQuantity()) {
+        if (itemEntity.getStorage()==0) {
+            return orderedItemDto.getQuantity(); //cannot increase item quantity
         } else {
             itemsQuantity.put(itemEntity, orderedItemDto.getQuantity());
             basket.setItemsQuantity(itemsQuantity);
             orderRepository.save(basket);
-            return 1;
+            decreaseItemQuantityInStock(orderedItemDto.getItemId());
+            return -1;
         }
     }
 
@@ -105,6 +114,10 @@ public class OrderService {
                 .noneMatch(itemEntity -> itemEntity.equals(foundItemEntity))) {
             return false;
         } else {
+            //increase item quantity in stock
+            ItemEntity itemEntity = itemRepository.findById(itemId).get();
+            itemEntity.setStorage(itemEntity.getStorage() + basket.getItemsQuantity().get(foundItemEntity));
+            itemRepository.save(itemEntity);
 
             itemsQuantity.remove(foundItemEntity);
             if (itemsQuantity.size() == 0) { //whether to delete whole basket
@@ -123,6 +136,12 @@ public class OrderService {
         orderEntity.setDate(new Date());
         orderEntity.setDeliveryAddress(orderDto.getDeliveryAddress());
         orderRepository.save(orderEntity);
+    }
+
+    private void decreaseItemQuantityInStock(long itemId) {
+        ItemEntity itemEntity = itemRepository.findById(itemId).get();
+        itemEntity.setStorage(itemEntity.getStorage() - 1);
+        itemRepository.save(itemEntity);
     }
 }
 

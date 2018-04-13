@@ -29,8 +29,9 @@ public class BasketController {
     @PostMapping("/add")
     public ResponseEntity add(long itemId) {
         long userId = 1; //TODO: get user id
-        orderService.addToBasket(userId, itemId);
-        return ResponseEntity.noContent().build();
+        return orderService.addToBasket(userId, itemId)?
+                ResponseEntity.noContent().build():
+                ResponseEntity.badRequest().build();
     }
 
     @GetMapping
@@ -56,7 +57,7 @@ public class BasketController {
     @PostMapping("/edit/{id}")
     public ResponseEntity edit(@PathVariable long id, OrderedItemDto orderedItemDto) {
         int quantity = orderService.increaseItemQuantity(id, orderedItemDto);
-        return quantity == 1 ?
+        return quantity == -1 ?
                 ResponseEntity.ok().build() :
                 ResponseEntity.badRequest().body(quantity);
 

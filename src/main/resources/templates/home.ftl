@@ -42,7 +42,8 @@
                 <div class="card-content">
                     <p class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
                     <p> ${item.price} rub</p>
-                    <p>${item.storage} ps</p>
+
+                    <p><span id="storage-${item.id}">${item.storage} </span> ps</p>
                 </div>
                 <div class="card-action">
                     <div class="row">
