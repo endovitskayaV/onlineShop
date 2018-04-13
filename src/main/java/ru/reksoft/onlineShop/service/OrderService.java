@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
+    public static final int STATUS_ID_BASKET = 1;
     private OrderRepository orderRepository;
     private OrderConverter orderConverter;
     private StatusRepository statusRepository;
@@ -44,12 +45,14 @@ public class OrderService {
     }
 
     public List<OrderDto> getAllOrderedByUserId(long userId) {
-        return orderRepository.findAllByUserIdAndStatusIdGreaterThan(userId, 1).stream()  //1- in basket
-                .map(orderConverter::toDto).collect(Collectors.toList());
+        return orderRepository.findAllByUserIdAndStatusIdGreaterThan(userId, 1)
+                .stream()  //1- in basket
+                .map(orderConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     public OrderDto getBasket(long userId) {
-        List<OrderEntity> orders = orderRepository.findAllByStatusIdAndUserId(1, userId); //1- in basket
+        List<OrderEntity> orders = orderRepository.findAllByStatusIdAndUserId(STATUS_ID_BASKET, userId); //1- in basket
         return (orders.size() != 0) ? orderConverter.toDto(orders.get(0)) : null;
     }
 
@@ -60,7 +63,7 @@ public class OrderService {
         if (foundItemEntity.getStorage() == 0) {
             return false;
         }
-        List<OrderEntity> orders = orderRepository.findAllByStatusIdAndUserId(1, userId);  //1- in basket
+        List<OrderEntity> orders = orderRepository.findAllByStatusIdAndUserId(STATUS_ID_BASKET, userId);  //1- in basket
         OrderEntity basket = (orders.size() != 0) ? orders.get(0) : null;
         if (basket == null) {
             //create new basket
@@ -76,8 +79,11 @@ public class OrderService {
             //add item to basket
             ItemEntity addableItem = itemRepository.findById(itemId).get();
             Map<ItemEntity, Integer> itemsQuantity = basket.getItemsQuantity();
-            if (itemsQuantity.keySet().stream()
-                    .anyMatch(itemEntity -> itemEntity.equals(addableItem))) {
+            boolean equal = itemsQuantity
+                    .keySet()
+                    .stream()
+                    .anyMatch(addableItem::equals);
+            if (equal) {
                 itemsQuantity.put(addableItem, itemsQuantity.get(addableItem) + 1);
             } else {
                 itemsQuantity.put(itemRepository.findById(itemId).get(), 1);
@@ -93,7 +99,6 @@ public class OrderService {
         OrderEntity basket = orderRepository.findById(basketId).get();
         Map<ItemEntity, Integer> itemsQuantity = basket.getItemsQuantity();
         ItemEntity itemEntity = itemRepository.findById(orderedItemDto.getItemId()).get();
-      //  if (itemEntity.getStorage() < orderedItemDto.getQuantity()) {
         if (itemEntity.getStorage()==0) {
             return orderedItemDto.getQuantity(); //cannot increase item quantity
         } else {

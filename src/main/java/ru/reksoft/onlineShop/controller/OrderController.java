@@ -51,20 +51,27 @@ public class OrderController {
 
     private boolean getOrderModel(Model model, long id) {
         OrderDto orderDto = orderService.getById(id);
+
         if (orderDto == null) {
             model.addAttribute("message", "No such order");
             return false;
-        } else {
-            if (orderDto.getDeliveryAddress() == null) orderDto.setDeliveryAddress("");
-            model.addAttribute("order", orderDto);
-            List<ItemDto> items = new ArrayList<>();
-            orderDto.getItems()
-                    .forEach(orderedItem -> items.add(itemService.getById(orderedItem.getItemId())));
-            model.addAttribute("items", items);
-            List<Integer> quatities = new ArrayList<>();
-            orderDto.getItems().forEach(orderedItem -> quatities.add(orderedItem.getQuantity()));
-            model.addAttribute("quantities", quatities);
-            return true;
         }
+
+        if (orderDto.getDeliveryAddress() == null) {
+            orderDto.setDeliveryAddress("");
+        }
+        model.addAttribute("order", orderDto);
+
+        List<ItemDto> items = new ArrayList<>();
+        List<Integer> quatities = new ArrayList<>();
+
+        orderDto.getItems()
+                .forEach(orderedItem -> items.add(itemService.getById(orderedItem.getItemId())));
+        orderDto.getItems().forEach(orderedItem -> quatities.add(orderedItem.getQuantity()));
+
+        model.addAttribute("items", items);
+        model.addAttribute("quantities", quatities);
+
+        return true;
     }
 }

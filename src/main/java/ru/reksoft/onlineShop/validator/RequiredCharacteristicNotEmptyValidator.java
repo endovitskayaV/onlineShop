@@ -6,26 +6,9 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class RequiredCharacteristicNotEmptyValidator
-        implements ConstraintValidator<RequiredCharacteristicNotEmpty, Object> {
+        implements ConstraintValidator<RequiredCharacteristicNotEmpty, Interface1> {
 
-    private String characteristicValue;
-    private String required;
-
-    public void initialize(RequiredCharacteristicNotEmpty constraintAnnotation) {
-        this.characteristicValue = constraintAnnotation.characteristicValue();
-        this.required = constraintAnnotation.required();
-    }
-
-    public boolean isValid(Object value,
-                           ConstraintValidatorContext context) {
-        String characteristicValue = (String) new BeanWrapperImpl(value)
-                .getPropertyValue(this.characteristicValue);
-        boolean fieldMatchValue = (boolean) new BeanWrapperImpl(value)
-                .getPropertyValue(required);
-        if (characteristicValue.equals("") && fieldMatchValue) {
-            return false;
-        } else {
-            return true;
-        }
+    public boolean isValid(Interface1 characteristic, ConstraintValidatorContext context) {
+        return !characteristic.getValue().isEmpty() || !characteristic.isRequired();
     }
 }

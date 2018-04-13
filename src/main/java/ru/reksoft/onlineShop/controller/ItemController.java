@@ -1,6 +1,7 @@
 package ru.reksoft.onlineShop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -122,21 +123,13 @@ public class ItemController {
      */
     @PostMapping("/add")
     public ModelAndView add(ModelMap modelMap, @Valid ItemDto itemDto, BindingResult bindingResult) {
-        if (!bindingResult.hasErrors()) {
-            long id = itemService.add(itemDto);
-            if (id == -1) {
-                modelMap.addAttribute("message",
-                        "Item '" + itemDto.getProducer() + " " + itemDto.getName() +
-                                "' already exists!");
-                return new ModelAndView("error", modelMap);
-            } else {
-                return new ModelAndView("redirect:/items/" + id);
-            }
-        } else {
-            List<String> errors = new ArrayList<>();
-            bindingResult.getAllErrors()
-                    .forEach(objectError -> errors.add(objectError.getDefaultMessage()));
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+
             modelMap.addAttribute("errors", errors);
+
             modelMap.addAttribute("item", itemDto);
             modelMap.addAttribute("categories", categoryService.getAll());
             NewCategoryDto newCategoryDto = NewCategoryDto.builder()
@@ -147,12 +140,21 @@ public class ItemController {
             modelMap.addAttribute("category", newCategoryDto);
             modelMap.addAttribute("characteristics", characteristicService.getAll());
 
-
             if (itemDto.getCategoryId()!=0) {
                 modelMap.addAttribute("selectedCategory", categoryService.getById(itemDto.getCategoryId()));
                 modelMap.addAttribute("characteristics", itemDto.getCharacteristics());
             }
             return new ModelAndView("add_item");
+        } else {
+            long id = itemService.add(itemDto);
+            if (id == -1) {
+                modelMap.addAttribute("message",
+                        "Item '" + itemDto.getProducer() + " " + itemDto.getName() +
+                                "' already exists!");
+                return new ModelAndView("error", modelMap);
+            } else {
+                return new ModelAndView("redirect:/items/" + id);
+            }
         }
 
 
@@ -169,7 +171,10 @@ public class ItemController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(Model model, @PathVariable long id) {
         ItemDto itemDto = itemService.getById(id);
-        if (itemDto == null) return "error";
+        if (itemDto == null) {
+            return "error";
+        }
+
         model.addAttribute("item", itemDto);
         model.addAttribute("categories",
                 categoryService.getAll().stream()

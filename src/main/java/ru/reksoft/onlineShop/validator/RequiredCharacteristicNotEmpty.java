@@ -16,9 +16,6 @@ public @interface RequiredCharacteristicNotEmpty {
 
     String message() default "Fill in required characteristic";
 
-    String characteristicValue();
-
-    String required();
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

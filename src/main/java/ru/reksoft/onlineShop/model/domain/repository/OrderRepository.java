@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     List<OrderEntity> findAllByStatusIdAndUserId(long statusId, long userId);
+        OrderEntity findByStatusIdAndUserId(long statusId, long userId);
 
     List<OrderEntity> findAllByUserIdAndStatusIdGreaterThan(long userId, long statusId);
 }

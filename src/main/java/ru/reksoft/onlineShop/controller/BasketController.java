@@ -29,8 +29,8 @@ public class BasketController {
     @PostMapping("/add")
     public ResponseEntity add(long itemId) {
         long userId = 1; //TODO: get user id
-        return orderService.addToBasket(userId, itemId)?
-                ResponseEntity.noContent().build():
+        return orderService.addToBasket(userId, itemId) ?
+                ResponseEntity.noContent().build() :
                 ResponseEntity.badRequest().build();
     }
 
@@ -38,18 +38,17 @@ public class BasketController {
     public String getBasket(Model model) {
         long userId = 1; //TODO: get user id
         OrderDto basket = orderService.getBasket(userId);
+        List<ItemDto> items = new ArrayList<>();
+        List<Integer> quatities = new ArrayList<>();
         if (basket != null) {
-            List<ItemDto> items = new ArrayList<>();
-            basket.getItems()
-                    .forEach(orderedItem -> items.add(itemService.getById(orderedItem.getItemId())));
-            model.addAttribute("items", items);
-            List<Integer> quatities = new ArrayList<>();
-            basket.getItems().forEach(orderedItem -> quatities.add(orderedItem.getQuantity()));
-            model.addAttribute("quantities", quatities);
+            basket.getItems().forEach(item -> {
+                quatities.add(item.getQuantity());
+                items.add(itemService.getById(item.getItemId()));
+            });
             model.addAttribute("basketId", basket.getId());
-        } else {
-            model.addAttribute("items", new ArrayList<>());
         }
+        model.addAttribute("quantities", quatities);
+        model.addAttribute("items", items);
         return "basket";
     }
 
