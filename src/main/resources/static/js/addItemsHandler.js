@@ -1,4 +1,5 @@
-function loadCharacteristics(element) {
+function loadCharacteristics(elemId) {
+    var element=document.getElementById(elemId);
     var categoryId = (element[element.selectedIndex].id);
     $.get("/characteristics?categoryId=" + categoryId, function (data) {
         var characteristicDiv = $('#characteristicDiv');

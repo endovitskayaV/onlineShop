@@ -29,7 +29,8 @@ public class CharacteristicDto {
     /**
      * eg: metres, gramms, etc
      */
-    @NotBlank(message = "Type must contain at least one not blank character")
+   //TODO: implement groups
+    // @NotBlank(message = "Type must contain at least one not blank character")
     private String type;
 
   //  @NotBlank(message = "Value must contain at least one not blank character")

@@ -36,6 +36,7 @@ public class ItemDto {
     @NotNull(message = "Fill in count")
     @Min(value = 0, message = "Count must be greater than or equal to 0")
     private Integer storage;
+
     private String description;
 
     @NotNull(message = "Fill in price")

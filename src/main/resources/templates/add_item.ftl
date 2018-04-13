@@ -17,12 +17,12 @@
                 <form class="container" method="post" action="/items/add">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                              <@spring.bind "item.name"/>
+                             <@spring.bind "item.name"/>
                             <label for="name">Name</label>
                             <@spring.formInput "item.name"/>
 
 
-                            <@spring.showErrors ""/>
+                            <@spring.showErrors "<br>"/>
 
                               <#if errors??>
                                   <#list errors as error>
@@ -33,8 +33,8 @@
                                  ${error.defaultMessage}
                              </#list>
 
+                        </div>
 
-                    </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
@@ -66,12 +66,28 @@
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                           
-                            <select   id="categoryId" name="categoryId" onchange="loadCharacteristics(this)">
+                            <select   id="categoryId" name="categoryId" onchange="loadCharacteristics('categoryId')">
+
                                 <option selected disabled value=''>Choose your option</option>
-              <#list categories as category>
-            <option id="${category.id}"  value="${category.id}">${category.name}</option>
-              </#list>
+
+                                  <#list categories as category>
+                                      <#if selectedCategory??>
+
+                                      <#if category.id==selectedCategory.id>
+                       <option selected id="${category.id}" value="${category.id}">${category.name}</option>
+                                      <#else>
+                   <option id="${category.id}" value="${category.id}">${category.name}</option>
+                                      </#if>
+
+                                    <#else>
+                                   <option id="${category.id}" value="${category.id}">${category.name}</option>
+                                      </#if>
+                                  </#list>
+
+
                             </select>
+
+
                             <label for="categoryId">Category</label>
                         </div>
                         <div style="margin-top: 30px" class="input-field col s1">
@@ -81,7 +97,33 @@
                         </div>
                     </div>
 
-                    <div id="characteristicDiv"></div>
+
+
+                    <div id="characteristicDiv">
+                          <#if selectedCategory??>
+                              <#assign i=0>
+                               <#list characteristics as characteristic>
+                              <input type="number" name="characteristic[${i}].id"
+                               hidden="hidden" value="${characteristic.id}">
+                              <input type="text" name="characteristics[${i}].type"
+                               hidden="hidden" value="${characteristic.type}">
+
+                              <input  name="characteristics[${i}].required"
+                               hidden="hidden" value="${characteristic.required?c}">
+
+                              <input type="text" name="characteristics[${i}].name"
+                              hidden="hidden" value="${characteristic.name}">
+                                  <div class="row">
+                                              <div class="input-field col s10 offset-s1">
+                                                  <input id="value" name="characteristics[${i}].value" type="text" value="${characteristic.value}">
+                                                      <label for="value">${characteristic.name}</label>
+                                   <span class="helper-text">${characteristic.type}</span>
+                                                  </div>
+                                          </div>
+                               <#assign i=i+1>
+                              </#list>
+                          </#if>
+                    </div>
 
                     <div class="row">
                         <div class="input-field col s2 offset-s1">

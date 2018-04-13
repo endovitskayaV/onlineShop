@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ru.reksoft.onlineShop.model.dto.CategoryDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.service.CategoryService;
@@ -143,6 +144,12 @@ public class ItemController {
                     .build();
             modelMap.addAttribute("category", newCategoryDto);
             modelMap.addAttribute("characteristics", characteristicService.getAll());
+
+
+            if (itemDto.getCategoryId()!=0) {
+                modelMap.addAttribute("selectedCategory", categoryService.getById(itemDto.getCategoryId()));
+                modelMap.addAttribute("characteristics", itemDto.getCharacteristics());
+            }
             return new ModelAndView("add_item");
         }
 
