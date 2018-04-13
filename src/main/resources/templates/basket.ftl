@@ -54,10 +54,16 @@
                         </div>
                         <div class="row">
                         <div class="col s4">
-                            <input id="quantity-${item.id}" name="quantity" type="number" min="1"
-                                   value="${quantities[i]?string["0"]}"
-                                   onchange="increaseItemQuantity(${basketId},${item.id})">
-                            <label for="quantity-${item.id}">Quantity</label>
+                            <p>
+                                <a href="javascript: setItemQuantity(${basketId},${item.id},true)">
+                                    <i class="material-icons cl-4db6a sz-20">add</i></a>
+                            <span id="quantity-${item.id}">
+                                ${quantities[i]?string["0"]}
+                            </span>ps
+                                <a href="javascript: setItemQuantity(${basketId},${item.id},false)">
+                                    <i class="material-icons cl-4db6a sz-20">remove</i></a>
+                            </p>
+
                         </div>
                         </div>
                         <div class="row">

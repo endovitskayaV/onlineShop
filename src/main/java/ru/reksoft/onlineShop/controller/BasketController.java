@@ -54,8 +54,8 @@ public class BasketController {
 
 
     @PostMapping("/edit/{id}")
-    public ResponseEntity edit(@PathVariable long id, OrderedItemDto orderedItemDto) {
-        int quantity = orderService.increaseItemQuantity(id, orderedItemDto);
+    public ResponseEntity edit(@PathVariable long id, boolean isIncrease, OrderedItemDto orderedItemDto) {
+        int quantity = orderService.setItemQuantityInBasket(id, orderedItemDto, isIncrease);
         return quantity == -1 ?
                 ResponseEntity.ok().build() :
                 ResponseEntity.badRequest().body(quantity);

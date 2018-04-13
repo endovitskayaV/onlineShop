@@ -32,6 +32,14 @@ public class OrderController {
         return "orders";
     }
 
+    @GetMapping("/check/{id}")
+    public ResponseEntity checkOrderDetails(@RequestBody OrderDto orderDto) {
+        return orderService.checkOrderDetails(orderDto) ?
+                ResponseEntity.noContent().build() :
+                ResponseEntity.badRequest().build();
+
+    }
+
     @GetMapping("/finish/{id}")
     public String finishOrder(Model model, @PathVariable long id) {
         return getOrderModel(model, id) ? "finish_order" : "error";
@@ -42,7 +50,6 @@ public class OrderController {
         orderService.finishOrder(orderDto);
         return ResponseEntity.noContent().build();
     }
-
 
     @GetMapping("{id}")
     public String getById(Model model, @PathVariable long id) {

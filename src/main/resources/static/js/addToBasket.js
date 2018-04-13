@@ -3,9 +3,6 @@ function addItemToBasket(id) {
         //alert( "success" );
     })
         .done(function () {
-            var storageElem = $("#storage-" + id);
-            var storage = parseInt(storageElem.text());
-            storageElem.html("").append((storage-1));
             showModal('<div class="row">' +
                 '          <div class="card-content">' +
                 '             <p class="center-align">Added to basket</p>' +

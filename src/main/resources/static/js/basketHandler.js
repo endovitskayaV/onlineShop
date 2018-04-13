@@ -1,23 +1,34 @@
-function increaseItemQuantity(basketId, itemId) {
-
-    $.post(document.location.origin + "/basket/edit/" + basketId,
-        {
-            itemId: itemId,
-            quantity: $("#quantity-" + itemId).val()
-        },
-        function () {
-            $("#sum-" + itemId).html("").append(
-                $("#quantity-" + itemId).val() * parseInt($("#price-" + itemId).text())
-            );
-            setOverall();
-        })
-        .fail(function (data) {
-            $("#quantity-"+itemId).val(data.responseJSON);
-            showModal('<div class="row">' +
-                '          <div class="card-content">' +
-                '             <p class="center-align">No more items in stock</p>' +
-                '      </div></div></div>');
-        });
+function setItemQuantity(basketId, itemId, isIncrease) {
+    var quantityElem = $("#quantity-" + itemId);
+    if (parseInt(quantityElem.text())===1 && !isIncrease) {
+        //do nothing
+    } else {
+        $.post(document.location.origin + "/basket/edit/" + basketId + "?isIncrease=" + isIncrease,
+            {
+                itemId: itemId,
+                quantity: parseInt(quantityElem.text())
+            },
+            function () {
+                var newQuantity = parseInt(quantityElem.text());
+                if (isIncrease) {
+                    newQuantity = newQuantity + 1;
+                } else {
+                    newQuantity = newQuantity - 1;
+                }
+                quantityElem.html("").text(newQuantity);
+                $("#sum-" + itemId).html("").append(
+                    newQuantity * parseInt($("#price-" + itemId).text())
+                );
+                setOverall();
+            })
+            .fail(function (data) {
+                $("#quantity-" + itemId).val(data.responseJSON);
+                showModal('<div class="row">' +
+                    '          <div class="card-content">' +
+                    '             <p class="center-align">No more items in stock</p>' +
+                    '      </div></div></div>');
+            });
+    }
 }
 
 
