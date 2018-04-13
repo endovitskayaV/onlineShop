@@ -99,7 +99,7 @@
                         </div>
                         <div class="row">
                             <div class="input-field col s1 offset-s10">
-                                <a href="javascript: makeOrder()" class="waves-effect waves-light btn">Order</a>
+                                <a href="/orders/finish/${basketId}" class="waves-effect waves-light btn">Order</a>
                             </div>
                         </div>
                     </div>

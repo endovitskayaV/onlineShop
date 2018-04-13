@@ -43,19 +43,19 @@ public class OrderService {
         return orderConverter.toDto(orderRepository.findById(id).orElse(null));
     }
 
-    public List<OrderDto> getAllOrderedAndUserId(long userId) {
-        return orderRepository.findAllByUserIdAndStatusIdGreaterThan(userId, 1).stream()
+    public List<OrderDto> getAllOrderedByUserId(long userId) {
+        return orderRepository.findAllByUserIdAndStatusIdGreaterThan(userId, 1).stream()  //1- in basket
                 .map(orderConverter::toDto).collect(Collectors.toList());
     }
 
     public OrderDto getBasket(long userId) {
-        List<OrderEntity> orders = orderRepository.findAllByStatusIdAndUserId(1, userId);
+        List<OrderEntity> orders = orderRepository.findAllByStatusIdAndUserId(1, userId); //1- in basket
         return (orders.size() != 0) ? orderConverter.toDto(orders.get(0)) : null;
     }
 
 
     public void addToBasket(long userId, long itemId) {
-        List<OrderEntity> orders = orderRepository.findAllByStatusIdAndUserId(1, userId);
+        List<OrderEntity> orders = orderRepository.findAllByStatusIdAndUserId(1, userId);  //1- in basket
         OrderEntity basket = (orders.size() != 0) ? orders.get(0) : null;
         if (basket == null) {
             //create new basket
@@ -107,7 +107,6 @@ public class OrderService {
         } else {
 
             itemsQuantity.remove(foundItemEntity);
-
             if (itemsQuantity.size() == 0) { //whether to delete whole basket
                 orderRepository.delete(basket);
             } else {
@@ -116,13 +115,6 @@ public class OrderService {
             }
             return true;
         }
-    }
-
-
-    public long basketToOrder(long orderId) {
-        OrderEntity orderEntity = orderRepository.findById(orderId).get();
-        orderEntity.setStatus(statusRepository.findById(1L).get()); //1- unfinished order
-        return orderRepository.save(orderEntity).getId();
     }
 
     public void finishOrder(OrderDto orderDto) {

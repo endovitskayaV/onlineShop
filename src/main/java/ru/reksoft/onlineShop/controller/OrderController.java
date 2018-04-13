@@ -13,8 +13,6 @@ import ru.reksoft.onlineShop.service.OrderService;
 import java.util.ArrayList;
 import java.util.List;
 
-;
-
 @Controller
 @RequestMapping("/orders")
 public class OrderController {
@@ -30,19 +28,13 @@ public class OrderController {
     @GetMapping
     public String getAll(Model model) {
         long userId = 1; //TODO: get user id
-        List<OrderDto> orders=orderService.getAllOrderedAndUserId(userId);
-        model.addAttribute("orders", orders);
+        model.addAttribute("orders", orderService.getAllOrderedByUserId(userId));
         return "orders";
-    }
-
-    @PostMapping(value = "/add")
-    public ResponseEntity basketToOrder(@RequestBody OrderDto orderDto) {
-        return ResponseEntity.ok(orderService.basketToOrder(orderDto.getId()));
     }
 
     @GetMapping("/finish/{id}")
     public String finishOrder(Model model, @PathVariable long id) {
-        return getOrder(model, id) ?"finish_order" : "error";
+        return getOrderModel(model, id) ? "finish_order" : "error";
     }
 
     @PostMapping(value = "/finish")
@@ -54,16 +46,16 @@ public class OrderController {
 
     @GetMapping("{id}")
     public String getById(Model model, @PathVariable long id) {
-        return getOrder(model, id) ? "order_info" : "error";
+        return getOrderModel(model, id) ? "order_info" : "error";
     }
 
-    private boolean getOrder(Model model, long id) {
+    private boolean getOrderModel(Model model, long id) {
         OrderDto orderDto = orderService.getById(id);
         if (orderDto == null) {
             model.addAttribute("message", "No such order");
             return false;
         } else {
-            if (orderDto.getDeliveryAddress()==null)  orderDto.setDeliveryAddress("");
+            if (orderDto.getDeliveryAddress() == null) orderDto.setDeliveryAddress("");
             model.addAttribute("order", orderDto);
             List<ItemDto> items = new ArrayList<>();
             orderDto.getItems()

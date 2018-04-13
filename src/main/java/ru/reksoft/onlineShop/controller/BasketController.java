@@ -30,7 +30,6 @@ public class BasketController {
     public ResponseEntity add(long itemId) {
         long userId = 1; //TODO: get user id
         orderService.addToBasket(userId, itemId);
-        //TODO: return order id and ask user whether to go to basket page or not
         return ResponseEntity.noContent().build();
     }
 
@@ -38,7 +37,7 @@ public class BasketController {
     public String getBasket(Model model) {
         long userId = 1; //TODO: get user id
         OrderDto basket = orderService.getBasket(userId);
-        if(basket!=null) {
+        if (basket != null) {
             List<ItemDto> items = new ArrayList<>();
             basket.getItems()
                     .forEach(orderedItem -> items.add(itemService.getById(orderedItem.getItemId())));
@@ -47,7 +46,7 @@ public class BasketController {
             basket.getItems().forEach(orderedItem -> quatities.add(orderedItem.getQuantity()));
             model.addAttribute("quantities", quatities);
             model.addAttribute("basketId", basket.getId());
-        }else{
+        } else {
             model.addAttribute("items", new ArrayList<>());
         }
         return "basket";
@@ -65,8 +64,8 @@ public class BasketController {
 
     @DeleteMapping("/delete/{basketId}/{itemId}")
     public ResponseEntity delete(@PathVariable long basketId, @PathVariable long itemId) {
-       return orderService.deleteItem(basketId, itemId)?
-               ResponseEntity.ok().build():
-               ResponseEntity.badRequest().build();
+        return orderService.deleteItem(basketId, itemId) ?
+                ResponseEntity.ok().build() :
+                ResponseEntity.badRequest().build();
     }
 }
