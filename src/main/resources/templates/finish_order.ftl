@@ -33,8 +33,8 @@
                         <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a>
                         </p>
                         <div id="price-${item.id}"> ${item.price?string["0"]} rub</div>
-                        <p id="quantity-${item.id}" type="number">
-                            Ordered: <b> ${quantities[i]?string["0"]} ps</b> &nbsp;&mdash;
+                        <p type="number">
+                            Ordered: <b id="quantity-${item.id}"> ${quantities[i]?string["0"]} ps</b> &nbsp;&mdash;
 
                     <#assign sum=item.price*quantities[i]>
                     <#assign overall=overall+sum>

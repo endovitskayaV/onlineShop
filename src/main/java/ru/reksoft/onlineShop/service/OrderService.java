@@ -2,6 +2,7 @@ package ru.reksoft.onlineShop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.reksoft.onlineShop.model.domain.converter.ItemConverter;
 import ru.reksoft.onlineShop.model.domain.converter.OrderConverter;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.model.domain.entity.OrderEntity;
@@ -9,36 +10,37 @@ import ru.reksoft.onlineShop.model.domain.repository.ItemRepository;
 import ru.reksoft.onlineShop.model.domain.repository.OrderRepository;
 import ru.reksoft.onlineShop.model.domain.repository.StatusRepository;
 import ru.reksoft.onlineShop.model.domain.repository.UserRepository;
+import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
 import ru.reksoft.onlineShop.model.dto.OrderedItemDto;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
     private static final long STATUS_ID_BASKET = 1;
-    private static final long STATUS_ID_ORDER = 1;
+    private static final long STATUS_ID_ORDER = 2;
     private OrderRepository orderRepository;
     private OrderConverter orderConverter;
     private StatusRepository statusRepository;
     private UserRepository userRepository;
     private ItemRepository itemRepository;
+    private ItemConverter itemConverter;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,
                         OrderConverter orderConverter,
                         StatusRepository statusRepository,
                         UserRepository userRepository,
-                        ItemRepository itemRepository) {
+                        ItemRepository itemRepository,
+                        ItemConverter itemConverter) {
         this.orderRepository = orderRepository;
         this.orderConverter = orderConverter;
         this.statusRepository = statusRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
+        this.itemConverter = itemConverter;
     }
 
     public OrderDto getById(long id) {
@@ -141,14 +143,29 @@ public class OrderService {
     }
 
 
-    public boolean checkOrderDetails(OrderDto orderDto){
-        //if (orderDto.get)
+    public List<ItemDto> checkOrderDetails(long basketId) {
+        List<ItemDto> buggedItem = new ArrayList<>();
+        orderConverter.toDto(orderRepository.getOne(basketId))
+                .getItems().forEach(orderedItemDto -> {
+            ItemEntity itemEntity = itemRepository.getOne(orderedItemDto.getItemId());
+            if (orderedItemDto.getQuantity() > itemEntity.getStorage()) {
+                buggedItem.add(itemConverter.toDto(itemEntity));
+            }
+        });
+        return buggedItem;
     }
+
     public void finishOrder(OrderDto orderDto) {
         OrderEntity orderEntity = orderRepository.getOne(orderDto.getId());
         orderEntity.setStatus(statusRepository.getOne(STATUS_ID_ORDER));
         orderEntity.setDate(new Date());
         orderEntity.setDeliveryAddress(orderDto.getDeliveryAddress());
+
+        int i = 0;
+        for (ItemEntity itemEntity : orderEntity.getItemsQuantity().keySet()) {
+            itemEntity.setStorage(itemEntity.getStorage() - orderDto.getItems().get(i).getQuantity());
+            i++;
+        }
         orderRepository.save(orderEntity);
     }
 }

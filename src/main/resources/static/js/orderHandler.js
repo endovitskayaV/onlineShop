@@ -3,7 +3,7 @@ function confirmOrder() {
 
     $("input[id*='itemId']").each(function () {
         var itemId = $(this).val();
-        query.push({itemId: itemId, quantity: $("#quantity-" + itemId).val()});
+        query.push({itemId: itemId, quantity:parseInt( $("#quantity-" + itemId).text())
     });
 
     var orderId = $("#id").val();
@@ -26,4 +26,5 @@ function confirmOrder() {
         }
 
     });
+})
 }

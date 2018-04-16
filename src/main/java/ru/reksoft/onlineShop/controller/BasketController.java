@@ -68,4 +68,12 @@ public class BasketController {
                 ResponseEntity.ok().build() :
                 ResponseEntity.badRequest().build();
     }
+
+    @GetMapping("/check/{id}")
+    public ResponseEntity checkOrderDetails(@PathVariable long id) {
+        List<ItemDto> buggedItems = orderService.checkOrderDetails(id);
+        return buggedItems.size() == 0 ?
+                ResponseEntity.noContent().build() :
+                ResponseEntity.badRequest().body(buggedItems);
+    }
 }

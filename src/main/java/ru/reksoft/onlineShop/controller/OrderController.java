@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
+import ru.reksoft.onlineShop.model.dto.OrderedItemDto;
 import ru.reksoft.onlineShop.service.ItemService;
 import ru.reksoft.onlineShop.service.OrderService;
 
@@ -30,14 +31,6 @@ public class OrderController {
         long userId = 1; //TODO: get user id
         model.addAttribute("orders", orderService.getAllOrderedByUserId(userId));
         return "orders";
-    }
-
-    @GetMapping("/check/{id}")
-    public ResponseEntity checkOrderDetails(@RequestBody OrderDto orderDto) {
-        return orderService.checkOrderDetails(orderDto) ?
-                ResponseEntity.noContent().build() :
-                ResponseEntity.badRequest().build();
-
     }
 
     @GetMapping("/finish/{id}")

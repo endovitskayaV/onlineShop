@@ -54,7 +54,7 @@
                         </div>
                         <div class="row">
                         <div class="col s4">
-                            <p>
+                            <div class="input-field col s5">
                                 <a href="javascript: setItemQuantity(${basketId},${item.id},true)">
                                     <i class="material-icons cl-4db6a sz-20">add</i></a>
                             <span id="quantity-${item.id}">
@@ -62,7 +62,9 @@
                             </span>ps
                                 <a href="javascript: setItemQuantity(${basketId},${item.id},false)">
                                     <i class="material-icons cl-4db6a sz-20">remove</i></a>
-                            </p>
+                            </div>
+                            <div id="error-quantity-${item.id}" class="input-field col s1">
+                            </div>
 
                         </div>
                         </div>
@@ -105,7 +107,7 @@
                         </div>
                         <div class="row">
                             <div class="input-field col s1 offset-s10">
-                                <a href="/orders/finish/${basketId}" class="waves-effect waves-light btn">Order</a>
+                                <a href="javascript: checkItemQuantity(${basketId})" class="waves-effect waves-light btn">Order</a>
                             </div>
                         </div>
                     </div>
