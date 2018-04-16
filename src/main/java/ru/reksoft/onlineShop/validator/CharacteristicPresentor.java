@@ -1,6 +1,6 @@
 package ru.reksoft.onlineShop.validator;
 
-public interface Interface1 {
+public interface CharacteristicPresentor {
 
     boolean isRequired();
     String getValue();

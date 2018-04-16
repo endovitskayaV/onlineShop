@@ -27,9 +27,6 @@ function confirmOrder() {
         error:function (data) {
             $('[name $= "-errors"]').html("");
             $.each(data.responseJSON,function (index,error) {
-                var f=error.field;
-                var m=error.message;
-                var eleem=$("#"+error.field+"-errors");
                 $("#"+error.field+"-errors").append('<span class="cl-c62828">'+error.message+'</span>');
             });
         }

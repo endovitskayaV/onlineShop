@@ -1,7 +1,6 @@
 package ru.reksoft.onlineShop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ru.reksoft.onlineShop.model.dto.CategoryDto;
+import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.service.CategoryService;
@@ -17,7 +16,6 @@ import ru.reksoft.onlineShop.service.CharacteristicService;
 import ru.reksoft.onlineShop.service.ItemService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -124,11 +122,7 @@ public class ItemController {
     @PostMapping("/add")
     public ModelAndView add(ModelMap modelMap, @Valid ItemDto itemDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-
-            modelMap.addAttribute("errors", errors);
+            modelMap.addAttribute("errors", ClientDataConstructor.getFormErrors(bindingResult));
 
             modelMap.addAttribute("item", itemDto);
             modelMap.addAttribute("categories", categoryService.getAll());
@@ -140,7 +134,7 @@ public class ItemController {
             modelMap.addAttribute("category", newCategoryDto);
             modelMap.addAttribute("characteristics", characteristicService.getAll());
 
-            if (itemDto.getCategoryId()!=0) {
+            if (itemDto.getCategoryId() != 0) {
                 modelMap.addAttribute("selectedCategory", categoryService.getById(itemDto.getCategoryId()));
                 modelMap.addAttribute("characteristics", itemDto.getCharacteristics());
             }

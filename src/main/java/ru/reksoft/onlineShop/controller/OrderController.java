@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.controller.util.Error;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
@@ -46,9 +47,7 @@ public class OrderController {
     @PostMapping(value = "/finish")
     public ResponseEntity finishOrder(@Valid @RequestBody OrderDto orderDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            List<Error> errors = new ArrayList<>();
-            bindingResult.getFieldErrors().forEach(fieldError -> errors.add(new Error(fieldError.getField(), fieldError.getDefaultMessage())));
-            return ResponseEntity.badRequest().body(errors);
+            return ResponseEntity.badRequest().body(ClientDataConstructor.getFormErrors(bindingResult));
         } else {
             orderService.finishOrder(orderDto);
             return ResponseEntity.noContent().build();

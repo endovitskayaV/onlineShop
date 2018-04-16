@@ -3,6 +3,7 @@
 <html>
 <head>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../js/addItemsHandler.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="../css/my_style.css"/>
@@ -20,18 +21,8 @@
                              <@spring.bind "item.name"/>
                             <label for="name">Name</label>
                             <@spring.formInput "item.name"/>
-                           
-                            <@spring.showErrors "<br>"/>
-
-                              <#if errors??>
-                                  <#list errors as error>
-                                      ${error}
-                                  </#list>
-                              </#if>
-                             <#list spring.status.errors.allErrors as error>
-                                 ${error.defaultMessage}
-                             </#list>
-
+                            <div id="name-errors">
+                            </div>
                         </div>
 
                     </div>
@@ -39,27 +30,32 @@
                         <div class="input-field col s10 offset-s1">
                                <@spring.formInput "item.producer"/>
                             <label for="producer">Producer</label>
-                          
+                            <div id="producer-errors">
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                               <@spring.formInput "item.storage"/>
                             <label for="storage">Count</label>
-                          
+                            <div id="storage-errors">
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                             <@spring.formInput "item.price"/>
                             <label for="price">Price</label>
-                          
+                            <div id="price-errors">
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                              <@spring.formInput "item.description"/>
                             <label for="description">Description</label>
+                            <div id="description-errors">
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -88,6 +84,8 @@
 
 
                             <label for="categoryId">Category</label>
+                            <div id="characteristics-errors">
+                            </div>
                         </div>
                         <div style="margin-top: 30px" class="input-field col s1">
                             <a class="modal-trigger" href="#category_modal">
@@ -116,6 +114,7 @@
                                               <div class="input-field col s10 offset-s1">
                                                   <input id="value" name="characteristics[${i}].value" type="text" value="${characteristic.value}">
                                                       <label for="value">${characteristic.name}</label>
+                                                   <div id="characteristics[${i}]-errors"></div>
                                    <span class="helper-text">${characteristic.type}</span>
                                                   </div>
                                           </div>
@@ -149,9 +148,14 @@
 <div id="error-modal" class="modal modal-content">
 </div>
 
+<#if errors??>
+    <#list errors as error>
+<script>showError("${error.field}","${error.message}");</script>
+    </#list>
+</#if>
+
 <script type="text/javascript" src="../js/materialize.min.js"></script>
 <script type="text/javascript" src="../js/addCategoryHandler.js"></script>
-<script type="text/javascript" src="../js/addItemsHandler.js"></script>
 <script type="text/javascript" src="../js/initSelect.js"></script>
 <script type="text/javascript" src="../js/initModal.js"></script>
 

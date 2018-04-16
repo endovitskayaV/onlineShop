@@ -1,5 +1,5 @@
 function loadCharacteristics(elemId) {
-    var element=document.getElementById(elemId);
+    var element = document.getElementById(elemId);
     var categoryId = (element[element.selectedIndex].id);
     $.get("/characteristics?categoryId=" + categoryId, function (data) {
         var characteristicDiv = $('#characteristicDiv');
@@ -28,4 +28,14 @@ function loadCharacteristics(elemId) {
         });
 
     });
+}
+
+
+function showError(field, message) {
+    var t =
+        $('[name="characteristics[1]-errors"]');
+    var str = field + "-errors";
+    var e = $('[name=str]');
+    $("#" + field + "-errors").append('<span class="cl-c62828">' + message + '</span>');
+
 }
