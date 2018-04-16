@@ -73,9 +73,6 @@ function checkItemQuantity(basketId) {
             .fail(function (data) {
                 $('[value ^= "#error-quantity-"]').html("");
                 $.each(data.responseJSON,function (index,itemDto) {
-                    var itemId=itemDto.id;
-                    var st=itemDto.storage;
-                    var elemb= $("#error-quantity-" + itemDto.itemId);
                     $("#error-quantity-" + itemDto.id).html("").append('<span class="cl-c62828">In stock '+itemDto.storage+' ps</span>');
                 });
                 showModal('<div class="row">' +

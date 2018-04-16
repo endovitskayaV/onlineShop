@@ -1,6 +1,7 @@
 package ru.reksoft.onlineShop.model.dto;
 
 import lombok.*;
+import ru.reksoft.onlineShop.controller.util.CreateCharacteristic;
 import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
 import ru.reksoft.onlineShop.validator.Interface1;
 import ru.reksoft.onlineShop.validator.RequiredCharacteristicNotEmpty;
@@ -17,7 +18,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@RequiredCharacteristicNotEmpty
+@RequiredCharacteristicNotEmpty //ensures required value filled in
 public class CharacteristicDto implements Interface1 {
     private long id;
 
@@ -28,11 +29,9 @@ public class CharacteristicDto implements Interface1 {
      * eg: metres, gramms, etc
      */
     //TODO: implement groups
-    // @NotBlank(message = "Type must contain at least one not blank character")
+     @NotBlank(groups = CreateCharacteristic.class,message = "Type must contain at least one not blank character")
     private String type;
 
-    //  @NotBlank(message = "Value must contain at least one not blank character")
     private String value;
-
     private boolean required;
 }

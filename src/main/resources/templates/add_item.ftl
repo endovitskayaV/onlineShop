@@ -20,9 +20,7 @@
                              <@spring.bind "item.name"/>
                             <label for="name">Name</label>
                             <@spring.formInput "item.name"/>
-                            <@spring.showErrors/>
-
-
+                           
                             <@spring.showErrors "<br>"/>
 
                               <#if errors??>

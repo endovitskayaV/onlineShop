@@ -56,6 +56,8 @@
                                    value="${order.deliveryAddress}">
                             <label for="deliveryAddress">Delivery address</label>
                        </div>
+                            <div id="deliveryAddress-errors">
+                            </div>
 
                         <div class="col s1 offset-s10">
                             <a href="javascript: confirmOrder()" class="waves-effect waves-light btn">Order</a>

@@ -3,6 +3,7 @@ package ru.reksoft.onlineShop.model.dto;
 import lombok.*;
 import ru.reksoft.onlineShop.model.domain.entity.CategoryEntity;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -23,18 +24,21 @@ public class CategoryDto {
     private long id;
 
 
+    @NotBlank(message = "Name must contain at least one not blank character")
     private String name;
     private String description;
 
     /**
      * category popularity
      */
-
-    private int rating;
+    @NotNull(message = "Fill in rating")
+    @Min(value = 0, message = "Rating must be greater than or equal to 0")
+    private Integer rating;
 
     /**
      * Characteristics that belongs to this category
      * eg: Category=smartphone, characteristics={diagonal, color, weight, etc}
      */
+    @NotNull(message = "Choose at least one characteristic")
     private List<CharacteristicDto> characteristics;
 }

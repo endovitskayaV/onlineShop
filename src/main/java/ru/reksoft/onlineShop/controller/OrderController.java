@@ -4,13 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import ru.reksoft.onlineShop.controller.util.Error;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
-import ru.reksoft.onlineShop.model.dto.OrderedItemDto;
 import ru.reksoft.onlineShop.service.ItemService;
 import ru.reksoft.onlineShop.service.OrderService;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +23,7 @@ import java.util.List;
 public class OrderController {
     private OrderService orderService;
     private ItemService itemService;
+    private ObjectError objectError;
 
     @Autowired
     public OrderController(OrderService orderService, ItemService itemService) {
@@ -34,22 +39,29 @@ public class OrderController {
     }
 
     @GetMapping("/finish/{id}")
-    public String finishOrder(Model model, @PathVariable long id) {
+    public String finishOrder(ModelMap model, @PathVariable long id) {
         return getOrderModel(model, id) ? "finish_order" : "error";
     }
 
     @PostMapping(value = "/finish")
-    public ResponseEntity finishOrder(@RequestBody OrderDto orderDto) {
-        orderService.finishOrder(orderDto);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity finishOrder(@Valid @RequestBody OrderDto orderDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<Error> errors = new ArrayList<>();
+            bindingResult.getFieldErrors().forEach(fieldError -> errors.add(new Error(fieldError.getField(), fieldError.getDefaultMessage())));
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            orderService.finishOrder(orderDto);
+            return ResponseEntity.noContent().build();
+        }
+
     }
 
     @GetMapping("{id}")
-    public String getById(Model model, @PathVariable long id) {
+    public String getById(ModelMap model, @PathVariable long id) {
         return getOrderModel(model, id) ? "order_info" : "error";
     }
 
-    private boolean getOrderModel(Model model, long id) {
+    private boolean getOrderModel(ModelMap model, long id) {
         OrderDto orderDto = orderService.getById(id);
 
         if (orderDto == null) {
