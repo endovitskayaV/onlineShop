@@ -28,8 +28,9 @@ public class CharacteristicConverter {
             return CharacteristicDto.builder()
                     .id(characteristicEntity.getId())
                     .name(characteristicEntity.getName())
-                    .type(characteristicEntity.getType())
+                    .measureUnit(characteristicEntity.getMeasureUnit())
                     .required(required)
+                    .valueDataType(characteristicEntity.getValueDataType())
                     .build();
         }
     }
@@ -47,7 +48,8 @@ public class CharacteristicConverter {
             return CharacteristicEntity.builder()
                     .id(characteristicDto.getId())
                     .name(characteristicDto.getName())
-                    .type(characteristicDto.getType())
+                    .measureUnit(characteristicDto.getMeasureUnit())
+                    .valueDataType(characteristicDto.getValueDataType())
                     .build();
         }
     }

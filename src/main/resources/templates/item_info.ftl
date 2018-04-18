@@ -54,7 +54,7 @@
                                         <#list characteristics as characteristic>
                                 <tr>
                                     <td>${characteristic.name}</td>
-                                    <td style="text-align: right">${characteristic.value} ${characteristic.type}</td>
+                                    <td style="text-align: right">${characteristic.value} ${characteristic.getMeasureUnit}</td>
                                 </tr>
                                         </#list>
                                     </#if>

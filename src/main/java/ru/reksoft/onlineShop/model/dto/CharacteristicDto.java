@@ -3,8 +3,11 @@ package ru.reksoft.onlineShop.model.dto;
 import lombok.*;
 import ru.reksoft.onlineShop.controller.util.CreateCharacteristic;
 import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
-import ru.reksoft.onlineShop.validator.CharacteristicPresentor;
-import ru.reksoft.onlineShop.validator.RequiredCharacteristicNotEmpty;
+import ru.reksoft.onlineShop.model.domain.entity.DataType;
+import ru.reksoft.onlineShop.validator.characteristicValueDataType.CharacteristicDataTypeValueProvider;
+import ru.reksoft.onlineShop.validator.characteristicValueDataType.CheckCharacteristicValueDataType;
+import ru.reksoft.onlineShop.validator.chracteristicRequiredValue.CharacteristicValueRequiredProvider;
+import ru.reksoft.onlineShop.validator.chracteristicRequiredValue.RequiredCharacteristicNotEmpty;
 
 import javax.validation.constraints.NotBlank;
 
@@ -19,7 +22,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Builder
 @RequiredCharacteristicNotEmpty //ensures required value filled in
-public class CharacteristicDto implements CharacteristicPresentor {
+@CheckCharacteristicValueDataType
+public class CharacteristicDto implements CharacteristicValueRequiredProvider, CharacteristicDataTypeValueProvider {
     private long id;
 
     @NotBlank(message = "Name must contain at least one not blank character")
@@ -28,9 +32,14 @@ public class CharacteristicDto implements CharacteristicPresentor {
     /**
      * eg: metres, gramms, etc
      */
-     @NotBlank(groups = CreateCharacteristic.class,message = "Type must contain at least one not blank character")
-    private String type;
+    @NotBlank(groups = CreateCharacteristic.class, message = "Type must contain at least one not blank character")
+    private String measureUnit;
 
     private String value;
     private boolean required;
+
+    /**
+     * whether characterisitc value is a String, fractional number or integer number
+     */
+    private DataType valueDataType;
 }

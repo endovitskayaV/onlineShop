@@ -26,7 +26,11 @@ public class CharacteristicEntity {
      * Unit of characteristic`s measure
      * eg: metres, gramme, etc
      */
-    @Column(name = "type", nullable = false)
-    private String type;
+    @Column(name = "measure_unit", nullable = false)
+    private String measureUnit;
+
+    @Column(name = "value_data_type", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private DataType valueDataType;
 
 }

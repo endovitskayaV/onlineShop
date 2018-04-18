@@ -8,11 +8,14 @@ function loadCharacteristics(elemId) {
         $.each(data, function (key, characteristic) {
             var newInput = '<input type="number" name="characteristics[' + i + '].id" ' +
                 ' hidden="hidden" value="' + characteristic.id + '"> ' +
-                '<input type="text" name="characteristics[' + i + '].type" ' +
-                ' hidden="hidden" value="' + characteristic.type + '"> ' +
+                '<input type="text" name="characteristics[' + i + '].measureUnit" ' +
+                ' hidden="hidden" value="' + characteristic.measureUnit + '"> ' +
 
                 '<input  name="characteristics[' + i + '].required" ' +
                 ' hidden="hidden" value="' + characteristic.required + '"> ' +
+
+                '<input  name="characteristics[' + i + '].valueDataType" ' +
+                ' hidden="hidden" value="' + characteristic.valueDataType + '"> ' +
 
                 '<input type="text" name="characteristics[' + i + '].name" ' +
                 'hidden="hidden" value="' + characteristic.name + '"> ' +
@@ -20,7 +23,7 @@ function loadCharacteristics(elemId) {
                 '                <div class="input-field col s10 offset-s1">\n' +
                 '                <input id="value" name="characteristics[' + i + '].value" type="text">\n' +
                 '                    <label for="value">' + characteristic.name + '</label>\n' +
-                ' <span class="helper-text">' + characteristic.type + '</span>' +
+                ' <span class="helper-text">' + characteristic.measureUnit + '</span>' +
                 '                </div>' +
                 '            </div>';
             characteristicDiv.append(newInput);

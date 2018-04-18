@@ -18,9 +18,9 @@
                 <form class="container" method="post" action="/items/add">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                             <@spring.bind "item.name"/>
+                            <input id="name" required="required" name=name" type="text" placeholder=""
+                                   value="${item.name}">
                             <label for="name">Name</label>
-                            <@spring.formInput "item.name"/>
                             <div name="name-errors">
                             </div>
                         </div>
@@ -110,20 +110,24 @@
                                <#list characteristics as characteristic>
                               <input type="number" name="characteristic[${i}].id"
                                hidden="hidden" value="${characteristic.id}">
-                              <input type="text" name="characteristics[${i}].type"
-                               hidden="hidden" value="${characteristic.type}">
+                              <input type="text" name="characteristics[${i}].measureUnit"
+                               hidden="hidden" value="${characteristic.measureUnit}">
 
                               <input  name="characteristics[${i}].required"
                                hidden="hidden" value="${characteristic.required?c}">
 
                               <input type="text" name="characteristics[${i}].name"
                               hidden="hidden" value="${characteristic.name}">
+
+                                <input type="text" name="characteristics[${i}].valueDataType"
+                                       hidden="hidden" value="${characteristic.valueDataType}">
+
                                   <div class="row">
                                               <div class="input-field col s10 offset-s1">
                                                   <input id="value" name="characteristics[${i}].value" type="text" value="${characteristic.value}">
                                                       <label for="value">${characteristic.name}</label>
                                                    <div name="characteristics[${i}]-errors"></div>
-                                   <span class="helper-text">${characteristic.type}</span>
+                                   <span class="helper-text">${characteristic.measureUnit}</span>
                                                   </div>
                                           </div>
                                <#assign i=i+1>
