@@ -6,19 +6,22 @@
                     <input id="category_name" required="required" name="category_name" type="text"
                            value="${category.name}">
                     <label for="category_name">Name</label>
-                </div>
+                    <div name="category_name-errors"></div>
             </div>
             <div class="row">
                 <div class="input-field col s10 offset-s3">
                     <input id="category_description" name="category_description" type="text"
                            value="${category.description}">
                     <label for="category_description">Description</label>
+                    <div name="category_description-errors"></div>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s10 offset-s3">
-                    <input id="category_rating" name="category_rating" type="number" value="${category.rating}">
+                    <input id="category_rating" name="category_rating" type="number" value="${category.rating}" min="0">
                     <label for="category_rating">Rating</label>
+                    <div name="category_rating-errors"></div>
+
                 </div>
             </div>
             <div class="row">
@@ -33,6 +36,7 @@
                   </#list>
                     </select>
                     <label for="category_select">Characteristics</label>
+                    <div name="category_characteristicIds-errors"></div>
                 </div>
             </div>
 

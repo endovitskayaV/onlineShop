@@ -3,6 +3,8 @@ package ru.reksoft.onlineShop.model.dto;
 import lombok.*;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
 
 
@@ -16,21 +18,25 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ItemDto {
+public class EditableItemDto {
     private long id;
 
+    @NotBlank(message = "Name must contain at least one not blank character")
     private String name;
 
+    @NotBlank(message = "Producer must contain at least one not blank character")
     private String producer;
 
     /**
      * Quantity of items in stock
      */
-    private Integer storage;
+    @NotNull(message = "Fill in count")
+    private String storage;
 
     private String description;
 
-    private Integer price;
+    @NotNull(message = "Fill in price")
+    private String price;
 
     /**
      * id of item category
@@ -44,5 +50,7 @@ public class ItemDto {
      * item characteristics
      * eg: color, weight, etc
      */
+    @NotNull(message = "Choose category")
+    @Valid
     private List<CharacteristicDto> characteristics;
 }

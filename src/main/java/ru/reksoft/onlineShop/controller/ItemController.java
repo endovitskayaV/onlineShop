@@ -9,6 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
+import ru.reksoft.onlineShop.controller.util.Error;
+import ru.reksoft.onlineShop.model.dto.EditableItemDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.service.CategoryService;
@@ -112,46 +114,77 @@ public class ItemController {
         return "add_item";
     }
 
-    /**
-     * Inserts new item to database
-     *
-     * @param modelMap
-     * @param itemDto  item that will be inserted to database
-     * @return redirects to /items or to /error if item can not be added
-     */
+
     @PostMapping("/add")
-    public ModelAndView add(ModelMap modelMap, @Valid ItemDto itemDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            modelMap.addAttribute("errors", ClientDataConstructor.getFormErrors(bindingResult));
+    public ModelAndView add(ModelMap modelMap, @Valid EditableItemDto editableItemDto, BindingResult bindingResult) {
+        List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+        ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);
 
-            modelMap.addAttribute("item", itemDto);
-            modelMap.addAttribute("categories", categoryService.getAll());
-            NewCategoryDto newCategoryDto = NewCategoryDto.builder()
-                    .name("")
-                    .rating(0)
-                    .description("")
-                    .build();
-            modelMap.addAttribute("category", newCategoryDto);
-            modelMap.addAttribute("characteristics", characteristicService.getAll());
-
-            if (itemDto.getCategoryId() != 0) {
-                modelMap.addAttribute("selectedCategory", categoryService.getById(itemDto.getCategoryId()));
-                modelMap.addAttribute("characteristics", itemDto.getCharacteristics());
-            }
+        if (errors.size() > 0) {
+            modelMap.addAttribute("errors", errors);
+            setItemModel(modelMap, editableItemDto);
             return new ModelAndView("add_item");
         } else {
             long id = itemService.add(itemDto);
             if (id == -1) {
-                modelMap.addAttribute("message",
-                        "Item '" + itemDto.getProducer() + " " + itemDto.getName() +
-                                "' already exists!");
+                modelMap.addAttribute("message", "Item '" + itemDto.getProducer() + " " + itemDto.getName() + "' already exists!");
                 return new ModelAndView("error", modelMap);
             } else {
                 return new ModelAndView("redirect:/items/" + id);
             }
         }
+    }
 
+    private void setItemModel(ModelMap modelMap, EditableItemDto editableItemDto) {
+//        if (itemDto.getPrice() == null) {
+//            itemDto.setPrice(0);
+//        }
+//        if (itemDto.getStorage() == null) {
+//            itemDto.setStorage(0);
+//        }
+        modelMap.addAttribute("item", editableItemDto);
+        modelMap.addAttribute("categories", categoryService.getAll());
+        NewCategoryDto newCategoryDto = NewCategoryDto.builder()
+                .name("")
+                .rating(0)
+                .description("")
+                .build();
+        modelMap.addAttribute("category", newCategoryDto);
+        modelMap.addAttribute("characteristics", characteristicService.getAll());
 
+        if (editableItemDto.getCategoryId() != 0) {
+            modelMap.addAttribute("selectedCategory", categoryService.getById(editableItemDto.getCategoryId()));
+            modelMap.addAttribute("characteristics", editableItemDto.getCharacteristics());
+        }
+    }
+
+    private ItemDto editableItemDtoToItemDto(EditableItemDto editableItemDto, List<Error> errors) {
+        ItemDto itemDto = ItemDto.builder()
+                .id(editableItemDto.getId())
+                .name(editableItemDto.getName())
+                .producer(editableItemDto.getProducer())
+                .description(editableItemDto.getDescription())
+                .categoryId(editableItemDto.getCategoryId())
+                .characteristics(editableItemDto.getCharacteristics())
+                .build();
+        try {
+            itemDto.setPrice(Integer.parseInt(editableItemDto.getPrice()));
+            if (itemDto.getPrice() < 0) {
+                errors.add(new Error("price", "Price must be greater than 0"));
+            }
+        } catch (NumberFormatException e) {
+            errors.add(new Error("price", "Price must be a number less than 2,147,483,647"));
+        }
+        try {
+            itemDto.setStorage(Integer.parseInt(editableItemDto.getStorage()));
+            if (itemDto.getStorage() < 1) {
+                errors.add(new Error("storage", "Count must be greater than 1"));
+            }
+        } catch (NumberFormatException e) {
+            errors.add(new Error("storage", "Count must be anumber less than 2,147,483,647"));
+        }
+
+        return itemDto;
     }
 
     /**
@@ -162,7 +195,7 @@ public class ItemController {
      * @return "edit_item" template
      * or "error" template if item id does not exist
      */
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable long id) {
         ItemDto itemDto = itemService.getById(id);
         if (itemDto == null) {

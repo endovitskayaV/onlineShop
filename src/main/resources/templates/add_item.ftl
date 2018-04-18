@@ -10,7 +10,7 @@
 </head>
 
 <body>
- <@spring.bind "item"/>
+
 <div style="margin-top: 80px" class="row">
     <div class="col s6 offset-s3">
         <div class="card hoverable">
@@ -21,7 +21,7 @@
                              <@spring.bind "item.name"/>
                             <label for="name">Name</label>
                             <@spring.formInput "item.name"/>
-                            <div id="name-errors">
+                            <div name="name-errors">
                             </div>
                         </div>
 
@@ -30,23 +30,31 @@
                         <div class="input-field col s10 offset-s1">
                                <@spring.formInput "item.producer"/>
                             <label for="producer">Producer</label>
-                            <div id="producer-errors">
+                            <div name="producer-errors">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                              <@spring.formInput "item.storage"/>
+                             <#if item.storage??>
+                              <input id="storage" name="storage" type="number" value="${item.storage}" min="0">
+                                 <#else>
+                              <input id="storage" name="storage" type="number" value="" min="0">
+                                 </#if>
                             <label for="storage">Count</label>
-                            <div id="storage-errors">
+                            <div name="storage-errors">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <@spring.formInput "item.price"/>
+                              <#if item.price??>
+                              <input id="price" name="price" type="number" value="${item.price}" min="1">
+                              <#else>
+                              <input id="price" name="price" type="number" value="" min="1">
+                              </#if>
                             <label for="price">Price</label>
-                            <div id="price-errors">
+                            <div name="price-errors">
                             </div>
                         </div>
                     </div>
@@ -54,7 +62,7 @@
                         <div class="input-field col s10 offset-s1">
                              <@spring.formInput "item.description"/>
                             <label for="description">Description</label>
-                            <div id="description-errors">
+                            <div name="description-errors">
                             </div>
                         </div>
                     </div>
@@ -84,7 +92,7 @@
 
 
                             <label for="categoryId">Category</label>
-                            <div id="characteristics-errors">
+                            <div name="characteristics-errors">
                             </div>
                         </div>
                         <div style="margin-top: 30px" class="input-field col s1">
@@ -114,7 +122,7 @@
                                               <div class="input-field col s10 offset-s1">
                                                   <input id="value" name="characteristics[${i}].value" type="text" value="${characteristic.value}">
                                                       <label for="value">${characteristic.name}</label>
-                                                   <div id="characteristics[${i}]-errors"></div>
+                                                   <div name="characteristics[${i}]-errors"></div>
                                    <span class="helper-text">${characteristic.type}</span>
                                                   </div>
                                           </div>

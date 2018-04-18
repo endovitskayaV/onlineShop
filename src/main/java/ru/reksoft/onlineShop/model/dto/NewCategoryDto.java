@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import ru.reksoft.onlineShop.model.domain.entity.CategoryEntity;
 import ru.reksoft.onlineShop.service.CategoryService;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -27,6 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class NewCategoryDto {
+
     @NotBlank(message = "Name must contain at least one not blank character")
     private String name;
     @NotBlank(message = "Description must contain at least one not blank character")
@@ -35,8 +37,9 @@ public class NewCategoryDto {
     /**
      * category popularity
      */
-    @NotNull(message = "Fill in count")
+    @NotNull(message = "Fill in rating")
     @Min(value = 0, message = "Rating must be greater than or equal to 0")
+    @Max(value = Integer.MAX_VALUE, message ="Rating must be less than or equal to "+Integer.MAX_VALUE )
     private Integer rating;
 
     /**

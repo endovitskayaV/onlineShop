@@ -9,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
-import ru.reksoft.onlineShop.controller.util.Error;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
 import ru.reksoft.onlineShop.service.ItemService;
@@ -41,7 +40,7 @@ public class OrderController {
 
     @GetMapping("/finish/{id}")
     public String finishOrder(ModelMap model, @PathVariable long id) {
-        return getOrderModel(model, id) ? "finish_order" : "error";
+        return setOrderModel(model, id) ? "finish_order" : "error";
     }
 
     @PostMapping(value = "/finish")
@@ -57,10 +56,10 @@ public class OrderController {
 
     @GetMapping("{id}")
     public String getById(ModelMap model, @PathVariable long id) {
-        return getOrderModel(model, id) ? "order_info" : "error";
+        return setOrderModel(model, id) ? "order_info" : "error";
     }
 
-    private boolean getOrderModel(ModelMap model, long id) {
+    private boolean setOrderModel(ModelMap model, long id) {
         OrderDto orderDto = orderService.getById(id);
 
         if (orderDto == null) {

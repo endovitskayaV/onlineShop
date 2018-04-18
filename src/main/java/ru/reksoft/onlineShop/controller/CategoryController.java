@@ -5,17 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.model.dto.CategoryDto;
-import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.CharacteristicService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/categories")
@@ -69,16 +67,16 @@ public class CategoryController {
     @PostMapping(value = "/add")
     public ResponseEntity add(@Valid NewCategoryDto category, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
+
             long id = categoryService.add(category);
             if (id == -1) {
-                return ResponseEntity
-                        .badRequest().body("Category '" + category.getName() + "' already exists!");
+                return new ResponseEntity<>("Category '" + category.getName() + "' already exists!", HttpStatus.NOT_ACCEPTABLE);
             } else {
                 return ResponseEntity.ok(id);
             }
-        }else{
-            return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
 
+        } else {
+            return ResponseEntity.badRequest().body(ClientDataConstructor.getFormErrors(bindingResult));
         }
     }
 }

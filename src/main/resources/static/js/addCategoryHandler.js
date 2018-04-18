@@ -4,11 +4,13 @@ function addCategory(id) {
     var selectedValues = instance.getSelectedValues();
     var query = "name=" + $("#category_name").val() + "&description=" + $("#category_description").val() + "&rating=" + $("#category_rating").val();
 
-    var i = 0;
-    $.each(selectedValues, function (key, value) {
-        query += '&characteristicIds[' + i + ']=' + selectedValues[i];
-        i++;
-    });
+    if (selectedValues[0]!=="") {
+        var i = 0;
+        $.each(selectedValues, function (key, value) {
+            query += '&characteristicIds[' + i + ']=' + selectedValues[i];
+            i++;
+        });
+    }
 
     $.ajax({
         url: document.location.origin + '/categories/add',
@@ -28,13 +30,18 @@ function addCategory(id) {
 
                 })
             },
-            400: function (data) {
+            406: function (data) {
                 var elem = document.getElementById('error-modal');
                 elem.append(data.responseText);
                 var instance = M.Modal.getInstance(elem);
                 instance.open();
             },
-            406: function (data) {
+            400: function (data) {
+                $('[name $= "-errors"]').html("");
+                $.each(data.responseJSON,function (index,error) {
+                    var r= $("[name='category_"+  error.field + "-errors']");
+                    $("[name='category_" + error.field + "-errors']").append('<span class="cl-c62828">'+error.message+'</span>');
+                });
             }
         }
 

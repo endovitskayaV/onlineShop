@@ -32,10 +32,5 @@ function loadCharacteristics(elemId) {
 
 
 function showError(field, message) {
-    var t =
-        $('[name="characteristics[1]-errors"]');
-    var str = field + "-errors";
-    var e = $('[name=str]');
-    $("#" + field + "-errors").append('<span class="cl-c62828">' + message + '</span>');
-
+    $("[name='" + field + "-errors']").append('<span class="cl-c62828">' + message + '</span>');
 }
