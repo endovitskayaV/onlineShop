@@ -4,10 +4,10 @@ import lombok.*;
 import ru.reksoft.onlineShop.controller.util.CreateCharacteristic;
 import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
 import ru.reksoft.onlineShop.model.domain.entity.DataType;
-import ru.reksoft.onlineShop.service.validating.characteristicValueDataType.CharacteristicDataTypeValueProvider;
-import ru.reksoft.onlineShop.service.validating.characteristicValueDataType.CheckCharacteristicValueDataType;
-import ru.reksoft.onlineShop.service.validating.characteristicRequiredValue.CharacteristicValueRequiredProvider;
-import ru.reksoft.onlineShop.service.validating.characteristicRequiredValue.RequiredCharacteristicNotEmpty;
+import ru.reksoft.onlineShop.validating.characteristicValueDataType.CharacteristicDataTypeValueProvider;
+import ru.reksoft.onlineShop.validating.characteristicValueDataType.CheckCharacteristicValueDataType;
+import ru.reksoft.onlineShop.validating.characteristicRequiredValue.CharacteristicValueRequiredProvider;
+import ru.reksoft.onlineShop.validating.characteristicRequiredValue.RequiredCharacteristicNotEmpty;
 
 import javax.validation.constraints.NotBlank;
 

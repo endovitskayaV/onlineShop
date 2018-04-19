@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.service.validating.characteristicRequiredValue;
+package ru.reksoft.onlineShop.validating.characteristicRequiredValue;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

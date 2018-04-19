@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.service.validating.characteristicValueDataType;
+package ru.reksoft.onlineShop.validating.characteristicValueDataType;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

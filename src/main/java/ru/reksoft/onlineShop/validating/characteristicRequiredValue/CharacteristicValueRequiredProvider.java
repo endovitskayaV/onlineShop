@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.service.validating.characteristicRequiredValue;
+package ru.reksoft.onlineShop.validating.characteristicRequiredValue;
 
 public interface CharacteristicValueRequiredProvider {
 

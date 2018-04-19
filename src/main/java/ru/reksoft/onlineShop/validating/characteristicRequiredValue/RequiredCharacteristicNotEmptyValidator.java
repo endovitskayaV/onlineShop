@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.service.validating.characteristicRequiredValue;
+package ru.reksoft.onlineShop.validating.characteristicRequiredValue;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -9,5 +9,4 @@ public class RequiredCharacteristicNotEmptyValidator
     public boolean isValid(CharacteristicValueRequiredProvider characteristic, ConstraintValidatorContext context) {
         return !characteristic.getValue().isEmpty() || !characteristic.isRequired();
     }
-    //fgjhfj
 }
