@@ -39,8 +39,7 @@ function addCategory(id) {
             400: function (data) {
                 $('[name $= "-errors"]').html("");
                 $.each(data.responseJSON,function (index,error) {
-                    var r= $("[name='category_"+  error.field + "-errors']");
-                    $("[name='category_" + error.field + "-errors']").append('<span class="cl-c62828">'+error.message+'</span>');
+                    $("[name='category_" + error.field + "-errors']").append('<span class="cl-c62828">'+error.message+". " + '</span>');
                 });
             }
         }

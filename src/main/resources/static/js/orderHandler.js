@@ -25,12 +25,12 @@ function confirmOrder() {
         location.href = document.location.origin + '/orders/' + orderId;
         },
         error:function (data) {
+
             $('[name $= "-errors"]').html("");
             $.each(data.responseJSON,function (index,error) {
-                $("#"+error.field+"-errors").append('<span class="cl-c62828">'+error.message+'</span>');
+                $("[name='" + error.field + "-errors']").append('<span class="cl-c62828">'+error.message+". " + '</span>');
             });
         }
-
     });
 })
 }

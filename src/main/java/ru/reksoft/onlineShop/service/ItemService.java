@@ -65,14 +65,13 @@ public class ItemService {
      * @return edited item id
      */
     public long edit(ItemDto itemDto) {
-        //TODO: inspect for proper work
-        if (itemRepository.findById(itemDto.getCategoryId()).orElse(null) != null)
-            return itemRepository.save(itemConverter.toEntity(itemDto)).getId();
-        ItemEntity itemEntity = itemConverter.toEntity(itemDto);
-        itemEntity.setId(itemRepository.count() + 1);
-        ItemEntity itemEntity1 = itemRepository.save(itemEntity);
-
-        return itemEntity1.getId();
+        return itemRepository.save(itemConverter.toEntity(itemDto)).getId();
+//        if (itemDto.getCategoryId() == itemRepository.getOne(itemDto.getId()).getCategory().getId()) {
+//            return itemRepository.save(itemConverter.toEntity(itemDto)).getId();
+//        } else {
+//            itemRepository.delete(itemConverter.toEntity(itemDto));
+//            return itemRepository.save(itemConverter.toEntity(itemDto)).getId();
+//        }
     }
 
     /**
@@ -87,11 +86,11 @@ public class ItemService {
                         itemDto.getProducer()) != null) {
             return -1;
         }
-       return save(itemDto);
+        return save(itemDto);
     }
 
 
-    public long save(ItemDto itemDto){
+    public long save(ItemDto itemDto) {
         ItemEntity newItemEntity = itemConverter.toEntity(itemDto);
         newItemEntity.setId(itemRepository.count() + 1); //generate id
         return itemRepository.save(newItemEntity).getId();

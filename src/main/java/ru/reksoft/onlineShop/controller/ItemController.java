@@ -207,9 +207,10 @@ public class ItemController {
                 categoryService.getAll().stream()
                         .filter(categoryDto -> (categoryDto.getId() != (itemDto.getCategoryId())))
                         .collect(Collectors.toList()));
-        model.addAttribute("characteristics", itemDto.getCharacteristics());
+        model.addAttribute("item_characteristics", itemDto.getCharacteristics());
         model.addAttribute("selectedCategory",
                 categoryService.getById(itemDto.getCategoryId()));
+
 
         NewCategoryDto newCategoryDto = NewCategoryDto.builder()
                 .name("")
@@ -221,17 +222,19 @@ public class ItemController {
         return "edit_ite";
     }
 
-    /**
-     * Updates item
-     *
-     * @param itemDto item that will be edited
-     * @return redirects to /items/{item_id}
-     */
     @PostMapping("/edit")
-    public ModelAndView edit(ItemDto itemDto) {
-        long id = itemService.save(itemDto);
-        return new ModelAndView("redirect:/items/" + id);
+    public ResponseEntity  edit(ModelMap modelMap, @Valid @RequestBody EditableItemDto editableItemDto,BindingResult bindingResult) {
 
+        List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+        ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);
+
+        if (errors.size() > 0) {
+            modelMap.addAttribute("errors", errors);
+            setItemModel(modelMap, editableItemDto);
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            return ResponseEntity.ok(itemService.edit(itemDto));
+        }
     }
 
     /**

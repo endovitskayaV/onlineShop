@@ -18,20 +18,17 @@
                 <form class="container" method="post" action="/items/add">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="name" required="required" name=name" type="text" placeholder=""
-                                   value="${item.name}">
-                            <label for="name">Name</label>
-                            <div name="name-errors">
-                            </div>
+                          <@spring.formInput "item.name"/>
+                            <label for="name" >Name</label>
+                            <div name="name-errors"></div>
                         </div>
 
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                                <@spring.formInput "item.producer"/>
-                            <label for="producer">Producer</label>
-                            <div name="producer-errors">
-                            </div>
+                            <label for="producer" >Producer</label>
+                            <div name="producer-errors"></div>
                         </div>
                     </div>
                     <div class="row">
@@ -41,7 +38,7 @@
                                  <#else>
                               <input id="storage" name="storage" type="number" value="" min="0">
                                  </#if>
-                            <label for="storage">Count</label>
+                            <label for="storage" >Count</label>
                             <div name="storage-errors">
                             </div>
                         </div>
@@ -53,7 +50,7 @@
                               <#else>
                               <input id="price" name="price" type="number" value="" min="1">
                               </#if>
-                            <label for="price">Price</label>
+                            <label for="price" >Price</label>
                             <div name="price-errors">
                             </div>
                         </div>
@@ -61,9 +58,8 @@
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                              <@spring.formInput "item.description"/>
-                            <label for="description">Description</label>
-                            <div name="description-errors">
-                            </div>
+                            <label for="description" >Description</label>
+                            <div name="description-errors"></div>
                         </div>
                     </div>
                     <div class="row">
@@ -91,7 +87,7 @@
                             </select>
 
 
-                            <label for="categoryId">Category</label>
+                            <label for="categoryId" >Category</label>
                             <div name="characteristics-errors">
                             </div>
                         </div>
@@ -125,7 +121,7 @@
                                   <div class="row">
                                               <div class="input-field col s10 offset-s1">
                                                   <input id="value" name="characteristics[${i}].value" type="text" value="${characteristic.value}">
-                                                      <label for="value">${characteristic.name}</label>
+                                                      <label for="value" >${characteristic.name}</label>
                                                    <div name="characteristics[${i}]-errors"></div>
                                    <span class="helper-text">${characteristic.measureUnit}</span>
                                                   </div>

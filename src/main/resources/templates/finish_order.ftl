@@ -56,7 +56,7 @@
                                    value="${order.deliveryAddress}">
                             <label for="deliveryAddress">Delivery address</label>
                        </div>
-                            <div id="deliveryAddress-errors">
+                            <div name="deliveryAddress-errors">
                             </div>
 
                         <div class="col s1 offset-s10">

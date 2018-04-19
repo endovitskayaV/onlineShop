@@ -1399,7 +1399,7 @@ M.getDocumentScrollLeft = function () {
 /**
  * Get time in ms
  * @license https://raw.github.com/jashkenas/underscore/master/LICENSE
- * @measureUnit {function}
+ * @type {function}
  * @return {number}
  */
 var getTime = Date.now || function () {
@@ -2249,19 +2249,19 @@ $jscomp.polyfill = function (e, r, p, m) {
 
       /**
        * Describes open/close state of dropdown
-       * @measureUnit {Boolean}
+       * @type {Boolean}
        */
       _this8.isOpen = false;
 
       /**
        * Describes if dropdown content is scrollable
-       * @measureUnit {Boolean}
+       * @type {Boolean}
        */
       _this8.isScrollable = false;
 
       /**
        * Describes if touch moving on dropdown content
-       * @measureUnit {Boolean}
+       * @type {Boolean}
        */
       _this8.isTouchMoving = false;
 
@@ -2872,7 +2872,7 @@ $jscomp.polyfill = function (e, r, p, m) {
 
       /**
        * Describes open/close state of modal
-       * @measureUnit {Boolean}
+       * @type {Boolean}
        */
       _this12.isOpen = false;
 
@@ -5067,7 +5067,7 @@ $jscomp.polyfill = function (e, r, p, m) {
 
       /**
        * Describes current pan state toast
-       * @measureUnit {Boolean}
+       * @type {Boolean}
        */
       this.panning = false;
 
@@ -5367,7 +5367,7 @@ $jscomp.polyfill = function (e, r, p, m) {
   /**
    * @static
    * @memberof Toast
-   * @measureUnit {Array.<Toast>}
+   * @type {Array.<Toast>}
    */
 
 
@@ -5382,7 +5382,7 @@ $jscomp.polyfill = function (e, r, p, m) {
   /**
    * @static
    * @memberof Toast
-   * @measureUnit {Toast}
+   * @type {Toast}
    */
   Toast._draggedToast = null;
 
@@ -5443,19 +5443,19 @@ $jscomp.polyfill = function (e, r, p, m) {
 
       /**
        * Describes open/close state of Sidenav
-       * @measureUnit {Boolean}
+       * @type {Boolean}
        */
       _this30.isOpen = false;
 
       /**
        * Describes if Sidenav is fixed
-       * @measureUnit {Boolean}
+       * @type {Boolean}
        */
       _this30.isFixed = _this30.el.classList.contains('sidenav-fixed');
 
       /**
        * Describes if Sidenav is being draggeed
-       * @measureUnit {Boolean}
+       * @type {Boolean}
        */
       _this30.isDragged = false;
 
@@ -6022,7 +6022,7 @@ $jscomp.polyfill = function (e, r, p, m) {
   /**
    * @static
    * @memberof Sidenav
-   * @measureUnit {Array.<Sidenav>}
+   * @type {Array.<Sidenav>}
    */
 
 
@@ -6308,7 +6308,7 @@ $jscomp.polyfill = function (e, r, p, m) {
   /**
    * @static
    * @memberof ScrollSpy
-   * @measureUnit {Array.<ScrollSpy>}
+   * @type {Array.<ScrollSpy>}
    */
 
 
@@ -6317,14 +6317,14 @@ $jscomp.polyfill = function (e, r, p, m) {
   /**
    * @static
    * @memberof ScrollSpy
-   * @measureUnit {Array.<ScrollSpy>}
+   * @type {Array.<ScrollSpy>}
    */
   ScrollSpy._elementsInView = [];
 
   /**
    * @static
    * @memberof ScrollSpy
-   * @measureUnit {Array.<cash>}
+   * @type {Array.<cash>}
    */
   ScrollSpy._visibleElements = [];
 
@@ -6792,7 +6792,7 @@ $jscomp.polyfill = function (e, r, p, m) {
 ;(function ($) {
   // Function to update labels of text fields
   M.updateTextFields = function () {
-    var input_selector = 'input[measureUnit=text], input[measureUnit=password], input[measureUnit=email], input[measureUnit=url], input[measureUnit=tel], input[measureUnit=number], input[measureUnit=search], input[measureUnit=date], input[measureUnit=time], textarea';
+    var input_selector = 'input[type=text], input[type=password], input[type=email], input[type=url], input[type=tel], input[type=number], input[type=search], input[type=date], input[type=time], textarea';
     $(input_selector).each(function (element, index) {
       var $this = $(this);
       if (element.value.length > 0 || $(element).is(':focus') || element.autofocus || $this.attr('placeholder') !== null) {
@@ -6921,7 +6921,7 @@ $jscomp.polyfill = function (e, r, p, m) {
 
   $(document).ready(function () {
     // Text based inputs
-    var input_selector = 'input[measureUnit=text], input[measureUnit=password], input[measureUnit=email], input[measureUnit=url], input[measureUnit=tel], input[measureUnit=number], input[measureUnit=search], input[measureUnit=date], input[measureUnit=time], textarea';
+    var input_selector = 'input[type=text], input[type=password], input[type=email], input[type=url], input[type=tel], input[type=number], input[type=search], input[type=date], input[type=time], textarea';
 
     // Add active if form auto complete
     $(document).on('change', input_selector, function () {
@@ -6988,7 +6988,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     }, true);
 
     // Radio and Checkbox focus class
-    var radio_checkbox = 'input[measureUnit=radio], input[measureUnit=checkbox]';
+    var radio_checkbox = 'input[type=radio], input[type=checkbox]';
     $(document).on('keyup', radio_checkbox, function (e) {
       // TAB, check if tabbing to radio or checkbox.
       if (e.which === M.keys.TAB) {
@@ -7021,7 +7021,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     });
 
     // File Input Path
-    $(document).on('change', '.file-field input[measureUnit="file"]', function () {
+    $(document).on('change', '.file-field input[type="file"]', function () {
       var file_field = $(this).closest('.file-field');
       var path_input = file_field.find('input.file-path');
       var files = $(this)[0].files;
@@ -8738,7 +8738,7 @@ $jscomp.polyfill = function (e, r, p, m) {
 
       /**
        * Describes open/close state of datepicker
-       * @measureUnit {Boolean}
+       * @type {Boolean}
        */
       _this52.isOpen = false;
 
@@ -9061,7 +9061,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         if (opts.isEndRange) {
           arr.push('is-endrange');
         }
-        return '<td data-day="' + opts.day + '" class="' + arr.join(' ') + '" aria-selected="' + ariaSelected + '">' + '<button class="datepicker-day-button" measureUnit="button" ' + 'data-pika-year="' + opts.year + '" data-pika-month="' + opts.month + '" data-pika-day="' + opts.day + '">' + opts.day + '</button>' + '</td>';
+        return '<td data-day="' + opts.day + '" class="' + arr.join(' ') + '" aria-selected="' + ariaSelected + '">' + '<button class="datepicker-day-button" type="button" ' + 'data-pika-year="' + opts.year + '" data-pika-month="' + opts.month + '" data-pika-day="' + opts.day + '">' + opts.day + '</button>' + '</td>';
       }
     }, {
       key: "renderRow",
@@ -9126,7 +9126,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         yearHtml = '<select class="pika-select pika-select-year" tabindex="-1">' + arr.join('') + '</select>';
 
         var leftArrow = '<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/><path d="M0-.5h24v24H0z" fill="none"/></svg>';
-        html += '<button class="month-prev' + (prev ? '' : ' is-disabled') + '" measureUnit="button">' + leftArrow + '</button>';
+        html += '<button class="month-prev' + (prev ? '' : ' is-disabled') + '" type="button">' + leftArrow + '</button>';
 
         html += '<div class="selects-container">';
         if (opts.showMonthAfterYear) {
@@ -9146,7 +9146,7 @@ $jscomp.polyfill = function (e, r, p, m) {
 
         // if (c === (this.options.numberOfMonths - 1) ) {
         var rightArrow = '<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/><path d="M0-.25h24v24H0z" fill="none"/></svg>';
-        html += '<button class="month-next' + (next ? '' : ' is-disabled') + '" measureUnit="button">' + rightArrow + '</button>';
+        html += '<button class="month-next' + (next ? '' : ' is-disabled') + '" type="button">' + rightArrow + '</button>';
         // }
 
         return html += '</div>';
@@ -9534,7 +9534,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     return Datepicker;
   }(Component);
 
-  Datepicker._template = ['<div class= "modal datepicker-modal">', '<div class="modal-content datepicker-container">', '<div class="datepicker-date-display">', '<span class="year-text"></span>', '<span class="date-text"></span>', '</div>', '<div class="datepicker-calendar-container">', '<div class="pika-single"></div>', '<div class="datepicker-footer">', '<button class="btn-flat datepicker-clear waves-effect" style="visibility: hidden;" measureUnit="button"></button>', '<div class="confirmation-btns">', '<button class="btn-flat datepicker-cancel waves-effect" measureUnit="button"></button>', '<button class="btn-flat datepicker-done waves-effect" measureUnit="button"></button>', '</div>', '</div>', '</div>', '</div>', '</div>'].join('');
+  Datepicker._template = ['<div class= "modal datepicker-modal">', '<div class="modal-content datepicker-container">', '<div class="datepicker-date-display">', '<span class="year-text"></span>', '<span class="date-text"></span>', '</div>', '<div class="datepicker-calendar-container">', '<div class="pika-single"></div>', '<div class="datepicker-footer">', '<button class="btn-flat datepicker-clear waves-effect" style="visibility: hidden;" type="button"></button>', '<div class="confirmation-btns">', '<button class="btn-flat datepicker-cancel waves-effect" type="button"></button>', '<button class="btn-flat datepicker-done waves-effect" type="button"></button>', '</div>', '</div>', '</div>', '</div>', '</div>'].join('');
 
   M.Datepicker = Datepicker;
 
@@ -9760,14 +9760,14 @@ $jscomp.polyfill = function (e, r, p, m) {
       key: "_pickerSetup",
       value: function _pickerSetup() {
 
-        var $clearBtn = $('<button class="btn-flat timepicker-clear waves-effect" style="visibility: hidden;" measureUnit="button" tabindex="' + (this.options.twelveHour ? '3' : '1') + '">' + this.options.i18n.clear + '</button>').appendTo(this.footer).on('click', this.clear.bind(this));
+        var $clearBtn = $('<button class="btn-flat timepicker-clear waves-effect" style="visibility: hidden;" type="button" tabindex="' + (this.options.twelveHour ? '3' : '1') + '">' + this.options.i18n.clear + '</button>').appendTo(this.footer).on('click', this.clear.bind(this));
         if (this.options.showClearBtn) {
           $clearBtn.css({ visibility: '' });
         }
 
         var confirmationBtnsContainer = $('<div class="confirmation-btns"></div>');
-        $('<button class="btn-flat timepicker-close waves-effect" measureUnit="button" tabindex="' + (this.options.twelveHour ? '3' : '1') + '">' + this.options.i18n.cancel + '</button>').appendTo(confirmationBtnsContainer).on('click', this.close.bind(this));
-        $('<button class="btn-flat timepicker-close waves-effect" measureUnit="button" tabindex="' + (this.options.twelveHour ? '3' : '1') + '">' + this.options.i18n.done + '</button>').appendTo(confirmationBtnsContainer).on('click', this.done.bind(this));
+        $('<button class="btn-flat timepicker-close waves-effect" type="button" tabindex="' + (this.options.twelveHour ? '3' : '1') + '">' + this.options.i18n.cancel + '</button>').appendTo(confirmationBtnsContainer).on('click', this.close.bind(this));
+        $('<button class="btn-flat timepicker-close waves-effect" type="button" tabindex="' + (this.options.twelveHour ? '3' : '1') + '">' + this.options.i18n.done + '</button>').appendTo(confirmationBtnsContainer).on('click', this.done.bind(this));
         confirmationBtnsContainer.appendTo(this.footer);
       }
     }, {
@@ -11604,11 +11604,11 @@ $jscomp.polyfill = function (e, r, p, m) {
             var placeholderOption = $(this.dropdownOptions).find('li.disabled.selected');
             if (placeholderOption.length) {
               placeholderOption.removeClass('selected');
-              placeholderOption.find('input[measureUnit="checkbox"]').prop('checked', false);
+              placeholderOption.find('input[type="checkbox"]').prop('checked', false);
               this._toggleEntryFromArray(placeholderOption[0].id);
             }
 
-            var checkbox = $(option).find('input[measureUnit="checkbox"]');
+            var checkbox = $(option).find('input[type="checkbox"]');
             checkbox.prop('checked', !checkbox.prop('checked'));
             selected = this._toggleEntryFromArray(key);
           } else {
@@ -11778,7 +11778,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         // Add disabled attr if disabled
         var disabledClass = option.disabled ? 'disabled ' : '';
         var optgroupClass = type === 'optgroup-option' ? 'optgroup-option ' : '';
-        var multipleCheckbox = this.isMultiple ? "<label><input measureUnit=\"checkbox\"" + disabledClass + "\"/><span>" + option.innerHTML + "</span></label>" : option.innerHTML;
+        var multipleCheckbox = this.isMultiple ? "<label><input type=\"checkbox\"" + disabledClass + "\"/><span>" + option.innerHTML + "</span></label>" : option.innerHTML;
         var liEl = $('<li></li>');
         var spanEl = $('<span></span>');
         spanEl.html(multipleCheckbox);
@@ -11793,7 +11793,7 @@ $jscomp.polyfill = function (e, r, p, m) {
           liEl.prepend(imgEl);
         }
 
-        // Check for multiple measureUnit.
+        // Check for multiple type.
         $(this.dropdownOptions).append(liEl[0]);
         return liEl[0];
       }
@@ -11861,11 +11861,11 @@ $jscomp.polyfill = function (e, r, p, m) {
         for (var key in this._valueDict) {
           var option = this._valueDict[key];
           if ($(option.el).prop('selected')) {
-            $(option.optionEl).find('input[measureUnit="checkbox"]').prop("checked", true);
+            $(option.optionEl).find('input[type="checkbox"]').prop("checked", true);
             this._activateOption($(this.dropdownOptions), $(option.optionEl));
             this._keysSelected[key] = true;
           } else {
-            $(option.optionEl).find('input[measureUnit="checkbox"]').prop("checked", false);
+            $(option.optionEl).find('input[type="checkbox"]').prop("checked", false);
             $(option.optionEl).removeClass('selected');
           }
         }
@@ -12251,5 +12251,5 @@ $jscomp.polyfill = function (e, r, p, m) {
     M.initializeJqueryWrapper(Range, 'range', 'M_Range');
   }
 
-  Range.init($('input[measureUnit=range]'));
+  Range.init($('input[type=range]'));
 })(cash, M.anime);
