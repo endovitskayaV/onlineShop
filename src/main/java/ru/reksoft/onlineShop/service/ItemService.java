@@ -61,6 +61,7 @@ public class ItemService {
     }
 
     public List<ItemDto> getByCategoryId(long categoryId, boolean isAscSort, SortCriteria sortCriteria) {
+        if (sortCriteria==null) return getByCategoryId(categoryId);
         Sort.Direction direction;
         if (isAscSort) {
             direction = Sort.Direction.ASC;
@@ -78,7 +79,7 @@ public class ItemService {
     }
 
 
-    public List<ItemDto> getAll(boolean isAscSort, SortCriteria sortCriteria/*String... properties*/) {
+    public List<ItemDto> getAll(boolean isAscSort, SortCriteria sortCriteria) {
         Sort.Direction direction;
         if (isAscSort) {
             direction = Sort.Direction.ASC;
