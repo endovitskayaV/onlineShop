@@ -1,6 +1,7 @@
 package ru.reksoft.onlineShop.model.dto;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 
 import javax.validation.Valid;
@@ -53,4 +54,6 @@ public class EditableItemDto {
     @NotNull(message = "Choose category")
     @Valid
     private List<CharacteristicDto> characteristics;
+
+  //  private MultipartFile photo;
 }

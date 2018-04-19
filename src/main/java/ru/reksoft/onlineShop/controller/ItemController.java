@@ -1,21 +1,26 @@
 package ru.reksoft.onlineShop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.controller.util.Error;
+import ru.reksoft.onlineShop.controller.util.SortCriteria;
 import ru.reksoft.onlineShop.model.dto.EditableItemDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
+import ru.reksoft.onlineShop.model.dto.Try;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.CharacteristicService;
 import ru.reksoft.onlineShop.service.ItemService;
+import ru.reksoft.onlineShop.service.StorageService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,17 +29,34 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/items")
 public class ItemController {
+    public static final String NO_PHOTO_PNG = "no_photo.png";
+    public static final String NO_PHOTO_NAME = NO_PHOTO_PNG;
     private ItemService itemService;
     private CategoryService categoryService;
     private CharacteristicService characteristicService;
+    private StorageService storageService;
 
     @Autowired
     public ItemController(ItemService itemService,
                           CategoryService categoryService,
-                          CharacteristicService characteristicService) {
+                          CharacteristicService characteristicService, StorageService storageService) {
         this.itemService = itemService;
         this.categoryService = categoryService;
         this.characteristicService = characteristicService;
+        this.storageService = storageService;
+    }
+
+
+    private Boolean getSafeBoolean(Boolean booleanValue) {
+        return booleanValue == null ? true : booleanValue;
+    }
+
+    private SortCriteria getSafeEnumValue(String value) {
+        try {
+            return SortCriteria.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     /**
@@ -44,25 +66,35 @@ public class ItemController {
      * @return all items stored in database
      */
     @GetMapping
-    public String getAll(Model model) {
-        List<ItemDto> items = itemService.getAll();
-        model.addAttribute("items", items);
+    public String getAll(Model model,
+                         @RequestParam(required = false) String sortBy,
+                         @RequestParam(required = false) Boolean asc,
+                         @RequestParam(required = false) String category) {
         model.addAttribute("categories", categoryService.getAll());
+
+        List<ItemDto> items;
+        if (category == null && sortBy == null) {
+            items = itemService.getAll();
+        } else if (category != null && sortBy == null) {
+            items = itemService.getByCategoryId((categoryService.getByName(category)).getId());
+        } else if (getSafeEnumValue(sortBy) == null) { //process incorrect sort criteria
+            items = itemService.getAll(); //TODO:think of better way to process incorrect sort criteria
+        } else if (category == null) { //&& sortBy!=null
+            items = itemService.getAll(getSafeBoolean(asc), SortCriteria.valueOf(sortBy));
+        } else { //category!=null && sortBy!=null
+            items = itemService.getByCategoryId((categoryService.getByName(category)).getId(), getSafeBoolean(asc), SortCriteria.valueOf(sortBy));
+        }
+
+        model.addAttribute("items", items);
         return "home";
     }
 
-    /**
-     * Gets items having given category, prepares model for template
-     *
-     * @param model
-     * @return "home" template
-     */
-    @GetMapping(params = "category")
-    public String getByCategory(Model model, String category) {
-        List<ItemDto> items = itemService.getByCategoryId((categoryService.getByName(category)).getId());
+    @GetMapping(value = "/filter", params = "query")
+    public String getByNameOrProducer(Model model, String query) {
+        List<ItemDto> items = itemService.getByNameOrProducer(query);
         model.addAttribute("items", items);
         model.addAttribute("categories", categoryService.getAll());
-        return "home";
+        return "home_copy";
     }
 
     /**
@@ -115,6 +147,18 @@ public class ItemController {
     }
 
 
+    @GetMapping("/files")
+    public String file() {
+        return "file_try";
+    }
+
+    @PostMapping(value = "/files", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ModelAndView add(@RequestParam("try") Try try1,
+                            @RequestParam("file") MultipartFile file) {
+        String name1 = file.getName();
+        return new ModelAndView("redirect:/items/");
+    }
+
     @PostMapping("/add")
     public ModelAndView add(ModelMap modelMap, @Valid EditableItemDto editableItemDto, BindingResult bindingResult) {
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
@@ -125,6 +169,7 @@ public class ItemController {
             setItemModel(modelMap, editableItemDto);
             return new ModelAndView("add_item");
         } else {
+            //  storageService.store(editableItemDto.getPhoto());
             long id = itemService.add(itemDto);
             if (id == -1) {
                 modelMap.addAttribute("message", "Item '" + itemDto.getProducer() + " " + itemDto.getName() + "' already exists!");
@@ -167,6 +212,13 @@ public class ItemController {
                 .categoryId(editableItemDto.getCategoryId())
                 .characteristics(editableItemDto.getCharacteristics())
                 .build();
+//        if (editableItemDto.getPhoto() == null) {
+//           itemDto.setPhotoPath(NO_PHOTO_NAME);
+//        } else {
+//            itemDto.setPhotoPath(editableItemDto.getPhoto().getName());
+//        }
+
+
         try {
             itemDto.setPrice(Integer.parseInt(editableItemDto.getPrice()));
             if (itemDto.getPrice() < 0) {
@@ -223,7 +275,7 @@ public class ItemController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity  edit(ModelMap modelMap, @Valid @RequestBody EditableItemDto editableItemDto,BindingResult bindingResult) {
+    public ResponseEntity edit(ModelMap modelMap, @Valid @RequestBody EditableItemDto editableItemDto, BindingResult bindingResult) {
 
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
         ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);

@@ -131,6 +131,11 @@
                           </#if>
                     </div>
 
+
+                    <div class="row">
+                        File to upload:<input type="file" name="photo"/>
+                    </div>
+
                     <div class="row">
                         <div class="input-field col s2 offset-s1">
                             <button class="waves-effect waves-light btn" type="submit">Save</button>

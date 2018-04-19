@@ -71,6 +71,7 @@ public class ItemConverter {
                     .price(itemEntity.getPrice())
                     .categoryId(categoryConverter.toDto(itemEntity.getCategory()).getId())
                     .characteristics(characteristicDtos)
+                    .photoPath(itemEntity.getPhotoPath())
                     .build();
         }
     }
@@ -106,6 +107,7 @@ public class ItemConverter {
                     .price(itemDto.getPrice())
                     .category(categoryRepository.findById(itemDto.getCategoryId()).orElse(null))
                     .characteristicsValues(characteristicsValues)
+                    .photoPath(itemDto.getPhotoPath())
                     .build();
         }
     }

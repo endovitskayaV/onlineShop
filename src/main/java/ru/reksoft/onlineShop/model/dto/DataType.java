@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.model.domain.entity;
+package ru.reksoft.onlineShop.model.dto;
 
 public enum DataType {
     STRING, INTEGER, FRACTIONAL

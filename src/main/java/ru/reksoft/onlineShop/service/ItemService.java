@@ -1,7 +1,9 @@
 package ru.reksoft.onlineShop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.reksoft.onlineShop.controller.util.SortCriteria;
 import ru.reksoft.onlineShop.model.domain.converter.ItemConverter;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.model.domain.repository.ItemRepository;
@@ -58,6 +60,36 @@ public class ItemService {
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
+    public List<ItemDto> getByCategoryId(long categoryId, boolean isAscSort, SortCriteria sortCriteria) {
+        Sort.Direction direction;
+        if (isAscSort) {
+            direction = Sort.Direction.ASC;
+        } else {
+            direction = Sort.Direction.DESC;
+        }
+        return itemRepository.findAllByCategoryId(categoryId, Sort.by(direction, sortCriteria.name().toLowerCase()))
+                .stream()
+                .map(itemConverter::toDto).collect(Collectors.toList());
+    }
+
+    public List<ItemDto> getByNameOrProducer(String query) {
+        return itemRepository.findAllByNameContainsOrProducerContains(query, query).stream()
+                .map(itemConverter::toDto).collect(Collectors.toList());
+    }
+
+
+    public List<ItemDto> getAll(boolean isAscSort, SortCriteria sortCriteria/*String... properties*/) {
+        Sort.Direction direction;
+        if (isAscSort) {
+            direction = Sort.Direction.ASC;
+        } else {
+            direction = Sort.Direction.DESC;
+        }
+        return itemRepository.findAll(Sort.by(direction, sortCriteria.name().toLowerCase()))
+                .stream()
+                .map(itemConverter::toDto).collect(Collectors.toList());
+    }
+
     /**
      * Updates given item
      *
@@ -66,12 +98,6 @@ public class ItemService {
      */
     public long edit(ItemDto itemDto) {
         return itemRepository.save(itemConverter.toEntity(itemDto)).getId();
-//        if (itemDto.getCategoryId() == itemRepository.getOne(itemDto.getId()).getCategory().getId()) {
-//            return itemRepository.save(itemConverter.toEntity(itemDto)).getId();
-//        } else {
-//            itemRepository.delete(itemConverter.toEntity(itemDto));
-//            return itemRepository.save(itemConverter.toEntity(itemDto)).getId();
-//        }
     }
 
     /**
@@ -81,19 +107,13 @@ public class ItemService {
      * @return id of created item
      */
     public long add(ItemDto itemDto) {
-        if (itemRepository.
-                findByNameAndProducer(itemDto.getName(),
-                        itemDto.getProducer()) != null) {
+        if (itemRepository.findByNameAndProducer(itemDto.getName(), itemDto.getProducer()) != null) {
             return -1;
+        } else {
+            ItemEntity newItemEntity = itemConverter.toEntity(itemDto);
+            newItemEntity.setId(itemRepository.count() + 1); //generate id
+            return itemRepository.save(newItemEntity).getId();
         }
-        return save(itemDto);
-    }
-
-
-    public long save(ItemDto itemDto) {
-        ItemEntity newItemEntity = itemConverter.toEntity(itemDto);
-        newItemEntity.setId(itemRepository.count() + 1); //generate id
-        return itemRepository.save(newItemEntity).getId();
     }
 
     /**

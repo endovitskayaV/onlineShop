@@ -1,6 +1,7 @@
 package ru.reksoft.onlineShop.model.domain.entity;
 
 import lombok.*;
+import ru.reksoft.onlineShop.model.dto.DataType;
 
 import javax.persistence.*;
 

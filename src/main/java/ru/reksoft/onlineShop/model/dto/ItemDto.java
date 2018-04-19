@@ -45,4 +45,10 @@ public class ItemDto {
      * eg: color, weight, etc
      */
     private List<CharacteristicDto> characteristics;
+
+    /**
+     * path in file system to item photo
+     */
+    private String photoPath;
+
 }
