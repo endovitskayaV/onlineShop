@@ -13,105 +13,125 @@
     <div class="col s6 offset-s3">
         <div class="card hoverable">
             <div class="card-content">
-                    <div class="row">
-                        <div class="input-field col s10 offset-s1">
-                            <input id="name"  name="name" type="text" value="${item.name}">
-                            <label for="name">Name</label>
-                            <div name="name-errors"></div>
-                        </div>
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <input id="name" name="name" type="text" value="${item.name}">
+                        <label for="name">Name</label>
+                        <div name="name-errors"></div>
                     </div>
-                    <div class="row">
-                        <div class="input-field col s10 offset-s1">
-                            <input id="producer"  name="producer" type="text"
-                                   value="${item.producer}">
-                            <label for="producer">Producer</label>
-                            <div name="producer-errors"></div>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <input id="producer" name="producer" type="text"
+                               value="${item.producer}">
+                        <label for="producer">Producer</label>
+                        <div name="producer-errors"></div>
                     </div>
-                    <div class="row">
-                        <div class="input-field col s10 offset-s1">
+                </div>
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
                              <#if item.storage??>
-                              <input id="storage" name="storage" type="number" value="${item.storage}" >
+                              <input id="storage" name="storage" type="number" value="${item.storage}">
                              <#else>
                               <input id="storage" name="storage" type="number" value="">
                              </#if>
-                            <label for="storage" >Count</label>
-                            <div name="storage-errors">
-                            </div>
+                        <label for="storage">Count</label>
+                        <div name="storage-errors">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="input-field col s10 offset-s1">
+                </div>
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
                                <#if item.price??>
-                              <input id="price" name="price" type="number" value="${item.price?string["0"]}" >
+                              <input id="price" name="price" type="number" value="${item.price?string["0"]}">
                                <#else>
                               <input id="price" name="price" type="number" value="">
                                </#if>
-                            <label for="price" >Price</label>
-                            <div name="price-errors">
-                            </div>
+                        <label for="price">Price</label>
+                        <div name="price-errors">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="input-field col s10 offset-s1">
-                            <input id="description" name="description" type="text"
-                                   value="${item.description}">
-                            <label for="description">Description</label>
-                            <div name="description-errors"></div>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <input id="description" name="description" type="text"
+                               value="${item.description}">
+                        <label for="description">Description</label>
+                        <div name="description-errors"></div>
                     </div>
-                    <div class="row">
-                        <div class="input-field col s10 offset-s1">
-                            <select required id="categoryId" name="categoryId" onchange="loadCharacteristics('categoryId')">
-                                <option selected id="${selectedCategory.id}" value="${selectedCategory.id}">${selectedCategory.name}</option>
+                </div>
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <select required id="categoryId" name="categoryId" onchange="loadCharacteristics('categoryId')">
+                            <option selected id="${selectedCategory.id}" value="${selectedCategory.id}">${selectedCategory.name}</option>
               <#list categories as category>
                    <option id="${category.id}" value="${category.id}">${category.name}</option>
               </#list>
-                            </select>
-                            <label for="categoryId">Category</label>
-                            <div name="characteristics-errors"></div>
-                        </div>
-                        <div style="margin-top: 30px" class="input-field col s1">
-                            <a class="modal-trigger" href="#category_modal">
-                                <i class="material-icons cl-4db6a sz-33 fw-b">add</i>
-                            </a>
-                        </div>
+                        </select>
+                        <label for="categoryId">Category</label>
+                        <div name="characteristics-errors"></div>
                     </div>
+                    <div style="margin-top: 30px" class="input-field col s1">
+                        <a class="modal-trigger" href="#category_modal">
+                            <i class="material-icons cl-4db6a sz-33 fw-b">add</i>
+                        </a>
+                    </div>
+                </div>
 
-                    <div id="characteristicDiv">
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <div id="characteristicDiv">
                         <#assign i=0>
                          <#list item_characteristics as characteristic>
                          <div id="characteristic_">
-                             <input id= "characteristic-id" type="number" name="${characteristic.id}" class="validate" hidden="hidden" value="${characteristic.id}">
-                             <input id= "characteristic-measureUnit" type="text" name="${characteristic.measureUnit}" class="validate" hidden="hidden" value="${characteristic.measureUnit}">
-                             <input id= "characteristic-name" type="text" name="${characteristic.name}" class="validate" hidden="hidden" value="${characteristic.name}">
-                             <input id= "characteristic-valueDataType" type="text" name="${characteristic.valueDataType}" class="validate" hidden="hidden" value="${characteristic.valueDataType}">
-                             <input id= "characteristic-required" type="text" name="${characteristic.required?c}" class="validate" hidden="hidden" value="${characteristic.required?c}">
-                                 <div id="1" class="row">
-                                             <div id="2" class="input-field col s3">
+                             <input id="characteristic-id" type="number" name="${characteristic.id}" class="validate"
+                                    hidden="hidden" value="${characteristic.id}">
+                             <input id="characteristic-measureUnit" type="text" name="${characteristic.measureUnit}"
+                                    class="validate" hidden="hidden" value="${characteristic.measureUnit}">
+                             <input id="characteristic-name" type="text" name="${characteristic.name}" class="validate"
+                                    hidden="hidden" value="${characteristic.name}">
+                             <input id="characteristic-valueDataType" type="text" name="${characteristic.valueDataType}"
+                                    class="validate" hidden="hidden" value="${characteristic.valueDataType}">
+                             <input id="characteristic-required" type="text" name="${characteristic.required?c}"
+                                    class="validate" hidden="hidden" value="${characteristic.required?c}">
+                             <div id="1" class="row">
+                                 <div id="2" class="input-field col s3">
                                                    <#if characteristic.value??>
-                              <input id= "characteristic-value" name="value" value="${characteristic.value}" type="text" class="validate">
+                              <input id="characteristic-value" name="value" value="${characteristic.value}" type="text"
+                                     class="validate">
                                                    <#else>
-                             <input id= "characteristic-value" name="value" value="" type="text" class="validate">
+                             <input id="characteristic-value" name="value" value="" type="text" class="validate">
                                                    </#if>
-                                                     <label for="value"> ${characteristic.name} </label>
-                                  <span class="helper-text">${characteristic.measureUnit}</span>
-                                                 <div name="characteristics[${i}]-errors"></div>
-                                                 </div>
-                                         </div>
+                                     <label for="value"> ${characteristic.name} </label>
+                                     <span class="helper-text">${characteristic.measureUnit}</span>
+                                     <div name="characteristics[${i}]-errors"></div>
+                                 </div>
+                             </div>
                              <#assign i=i+1>
                          </div>
                          </#list>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div class="input-field col s2 offset-s1">
-                            <button class="waves-effect waves-light btn" onclick="save(${item.id})">Save</button>
-                        </div>
-                        <div class="input-field col s2 offset-s5">
-                            <button class="waves-effect waves-light btn" type="reset">Reset</button>
-                        </div>
+
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <img width="60" height="200" src="../../../img/${item.photoName}">
+                        <label for="file">File</label>
+                        <input type="file" id="file" name="file"/>
                     </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="input-field col s2 offset-s1">
+                        <button class="waves-effect waves-light btn" onclick="save(${item.id})">Save</button>
+                    </div>
+                    <div class="input-field col s2 offset-s5">
+                        <button class="waves-effect waves-light btn" type="reset">Reset</button>
+                    </div>
+                </div>
 
             </div>
         </div>

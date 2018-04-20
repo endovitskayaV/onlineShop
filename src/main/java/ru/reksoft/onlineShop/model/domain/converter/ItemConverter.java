@@ -7,7 +7,6 @@ import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.model.domain.repository.CategoryRepository;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
-import ru.reksoft.onlineShop.model.dto.OrderedItemDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +70,7 @@ public class ItemConverter {
                     .price(itemEntity.getPrice())
                     .categoryId(categoryConverter.toDto(itemEntity.getCategory()).getId())
                     .characteristics(characteristicDtos)
-                    .photoPath(itemEntity.getPhotoPath())
+                    .photoName(itemEntity.getPhotoName())
                     .build();
         }
     }
@@ -107,7 +106,7 @@ public class ItemConverter {
                     .price(itemDto.getPrice())
                     .category(categoryRepository.findById(itemDto.getCategoryId()).orElse(null))
                     .characteristicsValues(characteristicsValues)
-                    .photoPath(itemDto.getPhotoPath())
+                    .photoName(itemDto.getPhotoName())
                     .build();
         }
     }

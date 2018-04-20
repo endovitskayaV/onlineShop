@@ -38,3 +38,17 @@ function loadCharacteristics(elemId) {
 function showError(field, message) {
     $("[name='" + field + "-errors']").append('<span class="cl-c62828">' + message+". " + '</span>');
 }
+
+$(document).ready(function () {
+    //file type validation
+    $("#file").change(function () {
+        var file = this.files[0];
+        var imagefile = file.type;
+        var match = ["image/jpeg", "image/png", "image/jpg"];
+        if (!((imagefile === match[0]) || (imagefile === match[1]) || (imagefile === match[2]))) {
+            alert('Please select a valid image file (JPEG/JPG/PNG).');
+            $("#file").val('');
+            return false;
+        }
+    });
+});

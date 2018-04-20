@@ -13,7 +13,8 @@ import java.nio.file.StandardCopyOption;
 
 @Service
 public class StorageService {
-    public static final Path ROOT_LOCATION = Paths.get("src/main/resources/img");
+    public static final Path ROOT_LOCATION = Paths.get("src/main/resources");
+
 
     public void store(MultipartFile file) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());

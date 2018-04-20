@@ -6,7 +6,7 @@
 <body>
 <div>
     <p class="statusMsg"></p>
-    <form enctype="multipart/form-data" id="fupForm">
+    <form enctype="multipart/form-data" id="fupForm" method="post" action="/items/files">
         <div class="form-group">
             <label for="name">NAME</label>
             <input type="text" class="form-control" id="name" name="name" placeholder="Enter name"/>
@@ -19,21 +19,24 @@
             <label for="file">File</label>
             <input type="file" class="form-control" id="file" name="file" required/>
         </div>
-        <input type="submit" name="submit" class="btn btn-danger submitBtn" value="SAVE"/>
+        <input type="submit" class="btn btn-danger submitBtn" value="SAVE"/>
     </form>
 </div>
-<script>
-    $(document).ready(function (e) {
+<!--<script>
+    $(document).ready(function () {
         $("#fupForm").on('submit', function (e) {
+            e.preventDefault();
             var formData = new FormData();
-            formData.append('try', JSON.stringify({
-                        name: "Tom",
-                        field: 6
-                    }));
 
+            // formData.append('try', JSON.stringify({
+            //             name: "Tom",
+            //             field: 6
+            //         }));
+            formData.append('name', 'Tom');
+
+            formData.append('field', 6);
             // Attach file
             formData.append('file', $('input[type=file]')[0].files[0]);
-            e.preventDefault();
             $.ajax({
                 type: 'POST',
                 url: document.location.origin + '/items/files',
@@ -70,6 +73,6 @@
             }
         });
     });
-</script>
+</script>-->
 </body>
 </html>

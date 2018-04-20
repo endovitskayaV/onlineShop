@@ -3,11 +3,11 @@
 <html>
 <head>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="../js/addItemsHandler.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="../css/my_style.css"/>
+    <link type="text/css" rel="stylesheet" href="/../css/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="/../css/my_style.css"/>
 </head>
+
 
 <body>
 
@@ -15,11 +15,12 @@
     <div class="col s6 offset-s3">
         <div class="card hoverable">
             <div class="card-content">
-                <form enctype="multipart/form-data" class="container" method="post" action="/items/add">
+                <form enctype="multipart/form-data" class="container" method="post" action="/items/edit">
+                    <input id="id" name="id" type="number" value="${item.id}" hidden>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                             <input id="name" name="name" type="text" value="${item.name}">
-                            <label for="name" >Name</label>
+                            <label for="name">Name</label>
                             <div name="name-errors"></div>
                         </div>
 
@@ -27,30 +28,31 @@
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                             <input id="producer" name="producer" type="text" value="${item.producer}">
-                            <label for="producer" >Producer</label>
+                            <label for="producer">Producer</label>
                             <div name="producer-errors"></div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                              <#if item.storage??>
-                              <input id="storage" name="storage" type="number" value="${item.storage}" min="0">
-                                 <#else>
+                              <input id="storage" name="storage" type="number" value="${item.storage?string["0"]}"
+                                     min="0">
+                             <#else>
                               <input id="storage" name="storage" type="number" value="" min="0">
-                                 </#if>
-                            <label for="storage" >Count</label>
+                             </#if>
+                            <label for="storage">Count</label>
                             <div name="storage-errors">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                              <#if item.price??>
-                              <input id="price" name="price" type="number" value="${item.price}" min="1">
-                              <#else>
+                               <#if item.price??>
+                              <input id="price" name="price" type="number" min="1" value="${item.price?string["0"]}">
+                               <#else>
                               <input id="price" name="price" type="number" value="" min="1">
-                              </#if>
-                            <label for="price" >Price</label>
+                               </#if>
+                            <label for="price">Price</label>
                             <div name="price-errors">
                             </div>
                         </div>
@@ -58,36 +60,24 @@
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                              <@spring.formInput "item.description"/>
-                            <label for="description" >Description</label>
+                            <label for="description">Description</label>
                             <div name="description-errors"></div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                          
-                            <select   id="categoryId" name="categoryId" onchange="loadCharacteristics('categoryId')">
 
-                                <option selected disabled value=''>Choose your option</option>
-
-                                  <#list categories as category>
-                                      <#if selectedCategory??>
-
-                                      <#if category.id==selectedCategory.id>
-                       <option selected id="${category.id}" value="${category.id}">${category.name}</option>
-                                      <#else>
+                            <select required id="categoryId" name="categoryId"
+                                    onchange="loadCharacteristics('categoryId')">
+                                <option selected id="${selectedCategory.id}"
+                                        value="${selectedCategory.id}">${selectedCategory.name}</option>
+              <#list categories as category>
                    <option id="${category.id}" value="${category.id}">${category.name}</option>
-                                      </#if>
-
-                                    <#else>
-                                   <option id="${category.id}" value="${category.id}">${category.name}</option>
-                                      </#if>
-                                  </#list>
-
-
+              </#list>
                             </select>
 
 
-                            <label for="categoryId" >Category</label>
+                            <label for="categoryId">Category</label>
                             <div name="characteristics-errors">
                             </div>
                         </div>
@@ -99,44 +89,58 @@
                     </div>
 
 
-
                     <div id="characteristicDiv">
                           <#if selectedCategory??>
                               <#assign i=0>
-                               <#list characteristics as characteristic>
+                               <#list item_characteristics as characteristic>
                               <input type="number" name="characteristic[${i}].id"
-                               hidden="hidden" value="${characteristic.id}">
+                                     hidden="hidden" value="${characteristic.id}">
                               <input type="text" name="characteristics[${i}].measureUnit"
-                               hidden="hidden" value="${characteristic.measureUnit}">
+                                     hidden="hidden" value="${characteristic.measureUnit}">
 
-                              <input  name="characteristics[${i}].required"
-                               hidden="hidden" value="${characteristic.required?c}">
+                              <input name="characteristics[${i}].required"
+                                     hidden="hidden" value="${characteristic.required?c}">
 
                               <input type="text" name="characteristics[${i}].name"
-                              hidden="hidden" value="${characteristic.name}">
+                                     hidden="hidden" value="${characteristic.name}">
 
                                 <input type="text" name="characteristics[${i}].valueDataType"
                                        hidden="hidden" value="${characteristic.valueDataType}">
 
                                   <div class="row">
-                                              <div class="input-field col s10 offset-s1">
-                                                  <input id="value" name="characteristics[${i}].value" type="text" value="${characteristic.value}">
-                                                      <label for="value" >${characteristic.name}</label>
-                                                   <div name="characteristics[${i}]-errors"></div>
-                                   <span class="helper-text">${characteristic.measureUnit}</span>
-                                                  </div>
-                                          </div>
-                               <#assign i=i+1>
-                              </#list>
+                                      <div class="input-field col s10 offset-s1">
+                                          <input id="value" name="characteristics[${i}].value" type="text"
+                                                 value="${characteristic.value}">
+                                          <label for="value">${characteristic.name}</label>
+                                          <div name="characteristics[${i}]-errors"></div>
+                                          <span class="helper-text">${characteristic.measureUnit}</span>
+                                      </div>
+                                  </div>
+                                   <#assign i=i+1>
+                               </#list>
                           </#if>
                     </div>
 
+                <#if item.photoName??>
+                    <div id="image_div" class="row">
+                        <div class="input-field col s11 offset-s1">
+                            <img width="60" height="200" src="../../../img/${item.photoName}">
+                            <a href="javascript: deleteImage()">
+                                <i class="material-icons cl-4db6a sz-20 modal-trigger">clear</i>
+                            </a>
+                            <input id="fileName" name="photoName" type="text" value="${item.photoName}" hidden>
+                        </div>
+                    </div>
+                </#if>
 
                     <div class="row">
-                        <label for="file">File</label>
-                        <input type="file" id="file" name="file"/>
+                        <div class="input-field col s11 offset-s1">
+                            <label for="file">Change photo</label>
+                        </div>
                     </div>
-
+                    <div class="row">
+                        <div class="input-field col s11 offset-s1"><input type="file" id="file" name="file"/></div>
+                    </div>
                     <div class="row">
                         <div class="input-field col s2 offset-s1">
                             <button class="waves-effect waves-light btn" type="submit">Save</button>
@@ -164,14 +168,15 @@
 
 <#if errors??>
     <#list errors as error>
-<script>showError("${error.field}","${error.message}");</script>
+<script>showError("${error.field}", "${error.message}");</script>
     </#list>
 </#if>
 
-<script type="text/javascript" src="../js/materialize.min.js"></script>
-<script type="text/javascript" src="../js/addCategoryHandler.js"></script>
-<script type="text/javascript" src="../js/initSelect.js"></script>
-<script type="text/javascript" src="../js/initModal.js"></script>
+<script type="text/javascript" src="/../js/materialize.min.js"></script>
+<script type="text/javascript" src="/../js/addCategoryHandler.js"></script>
+<script type="text/javascript" src="/../js/editItemHandler.js"></script>
+<script type="text/javascript" src="/../js/addItemsHandler.js"></script>
+<script type="text/javascript" src="/../js/initSelect.js"></script>
 
 </body>
 </html>

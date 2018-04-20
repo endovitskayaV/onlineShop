@@ -1,6 +1,12 @@
 package ru.reksoft.onlineShop.controller;
 
+
+import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,21 +19,27 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.controller.util.Error;
 import ru.reksoft.onlineShop.controller.util.SortCriteria;
-import ru.reksoft.onlineShop.model.dto.*;
+import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
+import ru.reksoft.onlineShop.model.dto.EditableItemDto;
+import ru.reksoft.onlineShop.model.dto.ItemDto;
+import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.CharacteristicService;
 import ru.reksoft.onlineShop.service.ItemService;
 import ru.reksoft.onlineShop.service.StorageService;
 
 import javax.validation.Valid;
+import java.io.*;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ru.reksoft.onlineShop.service.StorageService.ROOT_LOCATION;
 
 @Controller
 @RequestMapping("/items")
 public class ItemController {
-    public static final String NO_PHOTO_PNG = "no_photo.png";
-    public static final String NO_PHOTO_NAME = NO_PHOTO_PNG;
+    private static final String NO_PHOTO_NAME = "no_photo.png";
     private ItemService itemService;
     private CategoryService categoryService;
     private CharacteristicService characteristicService;
@@ -84,10 +96,11 @@ public class ItemController {
 
         model.addAttribute("categories", categoryService.getAll());
         List<ItemDto> items;
-        if (characteristics==null){
-            items = itemService.getByCategoryId((categoryService.getByName(category)).getId(),getSafeBoolean(asc),getSafeEnumValue(sortBy));
-        }else{
-            //TODO:set items
+        if (characteristics == null) {
+            items = itemService.getByCategoryId((categoryService.getByName(category)).getId(), getSafeBoolean(asc), getSafeEnumValue(sortBy));
+        } else {
+            //TODO:set items!
+            items = itemService.getAll();
         }
 
         model.addAttribute("items", items);
@@ -153,21 +166,26 @@ public class ItemController {
     }
 
 
-    @GetMapping("/files")
-    public String file() {
-        return "file_try";
-    }
+//    @GetMapping("/files")
+//    public String file() {
+//        return "file_try";
+//    }
+//
+//    @PostMapping(value = "/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ModelAndView add(@ModelAttribute Try try1,
+//                            @RequestParam("file") MultipartFile file) {
+//        String name1 = file.getName();
+//        return new ModelAndView("redirect:/items/");
+//    }
 
-    @PostMapping(value = "/files", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ModelAndView add(@RequestParam("try") Try try1,
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ModelAndView add(ModelMap modelMap,
+                            @Valid @ModelAttribute EditableItemDto editableItemDto,
+                            BindingResult bindingResult,
                             @RequestParam("file") MultipartFile file) {
-        String name1 = file.getName();
-        return new ModelAndView("redirect:/items/");
-    }
 
-    @PostMapping("/add")
-    public ModelAndView add(ModelMap modelMap, @Valid EditableItemDto editableItemDto, BindingResult bindingResult) {
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+        editableItemDto.setPhotoName(file.isEmpty() ? NO_PHOTO_NAME : file.getOriginalFilename());
         ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);
 
         if (errors.size() > 0) {
@@ -181,18 +199,61 @@ public class ItemController {
                 modelMap.addAttribute("message", "Item '" + itemDto.getProducer() + " " + itemDto.getName() + "' already exists!");
                 return new ModelAndView("error", modelMap);
             } else {
+                if (!file.isEmpty()) {
+                    storageService.store(file);
+                }
+
+////                Resource resource = new  ClassPathResource(editableItemDto.getPhotoName());
+////                try {
+////                    File img = resource.getFile();
+////                } catch (IOException e) {
+////                    e.printStackTrace();
+////                }
+//
+//                ClassLoader classLoader = getClass().getClassLoader();
+//                File file2 = new File(classLoader.getResource("b.png").getFile());
+//                File file1 = new File(classLoader.getResource("a.png").getFile());
+//
+//
+//                ClassPathResource classPathResource = new ClassPathResource("c.png");
+//
+//                InputStream inputStream = null;
+//                try {
+//                    inputStream = classPathResource.getInputStream();
+//                    File somethingFile = File.createTempFile("test", ".png");
+////                    FileUtils.copy
+////                            .copyInputStreamToFile(inputStream, somethingFile);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//try {
+//    byte[] bytes = file.getBytes();
+//
+//
+//    File directory = new File("src/main/resources");
+//    File imageFile = File.createTempFile("q", ".png", directory);
+//    OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(imageFile));
+//    outputStream.write(bytes);
+//    outputStream.close();
+//
+//}catch (Exception e){
+//                    e.printStackTrace();
+//}
+
+                FileSystemResource imgFile = new FileSystemResource("src\\main\\resources\\y.png");
+                try {
+                   String g= imgFile.getURI().toString();
+                   g+="d";
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 return new ModelAndView("redirect:/items/" + id);
             }
         }
     }
 
     private void setItemModel(ModelMap modelMap, EditableItemDto editableItemDto) {
-//        if (itemDto.getPrice() == null) {
-//            itemDto.setPrice(0);
-//        }
-//        if (itemDto.getStorage() == null) {
-//            itemDto.setStorage(0);
-//        }
         modelMap.addAttribute("item", editableItemDto);
         modelMap.addAttribute("categories", categoryService.getAll());
         NewCategoryDto newCategoryDto = NewCategoryDto.builder()
@@ -217,11 +278,12 @@ public class ItemController {
                 .description(editableItemDto.getDescription())
                 .categoryId(editableItemDto.getCategoryId())
                 .characteristics(editableItemDto.getCharacteristics())
+                .photoName(editableItemDto.getPhotoName())
                 .build();
 //        if (editableItemDto.getPhoto() == null) {
-//           itemDto.setPhotoPath(NO_PHOTO_NAME);
+//           itemDto.setPhotoName(NO_PHOTO_NAME);
 //        } else {
-//            itemDto.setPhotoPath(editableItemDto.getPhoto().getName());
+//            itemDto.setPhotoName(editableItemDto.getPhoto().getName());
 //        }
 
 
@@ -259,7 +321,9 @@ public class ItemController {
         if (itemDto == null) {
             return "error";
         }
-
+        if (itemDto.getPhotoName().equals(NO_PHOTO_NAME)) {
+            itemDto.setPhotoName(null);
+        }
         model.addAttribute("item", itemDto);
         model.addAttribute("categories",
                 categoryService.getAll().stream()
@@ -277,14 +341,23 @@ public class ItemController {
                 .build();
         model.addAttribute("category", newCategoryDto);
         model.addAttribute("characteristics", characteristicService.getAll());
-        return "edit_ite";
+        return "edit";
     }
 
     @PostMapping("/edit")
-    public ResponseEntity edit(ModelMap modelMap, @Valid @RequestBody EditableItemDto editableItemDto, BindingResult bindingResult) {
+    public ResponseEntity edit(ModelMap modelMap,
+                               @Valid @ModelAttribute EditableItemDto editableItemDto,
+                               BindingResult bindingResult,
+                               @RequestParam("file") MultipartFile file) {
 
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
-        ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);
+        if (file.isEmpty() && editableItemDto.getPhotoName() == null) {
+        editableItemDto.setPhotoName(NO_PHOTO_NAME);
+        }else if(!file.isEmpty()){
+            editableItemDto.setPhotoName(file.getOriginalFilename());
+        }
+            ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);
+
 
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
@@ -293,6 +366,29 @@ public class ItemController {
         } else {
             return ResponseEntity.ok(itemService.edit(itemDto));
         }
+
+//
+//        List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+//        editableItemDto.setPhotoName(file.isEmpty() ? NO_PHOTO_NAME : file.getOriginalFilename());
+//        ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);
+//
+//        if (errors.size() > 0) {
+//            modelMap.addAttribute("errors", errors);
+//            setItemModel(modelMap, editableItemDto);
+//            return new ModelAndView("add_item");
+//        } else {
+//            //  storageService.store(editableItemDto.getPhoto());
+//            long id = itemService.add(itemDto);
+//            if (id == -1) {
+//                modelMap.addAttribute("message", "Item '" + itemDto.getProducer() + " " + itemDto.getName() + "' already exists!");
+//                return new ModelAndView("error", modelMap);
+//            } else {
+//                if (!file.isEmpty()) {
+//                    storageService.store(file);
+//                }
+//                return new ModelAndView("redirect:/items/" + id);
+//            }
+//        }
     }
 
     /**

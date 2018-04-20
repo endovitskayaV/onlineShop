@@ -69,7 +69,7 @@ public class ItemEntity {
 
 
     @Column(name = "photo_path")
-    private String photoPath;
+    private String photoName;
 
 
 }

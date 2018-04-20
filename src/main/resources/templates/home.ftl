@@ -9,7 +9,9 @@
 </head>
 
 <body>
-<#include "header.ftl">
+
+  <img width="60" height="200" src="/img/p.png">
+
 <div class="row" style="margin-top: 100px">
     <div class="col s3">
         <div class="collection z-depth-1 hoverable">
@@ -36,7 +38,7 @@
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
             <div class="card-image">
-                <img width="60" height="200" src="../img/meizu.jpg">
+                <img width="60" height="200" src="../img/${item.photoName}">
             </div>
             <div class="card-stacked">
                 <div class="card-content">

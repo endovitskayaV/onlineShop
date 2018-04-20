@@ -55,5 +55,5 @@ public class EditableItemDto {
     @Valid
     private List<CharacteristicDto> characteristics;
 
-  //  private MultipartFile photo;
+    private String photoName;
 }

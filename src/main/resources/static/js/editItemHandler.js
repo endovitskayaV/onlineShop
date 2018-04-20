@@ -47,11 +47,11 @@ function save(itemId) {
                     $("[name='" + error.field + "-errors']").append('<span class="cl-c62828">'+error.message+". " + '</span>');
                 });
             }
-
         }
-
     });
+}
 
 
-
+function deleteImage(){
+    $("#image_div").html("");
 }

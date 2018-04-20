@@ -49,6 +49,6 @@ public class ItemDto {
     /**
      * path in file system to item photo
      */
-    private String photoPath;
+    private String photoName;
 
 }
