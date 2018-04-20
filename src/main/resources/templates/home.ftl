@@ -10,8 +10,8 @@
 
 <body>
 
-  <img width="60" height="200" src="/img/p.png">
-
+  <img width="60" height="200" src="../img/a.png">
+<#include "header.ftl">
 <div class="row" style="margin-top: 100px">
     <div class="col s3">
         <div class="collection z-depth-1 hoverable">

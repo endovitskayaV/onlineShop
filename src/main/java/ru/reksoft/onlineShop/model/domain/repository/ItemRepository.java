@@ -2,6 +2,7 @@ package ru.reksoft.onlineShop.model.domain.repository;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 
 import java.util.List;
@@ -32,4 +33,5 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
 
 
     List<ItemEntity> findAllByNameContainsOrProducerContains(String nameContains, String producerContains);
+
 }

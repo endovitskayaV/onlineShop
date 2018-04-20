@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.controller.util.SortCriteria;
 import ru.reksoft.onlineShop.model.domain.converter.ItemConverter;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
+import ru.reksoft.onlineShop.model.domain.repository.CharacteristicRepository;
 import ru.reksoft.onlineShop.model.domain.repository.ItemRepository;
+import ru.reksoft.onlineShop.model.dto.CharacterisricValueDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 
 import java.util.List;
@@ -20,15 +22,17 @@ import java.util.stream.Collectors;
 public class ItemService {
     private ItemRepository itemRepository;
     private ItemConverter itemConverter;
+    private CharacteristicRepository characteristicRepository;
 
     /**
      * @param itemRepository repository for item
      * @param itemConverter  converter for item
      */
     @Autowired
-    public ItemService(ItemRepository itemRepository, ItemConverter itemConverter) {
+    public ItemService(ItemRepository itemRepository, ItemConverter itemConverter,CharacteristicRepository characteristicRepository) {
         this.itemRepository = itemRepository;
         this.itemConverter = itemConverter;
+        this.characteristicRepository=characteristicRepository;
     }
 
     /**
@@ -72,6 +76,17 @@ public class ItemService {
                 .stream()
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
+
+
+    public List<ItemDto> getByCharacteristic(long categoryId, List<CharacterisricValueDto>characterisricValueDtos) {
+    //    characteristicRepository.
+
+        return itemRepository.findAllByCategoryId(categoryId)
+                .stream()
+                .map(itemConverter::toDto).collect(Collectors.toList());
+    }
+
+
 
     public List<ItemDto> getByNameOrProducer(String query) {
         return itemRepository.findAllByNameContainsOrProducerContains(query, query).stream()

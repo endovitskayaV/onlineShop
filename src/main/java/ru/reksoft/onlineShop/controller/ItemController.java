@@ -1,12 +1,7 @@
 package ru.reksoft.onlineShop.controller;
 
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,22 +14,15 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.controller.util.Error;
 import ru.reksoft.onlineShop.controller.util.SortCriteria;
-import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
-import ru.reksoft.onlineShop.model.dto.EditableItemDto;
-import ru.reksoft.onlineShop.model.dto.ItemDto;
-import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
+import ru.reksoft.onlineShop.model.dto.*;
 import ru.reksoft.onlineShop.service.CategoryService;
 import ru.reksoft.onlineShop.service.CharacteristicService;
 import ru.reksoft.onlineShop.service.ItemService;
 import ru.reksoft.onlineShop.service.StorageService;
 
 import javax.validation.Valid;
-import java.io.*;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ru.reksoft.onlineShop.service.StorageService.ROOT_LOCATION;
 
 @Controller
 @RequestMapping("/items")
@@ -91,21 +79,32 @@ public class ItemController {
     public String getByCategory(Model model,
                                 String category,
                                 @RequestParam(required = false) String sortBy,
-                                @RequestParam(required = false) Boolean asc,
-                                @RequestParam(required = false) List<CharacteristicDto> characteristics) {
-
+                                @RequestParam(required = false) Boolean asc/*,
+                                @RequestParam(required = false) List<CharacteristicDto> characteristics*/) {
+        CategoryDto categoryDto=categoryService.getByName(category);
         model.addAttribute("categories", categoryService.getAll());
-        List<ItemDto> items;
-        if (characteristics == null) {
-            items = itemService.getByCategoryId((categoryService.getByName(category)).getId(), getSafeBoolean(asc), getSafeEnumValue(sortBy));
-        } else {
-            //TODO:set items!
-            items = itemService.getAll();
-        }
-
+        List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(asc), getSafeEnumValue(sortBy));
         model.addAttribute("items", items);
+        model.addAttribute("characteristics", categoryDto.getCharacteristics());
         return "home";
     }
+
+
+
+//    @GetMapping(params = "category")
+//    public String getByCategoryAndCharacteristics(Model model,
+//                                String category,
+//                                @RequestParam(required = false) String sortBy,
+//                                @RequestParam(required = false) Boolean asc,
+//                                @RequestParam(required = false) List<CharacteristicDto> characteristics) {
+//
+//        CategoryDto categoryDto=categoryService.getByName(category);
+//        model.addAttribute("categories", categoryService.getAll());
+//        List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(asc), getSafeEnumValue(sortBy));
+//        model.addAttribute("items", items);
+//        model.addAttribute("characteristics", categoryDto.getCharacteristics());
+//        return "home";
+//    }
 
 
     @GetMapping(value = "/filter", params = "query")
@@ -241,13 +240,13 @@ public class ItemController {
 //                    e.printStackTrace();
 //}
 
-                FileSystemResource imgFile = new FileSystemResource("src\\main\\resources\\y.png");
-                try {
-                   String g= imgFile.getURI().toString();
-                   g+="d";
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                FileSystemResource imgFile = new FileSystemResource("src\\main\\resources\\y.png");
+//                try {
+//                   String g= imgFile.getURI().toString();
+//                   g+="d";
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 return new ModelAndView("redirect:/items/" + id);
             }
         }
@@ -345,50 +344,26 @@ public class ItemController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity edit(ModelMap modelMap,
-                               @Valid @ModelAttribute EditableItemDto editableItemDto,
-                               BindingResult bindingResult,
-                               @RequestParam("file") MultipartFile file) {
+    public ModelAndView edit(ModelMap modelMap,
+                             @Valid @ModelAttribute EditableItemDto editableItemDto,
+                             BindingResult bindingResult,
+                             @RequestParam("file") MultipartFile file) {
 
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
         if (file.isEmpty() && editableItemDto.getPhotoName() == null) {
-        editableItemDto.setPhotoName(NO_PHOTO_NAME);
-        }else if(!file.isEmpty()){
+            editableItemDto.setPhotoName(NO_PHOTO_NAME);
+        } else if (!file.isEmpty()) {
             editableItemDto.setPhotoName(file.getOriginalFilename());
         }
-            ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);
-
+        ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);
 
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
             setItemModel(modelMap, editableItemDto);
-            return ResponseEntity.badRequest().body(errors);
+            return new ModelAndView("edit_item");
         } else {
-            return ResponseEntity.ok(itemService.edit(itemDto));
+            return new ModelAndView("redirect:/items/" + itemService.edit(itemDto));
         }
-
-//
-//        List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
-//        editableItemDto.setPhotoName(file.isEmpty() ? NO_PHOTO_NAME : file.getOriginalFilename());
-//        ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);
-//
-//        if (errors.size() > 0) {
-//            modelMap.addAttribute("errors", errors);
-//            setItemModel(modelMap, editableItemDto);
-//            return new ModelAndView("add_item");
-//        } else {
-//            //  storageService.store(editableItemDto.getPhoto());
-//            long id = itemService.add(itemDto);
-//            if (id == -1) {
-//                modelMap.addAttribute("message", "Item '" + itemDto.getProducer() + " " + itemDto.getName() + "' already exists!");
-//                return new ModelAndView("error", modelMap);
-//            } else {
-//                if (!file.isEmpty()) {
-//                    storageService.store(file);
-//                }
-//                return new ModelAndView("redirect:/items/" + id);
-//            }
-//        }
     }
 
     /**
