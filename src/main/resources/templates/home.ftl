@@ -94,6 +94,7 @@
 </div>
 
 <script type="text/javascript" src="js/homeHandler.js"></script>
+<script type="text/javascript" src="js/searchHandler.js"></script>
 <script type="text/javascript" src="js/addToBasket.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>
 <script type="text/javascript" src="../js/initSelect.js"></script>

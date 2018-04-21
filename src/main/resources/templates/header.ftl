@@ -16,7 +16,7 @@
             <input placeholder="Search" id="search" type="text" class="left">
         </div>
         <div style="margin-top: 23px;" class="input-field col s1">
-            <div class="btn left"><i class="material-icons">search</i></div>
+            <a href="javascript: findItems()" class="btn left"><i class="material-icons">search</i></a>
         </div>
         <div class="input-field col s1 offset-s2">
             <div class="right"><a href="/basket"> <i class="material-icons cl-4db6a sz-36">shopping_cart</i></a></div>
