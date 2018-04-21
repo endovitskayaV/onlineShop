@@ -68,7 +68,7 @@ public class ItemEntity {
     private Map<CharacteristicEntity, String> characteristicsValues;
 
 
-    @Column(name = "photo_path")
+    @Column(name = "photo_name")
     private String photoName;
 
 

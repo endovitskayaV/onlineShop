@@ -81,14 +81,13 @@ public class ItemController {
                                 @RequestParam(required = false) String sortBy,
                                 @RequestParam(required = false) Boolean asc/*,
                                 @RequestParam(required = false) List<CharacteristicDto> characteristics*/) {
-        CategoryDto categoryDto=categoryService.getByName(category);
+        CategoryDto categoryDto = categoryService.getByName(category);
         model.addAttribute("categories", categoryService.getAll());
         List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(asc), getSafeEnumValue(sortBy));
         model.addAttribute("items", items);
         model.addAttribute("characteristics", categoryDto.getCharacteristics());
         return "home";
     }
-
 
 
 //    @GetMapping(params = "category")
@@ -148,7 +147,7 @@ public class ItemController {
                 .name("")
                 .producer("")
                 .description("")
-                .price(0)
+                .price(1)
                 .storage(0)
                 .build();
         model.addAttribute("item", itemDto);
@@ -185,7 +184,7 @@ public class ItemController {
 
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
         editableItemDto.setPhotoName(file.isEmpty() ? NO_PHOTO_NAME : file.getOriginalFilename());
-        ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);
+        checkIntegerFields(editableItemDto, errors);
 
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
@@ -193,60 +192,14 @@ public class ItemController {
             return new ModelAndView("add_item");
         } else {
             //  storageService.store(editableItemDto.getPhoto());
-            long id = itemService.add(itemDto);
+            long id = itemService.add(toItemDto(editableItemDto));
             if (id == -1) {
-                modelMap.addAttribute("message", "Item '" + itemDto.getProducer() + " " + itemDto.getName() + "' already exists!");
+                modelMap.addAttribute("message", "Item '" + editableItemDto.getProducer() + " " + editableItemDto.getName() + "' already exists!");
                 return new ModelAndView("error", modelMap);
             } else {
                 if (!file.isEmpty()) {
                     storageService.store(file);
                 }
-
-////                Resource resource = new  ClassPathResource(editableItemDto.getPhotoName());
-////                try {
-////                    File img = resource.getFile();
-////                } catch (IOException e) {
-////                    e.printStackTrace();
-////                }
-//
-//                ClassLoader classLoader = getClass().getClassLoader();
-//                File file2 = new File(classLoader.getResource("b.png").getFile());
-//                File file1 = new File(classLoader.getResource("a.png").getFile());
-//
-//
-//                ClassPathResource classPathResource = new ClassPathResource("c.png");
-//
-//                InputStream inputStream = null;
-//                try {
-//                    inputStream = classPathResource.getInputStream();
-//                    File somethingFile = File.createTempFile("test", ".png");
-////                    FileUtils.copy
-////                            .copyInputStreamToFile(inputStream, somethingFile);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//try {
-//    byte[] bytes = file.getBytes();
-//
-//
-//    File directory = new File("src/main/resources");
-//    File imageFile = File.createTempFile("q", ".png", directory);
-//    OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(imageFile));
-//    outputStream.write(bytes);
-//    outputStream.close();
-//
-//}catch (Exception e){
-//                    e.printStackTrace();
-//}
-
-//                FileSystemResource imgFile = new FileSystemResource("src\\main\\resources\\y.png");
-//                try {
-//                   String g= imgFile.getURI().toString();
-//                   g+="d";
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
                 return new ModelAndView("redirect:/items/" + id);
             }
         }
@@ -265,45 +218,38 @@ public class ItemController {
 
         if (editableItemDto.getCategoryId() != 0) {
             modelMap.addAttribute("selectedCategory", categoryService.getById(editableItemDto.getCategoryId()));
-            modelMap.addAttribute("characteristics", editableItemDto.getCharacteristics());
+            modelMap.addAttribute("item_characteristics", editableItemDto.getCharacteristics());
         }
     }
 
-    private ItemDto editableItemDtoToItemDto(EditableItemDto editableItemDto, List<Error> errors) {
-        ItemDto itemDto = ItemDto.builder()
-                .id(editableItemDto.getId())
-                .name(editableItemDto.getName())
-                .producer(editableItemDto.getProducer())
-                .description(editableItemDto.getDescription())
-                .categoryId(editableItemDto.getCategoryId())
-                .characteristics(editableItemDto.getCharacteristics())
-                .photoName(editableItemDto.getPhotoName())
-                .build();
-//        if (editableItemDto.getPhoto() == null) {
-//           itemDto.setPhotoName(NO_PHOTO_NAME);
-//        } else {
-//            itemDto.setPhotoName(editableItemDto.getPhoto().getName());
-//        }
-
-
+    private void checkIntegerFields(EditableItemDto editableItemDto, List<Error> errors) {
         try {
-            itemDto.setPrice(Integer.parseInt(editableItemDto.getPrice()));
-            if (itemDto.getPrice() < 0) {
+            if (Integer.parseInt(editableItemDto.getPrice()) < 0) {
                 errors.add(new Error("price", "Price must be greater than 0"));
             }
         } catch (NumberFormatException e) {
             errors.add(new Error("price", "Price must be a number less than 2,147,483,647"));
         }
         try {
-            itemDto.setStorage(Integer.parseInt(editableItemDto.getStorage()));
-            if (itemDto.getStorage() < 1) {
-                errors.add(new Error("storage", "Count must be greater than 1"));
-            }
+            Integer.parseInt(editableItemDto.getStorage());
         } catch (NumberFormatException e) {
-            errors.add(new Error("storage", "Count must be anumber less than 2,147,483,647"));
+            errors.add(new Error("storage", "Count must be a number less than 2,147,483,647"));
         }
+    }
 
-        return itemDto;
+
+    private ItemDto toItemDto(EditableItemDto editableItemDto) {
+        return ItemDto.builder()
+                .id(editableItemDto.getId())
+                .name(editableItemDto.getName())
+                .producer(editableItemDto.getProducer())
+                .description(editableItemDto.getDescription())
+                .price(Integer.parseInt(editableItemDto.getPrice()))
+                .storage(Integer.parseInt(editableItemDto.getStorage()))
+                .categoryId(editableItemDto.getCategoryId())
+                .characteristics(editableItemDto.getCharacteristics())
+                .photoName(editableItemDto.getPhotoName())
+                .build();
     }
 
     /**
@@ -320,8 +266,11 @@ public class ItemController {
         if (itemDto == null) {
             return "error";
         }
-        if (itemDto.getPhotoName().equals(NO_PHOTO_NAME)) {
-            itemDto.setPhotoName(null);
+
+        if (itemDto.getPhotoName() != null) {
+            if (itemDto.getPhotoName().equals(NO_PHOTO_NAME)) {
+                itemDto.setPhotoName(null);
+            }
         }
         model.addAttribute("item", itemDto);
         model.addAttribute("categories",
@@ -355,14 +304,17 @@ public class ItemController {
         } else if (!file.isEmpty()) {
             editableItemDto.setPhotoName(file.getOriginalFilename());
         }
-        ItemDto itemDto = editableItemDtoToItemDto(editableItemDto, errors);
+        checkIntegerFields(editableItemDto, errors);
 
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
             setItemModel(modelMap, editableItemDto);
-            return new ModelAndView("edit_item");
+            return new ModelAndView("edit");
         } else {
-            return new ModelAndView("redirect:/items/" + itemService.edit(itemDto));
+            if (!file.isEmpty()) {
+                storageService.store(file);
+            }
+            return new ModelAndView("redirect:/items/" + itemService.edit(toItemDto(editableItemDto)));
         }
     }
 

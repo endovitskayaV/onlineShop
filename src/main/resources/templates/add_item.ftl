@@ -104,7 +104,7 @@
                           <#if selectedCategory??>
                               <#assign i=0>
                                <#list characteristics as characteristic>
-                              <input type="number" name="characteristic[${i}].id"
+                              <input type="number" name="characteristics[${i}].id"
                                hidden="hidden" value="${characteristic.id}">
                               <input type="text" name="characteristics[${i}].measureUnit"
                                hidden="hidden" value="${characteristic.measureUnit}">

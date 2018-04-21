@@ -38,7 +38,9 @@
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
 
-            <div class="card-image"><img width="60" height="200" src="../img/meizu.jpg"></div>
+            <div class="card-image">
+                <#include "item_photo.ftl">
+            </div>
                 <div id="anyCardLeft">
                     <div class="card-content">
                         <label for="itemId"></label>

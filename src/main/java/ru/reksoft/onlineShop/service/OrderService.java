@@ -60,7 +60,6 @@ public class OrderService {
     }
 
     public boolean addToBasket(long userId, long itemId) {
-
         ItemEntity foundItemEntity = itemRepository.getOne(itemId);
         if (foundItemEntity.getStorage() == 0) {
             return false;
@@ -86,7 +85,7 @@ public class OrderService {
                     .stream()
                     .anyMatch(addableItem::equals);
             if (equal) {
-                itemsQuantity.put(addableItem, itemsQuantity.get(addableItem));
+                itemsQuantity.put(addableItem, itemsQuantity.get(addableItem)+1);
             } else {
                 itemsQuantity.put(itemRepository.getOne(itemId), 1);
             }

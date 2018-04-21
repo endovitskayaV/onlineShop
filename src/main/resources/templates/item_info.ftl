@@ -25,7 +25,7 @@
             <div class="col s8 offset-s1">
                 <div class="card horizontal hoverable">
                     <div class="card-image">
-                        <img width="60" height="200" src="../../img/${item.photoName}">
+                        <#include "item_photo.ftl">
                     </div>
                     <div class="card-stacked">
                         <div class="card-content">

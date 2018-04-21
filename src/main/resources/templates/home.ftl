@@ -9,8 +9,6 @@
 </head>
 
 <body>
-
-  <img width="60" height="200" src="../img/a.png">
 <#include "header.ftl">
 <div class="row" style="margin-top: 100px">
     <div class="col s3">
@@ -38,7 +36,7 @@
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
             <div class="card-image">
-                <img width="60" height="200" src="../img/${item.photoName}">
+               <#include "item_photo.ftl">
             </div>
             <div class="card-stacked">
                 <div class="card-content">

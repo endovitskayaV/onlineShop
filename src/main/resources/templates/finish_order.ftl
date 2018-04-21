@@ -23,7 +23,7 @@
         <div id="${item.id}" class="card horizontal hoverable">
 
             <div class="card-image">
-                <img width="60" height="200" src="../../img/meizu.jpg">
+                 <#include "item_photo.ftl">
             </div>
             <div id="anyCardLeft">
                 <div class="card-stacked">

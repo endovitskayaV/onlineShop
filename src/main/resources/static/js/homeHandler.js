@@ -1,22 +1,24 @@
 function deleteItem(id) {
-    $.ajax({
-        url: document.location.origin + '/items/delete/' + id,
-        type: "DELETE",
-        contentType: "application/x-www-form-urlencoded",
-        success: function (data) {
-            $('#' + id).html("");
-            showModal('<div class="row">' +
-                '          <div class="card-content">' +
-                '             <p class="center-align">Deleted</p>' +
-                '      </div></div></div>');
-        },
-        error: function (data) {
-            showModal('<div class="row">' +
-                '          <div class="card-content">' +
-                '             <p class="center-align">' + data.responseText +
-                '</p></div></div>');
-        }
-    });
+    if (confirm("Are you sure?")) {
+        $.ajax({
+            url: document.location.origin + '/items/delete/' + id,
+            type: "DELETE",
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data) {
+                $('#' + id).html("");
+                showModal('<div class="row">' +
+                    '          <div class="card-content">' +
+                    '             <p class="center-align">Deleted</p>' +
+                    '      </div></div></div>');
+            },
+            error: function (data) {
+                showModal('<div class="row">' +
+                    '          <div class="card-content">' +
+                    '             <p class="center-align">' + data.responseText +
+                    '</p></div></div>');
+            }
+        });
+    }
 }
 
 

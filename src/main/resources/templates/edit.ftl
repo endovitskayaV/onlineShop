@@ -10,7 +10,7 @@
 
 
 <body>
-
+<script type="text/javascript" src="/../js/addItemsHandler.js"></script>
 <div style="margin-top: 80px" class="row">
     <div class="col s6 offset-s3">
         <div class="card hoverable">
@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                              <#if item.storage??>
-                              <input id="storage" name="storage" type="number" value="${item.storage?string["0"]}"
+                              <input id="storage" name="storage" type="number" value="${item.storage?replace(",", "")}"
                                      min="0">
                              <#else>
                               <input id="storage" name="storage" type="number" value="" min="0">
@@ -48,7 +48,7 @@
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                                <#if item.price??>
-                              <input id="price" name="price" type="number" min="1" value="${item.price?string["0"]}">
+                              <input id="price" name="price" type="number" min="1" value="${item.price?replace(",", "")}">
                                <#else>
                               <input id="price" name="price" type="number" value="" min="1">
                                </#if>
@@ -93,7 +93,7 @@
                           <#if selectedCategory??>
                               <#assign i=0>
                                <#list item_characteristics as characteristic>
-                              <input type="number" name="characteristic[${i}].id"
+                              <input type="number" name="characteristics[${i}].id"
                                      hidden="hidden" value="${characteristic.id}">
                               <input type="text" name="characteristics[${i}].measureUnit"
                                      hidden="hidden" value="${characteristic.measureUnit}">
@@ -175,7 +175,6 @@
 <script type="text/javascript" src="/../js/materialize.min.js"></script>
 <script type="text/javascript" src="/../js/addCategoryHandler.js"></script>
 <script type="text/javascript" src="/../js/editItemHandler.js"></script>
-<script type="text/javascript" src="/../js/addItemsHandler.js"></script>
 <script type="text/javascript" src="/../js/initSelect.js"></script>
 
 </body>

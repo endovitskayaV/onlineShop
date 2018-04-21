@@ -6,7 +6,8 @@ function loadCharacteristics(elemId) {
         characteristicDiv.html("");
         var i = 0;
         $.each(data, function (key, characteristic) {
-            var newInput = ' <div id="characteristic_"><input id= "characteristic-id"  type="number" name="characteristics[' + i + '].id" ' +
+            var newInput = ' <div id="characteristic_">' +
+                '<input id= "characteristic-id"  type="number" name="characteristics[' + i + '].id" ' +
                 ' hidden="hidden" value="' + characteristic.id + '"> ' +
                 '<input id= "characteristic-measureUnit"  type="text" name="characteristics[' + i + '].measureUnit" ' +
                 ' hidden="hidden" value="' + characteristic.measureUnit + '"> ' +
@@ -42,6 +43,7 @@ function showError(field, message) {
 $(document).ready(function () {
     //file type validation
     $("#file").change(function () {
+        var fileMaxSize=1048575;
         var file = this.files[0];
         var imagefile = file.type;
         var match = ["image/jpeg", "image/png", "image/jpg"];
@@ -49,6 +51,14 @@ $(document).ready(function () {
             alert('Please select a valid image file (JPEG/JPG/PNG).');
             $("#file").val('');
             return false;
+        }else if (file.size>fileMaxSize){
+            donotUploadFile('File size must be not more than 1 Mb');
         }
     });
 });
+
+function donotUploadFile(message) {
+    alert(message);
+    $("#file").val('');
+    return false;
+}

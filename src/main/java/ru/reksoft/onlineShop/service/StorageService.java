@@ -21,7 +21,6 @@ public class StorageService {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         Path path = ROOT_LOCATION.resolve(filename);
         try {
-            Files.createFile(path);
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + filename, e);
