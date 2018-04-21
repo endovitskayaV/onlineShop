@@ -21,6 +21,7 @@ import ru.reksoft.onlineShop.service.ItemService;
 import ru.reksoft.onlineShop.service.StorageService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,42 +49,34 @@ public class ItemController {
         return booleanValue == null ? true : booleanValue;
     }
 
-    private SortCriteria getSafeEnumValue(String value) {
-        try {
-            return SortCriteria.valueOf(value);
-        } catch (IllegalArgumentException e) {
-            return null;
+    @GetMapping("/catalogue")
+    @ResponseBody
+    public List<ItemDto> getAllSorted(@RequestParam(required = false) String category,
+                                      @RequestParam SortCriteria sortBy,
+                                      @RequestParam boolean acs) {
+
+        if (category == null) {
+            List<ItemDto> items = itemService.getAll(getSafeBoolean(acs), sortBy);
+            return itemService.getAll(getSafeBoolean(acs), sortBy);
+        } else {
+            CategoryDto categoryDto = categoryService.getByName(category);
+            List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(acs), sortBy);
+            return itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(acs), sortBy);
         }
     }
 
     @GetMapping
-    public String getAll(Model model,
-                         @RequestParam(required = false) String sortBy,
-                         @RequestParam(required = false) Boolean asc) {
-
+    public String getAll(Model model) {
         model.addAttribute("categories", categoryService.getAll());
-        List<ItemDto> items;
-        if (sortBy == null) {
-            items = itemService.getAll();
-        } else if (getSafeEnumValue(sortBy) == null) { //process incorrect sort criteria
-            items = itemService.getAll(); //TODO:think of better way to process incorrect sort criteria
-        } else { //&& sortBy!=null
-            items = itemService.getAll(getSafeBoolean(asc), SortCriteria.valueOf(sortBy));
-        }
-
-        model.addAttribute("items", items);
+        model.addAttribute("items", itemService.getAll());
         return "home";
     }
 
     @GetMapping(params = "category")
-    public String getByCategory(Model model,
-                                String category,
-                                @RequestParam(required = false) String sortBy,
-                                @RequestParam(required = false) Boolean asc/*,
-                                @RequestParam(required = false) List<CharacteristicDto> characteristics*/) {
+    public String getByCategory(Model model, String category) {
         CategoryDto categoryDto = categoryService.getByName(category);
+        List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId());
         model.addAttribute("categories", categoryService.getAll());
-        List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(asc), getSafeEnumValue(sortBy));
         model.addAttribute("items", items);
         model.addAttribute("characteristics", categoryDto.getCharacteristics());
         return "home";

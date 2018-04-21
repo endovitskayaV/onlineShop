@@ -60,7 +60,7 @@ public class ItemService {
      * @return item dtos having given categoryId
      */
     public List<ItemDto> getByCategoryId(long categoryId) {
-        return itemRepository.findAllByCategoryId(categoryId).stream()
+        return itemRepository.findAllByCategoryIdOrderByProducer(categoryId).stream()
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
@@ -81,7 +81,7 @@ public class ItemService {
     public List<ItemDto> getByCharacteristic(long categoryId, List<CharacterisricValueDto>characterisricValueDtos) {
     //    characteristicRepository.
 
-        return itemRepository.findAllByCategoryId(categoryId)
+        return itemRepository.findAllByCategoryIdOrderByProducer(categoryId)
                 .stream()
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
@@ -89,14 +89,14 @@ public class ItemService {
 
 
     public List<ItemDto> getByNameOrProducer(String query) {
-        return itemRepository.findAllByNameContainsOrProducerContains(query, query).stream()
+        return itemRepository.findAllByNameContainsOrProducerContainsOrderByProducer(query, query).stream()
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
 
-    public List<ItemDto> getAll(boolean isAscSort, SortCriteria sortCriteria) {
+    public List<ItemDto> getAll(boolean isAcsSort, SortCriteria sortCriteria) {
         Sort.Direction direction;
-        if (isAscSort) {
+        if (isAcsSort) {
             direction = Sort.Direction.ASC;
         } else {
             direction = Sort.Direction.DESC;
