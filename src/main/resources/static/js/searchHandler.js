@@ -1,25 +1,27 @@
 function findItems() {
     var search = $('#search').val();
-    if (search !== "")
-        setCategories(document.location.origin + '/items/search?query=' + search + '&' + getSortingParams());
+    if (search !== "") {
+        var url = document.location.origin + '/items/search?query=' + search + '&' + getSortingParams();
+        setCategories(url);
+    }
 }
 
 function setCategories(query) {
     $.get(query, function (data) {
-        var select=document.getElementById("sort_criteria_div");
+        var select = document.getElementById("sort_criteria_div");
 
         if (data.items.length === 0) {
             $('#verifyCategory').html("");
             $('#categories').html("");
             $('#items_div').html("");
-            if (select!==null) {
+            if (select !== null) {
                 select.style.visibility = "hidden";
             }
             $('#message_div').append('<span>No items on request &laquo;' + $('#search').val() + '&raquo; found</span>');
 
         } else {
             $('#categories').html("");
-            if (select!==null) {
+            if (select !== null) {
                 select.style.visibility = "visible";
             }
             $('#message_div').html("");
@@ -39,7 +41,7 @@ function setCategories(query) {
 
                 div += '</div></div>';
                 categoriesDiv.append(div);
-            }else{
+            } else {
                 categoriesDiv.append('<div class="col s3"></div>');
             }
             setItemCards(data.items);

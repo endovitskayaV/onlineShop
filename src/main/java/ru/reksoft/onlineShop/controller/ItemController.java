@@ -49,29 +49,6 @@ public class ItemController {
         this.storageService = storageService;
     }
 
-//    @GetMapping("/catalogue")
-//    @ResponseBody
-//    public List<ItemDto> getAllSorted(@RequestParam(required = false) String category,
-//                                      @RequestParam SortCriteria sortBy,
-//                                      @RequestParam boolean acs) {
-//
-//        if (category == null) {
-//            List<ItemDto> items = itemService.getAll(getSafeBoolean(acs), sortBy);
-//            return itemService.getAll(getSafeBoolean(acs), sortBy);
-//        } else {
-//            CategoryDto categoryDto = categoryService.getByName(category);
-//            List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(acs), sortBy);
-//            return itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(acs), sortBy);
-//        }
-//    }
-
-//    @GetMapping
-//    public String getAll(Model model) {
-//        model.addAttribute("categories", categoryService.getAll());
-//        model.addAttribute("items", itemService.getAll());
-//        return "home";
-//    }
-
     @GetMapping
     public String getAll(Model model, @RequestParam(required = false) String category,
                          @RequestParam(required = false) SortCriteria sortBy,
@@ -82,25 +59,14 @@ public class ItemController {
             items = itemService.getAll(getSafeBoolean(acs), sortBy);
         } else if (characteristics == null) {
             items = itemService.getByCategoryId(categoryService.getByName(category).getId(), acs, sortBy);
-            model.addAttribute("characteristics",
+            model.addAttribute("characteristicValues",
                     itemService.getCharacteristicByCategoryId(categoryService.getByName(category).getId(), acs, sortBy));
         } else {
             items = new ArrayList<>();//itemService.getByCharacteristic(categoryService.getByName(category).getId(), characteristics, acs, sortBy);
         }
-        model.addAttribute("items", items);
-        model.addAttribute("categories", categoryService.getAll());
+        setModel(model, items, sortBy, acs, categoryService.getAll());
 
-        if (sortBy != null) {
-            String selectedSortCriteria = sortBy.name().toLowerCase();
-            if (acs == null) {
-                selectedSortCriteria += "Acs";
-            } else {
-                selectedSortCriteria += acs ? "Acs" : "Des";
-            }
-            model.addAttribute("selectedSortCriteria", selectedSortCriteria);
-        }
-
-        if (category!=null)  model.addAttribute("selectedCategory",category);
+        if (category != null) model.addAttribute("selectedCategory", category);
         return "home";
     }
 
@@ -109,47 +75,11 @@ public class ItemController {
                                  @RequestParam(required = false) Long categoryId,
                                  @RequestParam(required = false) SortCriteria sortBy,
                                  @RequestParam(required = false) Boolean acs) {
-
         return categoryId == null ?
                 ResponseEntity.ok(new ItemsCategories(itemService.getByNameOrProducer(query, getSafeBoolean(acs), sortBy), categoryService.getByQuery(query))) :
                 ResponseEntity.ok(itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy));
     }
 
-
-//    @GetMapping(params = "category")
-//    public String getByCategory(Model model, String category) {
-//        CategoryDto categoryDto = categoryService.getByName(category);
-//        List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId());
-//        model.addAttribute("categories", categoryService.getAll());
-//        model.addAttribute("items", items);
-//        model.addAttribute("characteristics", categoryDto.getCharacteristics());
-//        return "home";
-//    }
-
-
-//    @GetMapping(params = "category")
-//    public String getByCategoryAndCharacteristics(Model model,
-//                                String category,
-//                                @RequestParam(required = false) String sortBy,
-//                                @RequestParam(required = false) Boolean asc,
-//                                @RequestParam(required = false) List<CharacteristicDto> characteristics) {
-//
-//        CategoryDto categoryDto=categoryService.getByName(category);
-//        model.addAttribute("categories", categoryService.getAll());
-//        List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(asc), getSafeEnumValue(sortBy));
-//        model.addAttribute("items", items);
-//        model.addAttribute("characteristics", categoryDto.getCharacteristics());
-//        return "home";
-//    }
-
-
-//    @GetMapping(value = "/filter", params = "query")
-//    public String getByNameOrProducer(Model model, String query) {
-//        List<ItemDto> items = itemService.getByNameOrProducer(query);
-//        model.addAttribute("items", items);
-//        model.addAttribute("categories", categoryService.getAll());
-//        return "home_copy";
-//    }
 
     /**
      * Gets item by its id, prepares model for template
@@ -165,9 +95,7 @@ public class ItemController {
             model.addAttribute("message", "No such item");
             return "error";
         } else {
-            model.addAttribute("item", itemDto);
-            model.addAttribute("categories", categoryService.getAll());
-            model.addAttribute("characteristics", itemDto.getCharacteristics());
+            setModel(model, itemDto, categoryService.getAll(), itemDto.getCharacteristics());
             return "item_info";
         }
     }
@@ -199,19 +127,6 @@ public class ItemController {
         model.addAttribute("characteristics", characteristicService.getAll());
         return "add_item";
     }
-
-
-//    @GetMapping("/files")
-//    public String file() {
-//        return "file_try";
-//    }
-//
-//    @PostMapping(value = "/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ModelAndView add(@ModelAttribute Try try1,
-//                            @RequestParam("file") MultipartFile file) {
-//        String name1 = file.getName();
-//        return new ModelAndView("redirect:/items/");
-//    }
 
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ModelAndView add(ModelMap modelMap,
@@ -375,6 +290,33 @@ public class ItemController {
     private Boolean getSafeBoolean(Boolean booleanValue) {
         return booleanValue == null ? true : booleanValue;
     }
+
+    private String setSelectedSortCriteria(SortCriteria sortBy, Boolean acs) {
+        String selectedSortCriteria = sortBy.name().toLowerCase();
+        if (acs == null) {
+            selectedSortCriteria += "Acs";
+        } else {
+            selectedSortCriteria += acs ? "Acs" : "Des";
+        }
+        return selectedSortCriteria;
+    }
+
+    private void setModel(Model model, ItemDto itemDto,
+                          List<CategoryDto> categories, List<CharacteristicDto> characteristics) {
+        model.addAttribute("item", itemDto);
+        model.addAttribute("categories", categories);
+        model.addAttribute("characteristics", characteristics);
+    }
+
+    private void setModel(Model model, List<ItemDto> itemDto, SortCriteria sortBy, Boolean acs,
+                          List<CategoryDto> categories) {
+        model.addAttribute("items", itemDto);
+        model.addAttribute("categories", categories);
+        if (sortBy != null) {
+            model.addAttribute("selectedSortCriteria", setSelectedSortCriteria(sortBy, acs));
+        }
+    }
+
 
     @Data
     @AllArgsConstructor

@@ -8,9 +8,8 @@
     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
 </head>
 
-<body>
+<body id="body">
 <#include "header.ftl">
-
 <div class="row" style="margin-top: 100px">
     <div id="categories">
         <div class="col s3">
@@ -87,5 +86,6 @@
 <script type="text/javascript" src="../js/addToBasket.js"></script>
 <script type="text/javascript" src="../js/itemInfoHandler.js"></script>
 <script type="text/javascript" src="../js/materialize.min.js"></script>
+
 </body>
 </html>
