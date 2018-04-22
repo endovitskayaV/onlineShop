@@ -122,14 +122,17 @@
                     </div>
 
                 <#if item.photoName??>
-                    <div id="image_div" class="row">
-                        <div class="input-field col s11 offset-s1">
-                            <img width="60" height="200" src="../../../img/${item.photoName}">
+                    <div id="image_div">
+                        <div class="col s8 offset-s1">
+                            <div class="card-image">
+                                <img width="60" height="200" src="../../../img/${item.photoName}">
+                            </div>
                             <a href="javascript: deleteImage()">
                                 <i class="material-icons cl-4db6a sz-20 modal-trigger">clear</i>
                             </a>
-                            <input id="fileName" name="photoName" type="text" value="${item.photoName}" hidden>
                         </div>
+                            <input id="fileName" name="photoName" type="text" value="${item.photoName}" hidden>
+
                     </div>
                 </#if>
 
