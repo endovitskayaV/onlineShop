@@ -6,16 +6,22 @@ function findItems() {
 
 function setCategories(query) {
     $.get(query, function (data) {
+        var select=document.getElementById("sort_criteria_div");
+
         if (data.items.length === 0) {
             $('#verifyCategory').html("");
             $('#categories').html("");
             $('#items_div').html("");
-            document.getElementById("sort_criteria_div").style.visibility = "hidden";
+            if (select!==null) {
+                select.style.visibility = "hidden";
+            }
             $('#message_div').append('<span>No items on request &laquo;' + $('#search').val() + '&raquo; found</span>');
 
         } else {
             $('#categories').html("");
-            document.getElementById("sort_criteria_div").style.visibility = "visible";
+            if (select!==null) {
+                select.style.visibility = "visible";
+            }
             $('#message_div').html("");
             var categoriesDiv = $('#verifyCategory').html("");
 

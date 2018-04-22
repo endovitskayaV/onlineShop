@@ -12,17 +12,24 @@
 <#include "header.ftl">
 
 <div class="row" style="margin-top: 100px">
-    <div class="col s3">
-        <div class="collection">
+    <div id="categories">
+        <div class="col s3">
+            <div class="collection z-depth-1 hoverable">
     <#list categories as category>
-        <div><a href="/items?category=${category.name}" class="collection-item">${category.name}</a></div>
+        <div><a href="javascript: getByCategory('${category.name}')" class="collection-item">${category.name}</a></div>
+   <#if selectedCategory??>
+    <input id="chosenCategory" type="text" hidden value="${selectedCategory}">
+   </#if>
     </#list>
+            </div>
         </div>
     </div>
+    <div id="verifyCategory"></div>
 
     <div class="col s8">
         <div class="row">
             <div class="col s8 offset-s1">
+                <div id="items_div">
                 <div class="card horizontal hoverable">
                     <div class="card-image">
                         <#include "item_photo.ftl">
@@ -67,6 +74,7 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
     </div>
 </div>
@@ -74,6 +82,8 @@
 <div id="info-modal" class="modal modal-content">
 </div>
 
+<script type="text/javascript" src="../js/homeHandler.js"></script>
+<script type="text/javascript" src="../js/searchHandler.js"></script>
 <script type="text/javascript" src="../js/addToBasket.js"></script>
 <script type="text/javascript" src="../js/itemInfoHandler.js"></script>
 <script type="text/javascript" src="../js/materialize.min.js"></script>
