@@ -21,7 +21,6 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
 
     List<ItemEntity> findAllByCategoryId(long categoryId, Sort sort);
 
-
     /**
      * Finds itemEntity by its name and producer name
      *
@@ -31,7 +30,5 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
      */
     ItemEntity findByNameAndProducer(String name, String producer);
 
-
-    List<ItemEntity> findAllByNameContainsOrProducerContainsOrderByProducer(String nameContains, String producerContains);
-
+    List<ItemEntity> findAllByNameContainsOrProducerContains(String nameContains, String producerContains, Sort sort);
 }

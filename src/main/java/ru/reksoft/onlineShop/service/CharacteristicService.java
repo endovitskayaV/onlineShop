@@ -2,12 +2,15 @@ package ru.reksoft.onlineShop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.reksoft.onlineShop.controller.util.SortCriteria;
 import ru.reksoft.onlineShop.model.domain.converter.CharacteristicConverter;
 import ru.reksoft.onlineShop.model.domain.repository.CategoryRepository;
+import ru.reksoft.onlineShop.model.domain.repository.ItemRepository;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.model.domain.repository.CharacteristicRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -19,6 +22,7 @@ public class CharacteristicService {
     private CharacteristicRepository characteristicRepository;
     private CharacteristicConverter characteristicConverter;
     private CategoryRepository categoryRepository;
+    private ItemRepository itemRepository;
 
     /**
      * @param characteristicRepository repository for characteristic
@@ -27,10 +31,11 @@ public class CharacteristicService {
     @Autowired
     public CharacteristicService(CharacteristicRepository characteristicRepository,
                                  CharacteristicConverter characteristicConverter,
-                                 CategoryRepository categoryRepository) {
+                                 CategoryRepository categoryRepository, ItemRepository itemRepository) {
         this.characteristicRepository = characteristicRepository;
         this.characteristicConverter = characteristicConverter;
-        this.categoryRepository=categoryRepository;
+        this.categoryRepository = categoryRepository;
+        this.itemRepository = itemRepository;
     }
 
     /**
@@ -56,5 +61,6 @@ public class CharacteristicService {
                                                 .getCharacteristicsRequired().get(characteristicEntity)))
                 .collect(Collectors.toList());
     }
+
 
 }

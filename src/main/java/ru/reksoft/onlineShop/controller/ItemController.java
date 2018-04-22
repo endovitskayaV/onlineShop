@@ -1,6 +1,9 @@
 package ru.reksoft.onlineShop.controller;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,8 @@ import ru.reksoft.onlineShop.service.StorageService;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -44,43 +49,82 @@ public class ItemController {
         this.storageService = storageService;
     }
 
+//    @GetMapping("/catalogue")
+//    @ResponseBody
+//    public List<ItemDto> getAllSorted(@RequestParam(required = false) String category,
+//                                      @RequestParam SortCriteria sortBy,
+//                                      @RequestParam boolean acs) {
+//
+//        if (category == null) {
+//            List<ItemDto> items = itemService.getAll(getSafeBoolean(acs), sortBy);
+//            return itemService.getAll(getSafeBoolean(acs), sortBy);
+//        } else {
+//            CategoryDto categoryDto = categoryService.getByName(category);
+//            List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(acs), sortBy);
+//            return itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(acs), sortBy);
+//        }
+//    }
 
-    private Boolean getSafeBoolean(Boolean booleanValue) {
-        return booleanValue == null ? true : booleanValue;
-    }
-
-    @GetMapping("/catalogue")
-    @ResponseBody
-    public List<ItemDto> getAllSorted(@RequestParam(required = false) String category,
-                                      @RequestParam SortCriteria sortBy,
-                                      @RequestParam boolean acs) {
-
-        if (category == null) {
-            List<ItemDto> items = itemService.getAll(getSafeBoolean(acs), sortBy);
-            return itemService.getAll(getSafeBoolean(acs), sortBy);
-        } else {
-            CategoryDto categoryDto = categoryService.getByName(category);
-            List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(acs), sortBy);
-            return itemService.getByCategoryId(categoryDto.getId(), getSafeBoolean(acs), sortBy);
-        }
-    }
+//    @GetMapping
+//    public String getAll(Model model) {
+//        model.addAttribute("categories", categoryService.getAll());
+//        model.addAttribute("items", itemService.getAll());
+//        return "home";
+//    }
 
     @GetMapping
-    public String getAll(Model model) {
+    public String getAll(Model model, @RequestParam(required = false) String category,
+                         @RequestParam(required = false) SortCriteria sortBy,
+                         @RequestParam(required = false) Boolean acs,
+                         @RequestParam(required = false) List<CharacteristicValueDto> characteristics) {
+        List<ItemDto> items;
+        if (category == null) {
+            items = itemService.getAll(getSafeBoolean(acs), sortBy);
+        } else if (characteristics == null) {
+            items = itemService.getByCategoryId(categoryService.getByName(category).getId(), acs, sortBy);
+            model.addAttribute("characteristics",
+                    itemService.getCharacteristicByCategoryId(categoryService.getByName(category).getId(), acs, sortBy));
+        } else {
+            items = new ArrayList<>();//itemService.getByCharacteristic(categoryService.getByName(category).getId(), characteristics, acs, sortBy);
+        }
+        model.addAttribute("items", items);
         model.addAttribute("categories", categoryService.getAll());
-        model.addAttribute("items", itemService.getAll());
+
+        if (sortBy != null) {
+            String selectedSortCriteria = sortBy.name().toLowerCase();
+            if (acs == null) {
+                selectedSortCriteria += "Acs";
+            } else {
+                selectedSortCriteria += acs ? "Acs" : "Des";
+            }
+            model.addAttribute("selectedSortCriteria", selectedSortCriteria);
+        }
+
+        if (category!=null)  model.addAttribute("selectedCategory",category);
         return "home";
     }
 
-    @GetMapping(params = "category")
-    public String getByCategory(Model model, String category) {
-        CategoryDto categoryDto = categoryService.getByName(category);
-        List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId());
-        model.addAttribute("categories", categoryService.getAll());
-        model.addAttribute("items", items);
-        model.addAttribute("characteristics", categoryDto.getCharacteristics());
-        return "home";
+    @GetMapping("/search")
+    public ResponseEntity getAll(String query,
+                                 @RequestParam(required = false) Long categoryId,
+                                 @RequestParam(required = false) SortCriteria sortBy,
+                                 @RequestParam(required = false) Boolean acs) {
+
+        return categoryId == null ?
+                ResponseEntity.ok(new ItemsCategories(itemService.getByNameOrProducer(query, getSafeBoolean(acs), sortBy), categoryService.getByQuery(query))) :
+                ResponseEntity.ok(itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy));
     }
+
+
+//    @GetMapping(params = "category")
+//    public String getByCategory(Model model, String category) {
+//        CategoryDto categoryDto = categoryService.getByName(category);
+//        List<ItemDto> items = itemService.getByCategoryId(categoryDto.getId());
+//        model.addAttribute("categories", categoryService.getAll());
+//        model.addAttribute("items", items);
+//        model.addAttribute("characteristics", categoryDto.getCharacteristics());
+//        return "home";
+//    }
 
 
 //    @GetMapping(params = "category")
@@ -99,13 +143,13 @@ public class ItemController {
 //    }
 
 
-    @GetMapping(value = "/filter", params = "query")
-    public String getByNameOrProducer(Model model, String query) {
-        List<ItemDto> items = itemService.getByNameOrProducer(query);
-        model.addAttribute("items", items);
-        model.addAttribute("categories", categoryService.getAll());
-        return "home_copy";
-    }
+//    @GetMapping(value = "/filter", params = "query")
+//    public String getByNameOrProducer(Model model, String query) {
+//        List<ItemDto> items = itemService.getByNameOrProducer(query);
+//        model.addAttribute("items", items);
+//        model.addAttribute("categories", categoryService.getAll());
+//        return "home_copy";
+//    }
 
     /**
      * Gets item by its id, prepares model for template
@@ -326,5 +370,16 @@ public class ItemController {
         } else {
             return ResponseEntity.badRequest().body("Item cannot be deleted as it is ordered");
         }
+    }
+
+    private Boolean getSafeBoolean(Boolean booleanValue) {
+        return booleanValue == null ? true : booleanValue;
+    }
+
+    @Data
+    @AllArgsConstructor
+    private class ItemsCategories {
+        List<ItemDto> items;
+        Set<CategoryDto> categories;
     }
 }

@@ -8,7 +8,9 @@ import ru.reksoft.onlineShop.model.domain.repository.CategoryRepository;
 import ru.reksoft.onlineShop.model.dto.CategoryDto;
 import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -19,15 +21,17 @@ import java.util.stream.Collectors;
 public class CategoryService {
     private CategoryRepository categoryRepository;
     private CategoryConverter categoryConverter;
+    private ItemService itemService;
 
     /**
      * @param categoryRepository repository for category
      * @param categoryConverter  repository for category
      */
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository, CategoryConverter categoryConverter) {
+    public CategoryService(CategoryRepository categoryRepository, CategoryConverter categoryConverter, ItemService itemService) {
         this.categoryRepository = categoryRepository;
         this.categoryConverter = categoryConverter;
+        this.itemService = itemService;
     }
 
     /**
@@ -45,7 +49,7 @@ public class CategoryService {
      * @return category dto found by its id
      */
     public CategoryDto getById(long id) {
-        CategoryEntity categoryEntity=categoryRepository.findById(id).orElse(null);
+        CategoryEntity categoryEntity = categoryRepository.findById(id).orElse(null);
         return categoryConverter.toDto(categoryRepository.getOne(id));
     }
 
@@ -72,5 +76,14 @@ public class CategoryService {
             return categoryRepository.save(categoryEntity).getId();
         }
 
+    }
+
+
+    public Set<CategoryDto> getByQuery(String query) {
+        Set<CategoryDto> categories = new HashSet<>();
+        itemService.getByNameOrProducer(query, true, null).forEach(itemDto ->
+                categories.add(categoryConverter.toDto(categoryRepository.getOne(itemDto.getCategoryId())))
+        );
+        return categories;
     }
 }

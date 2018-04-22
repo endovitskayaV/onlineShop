@@ -8,36 +8,75 @@
     <link type="text/css" rel="stylesheet" href="css/my_style.css"/>
 </head>
 
-<body>
+<body id="body">
 <#include "header.ftl">
 <div class="row" style="margin-top: 30px">
     <div class="col s3"></div>
-    <div class="col s8">
+    <div  class="col s8">
         <div class="row">
             <div class="col s8 offset-s1">
                 <div class="card horizontal hoverable">
                     <div class="card-content">
-                        <select id="sort_criteria" name="categoryId" onchange="sortItems()">
-                            <option id="producerAcs" selected>Name(A-z)</option>
+                        <div id="message_div"></div><div id="sort_criteria_div">
+                        <select  id="sort_criteria" name="categoryId" onchange="sortItems()">
+                            <#if selectedSortCriteria??>
+                                <#switch selectedSortCriteria>
+                                    <#case "producerAcs">
+                                    <option id="producerAcs" selected>Name(A-z)</option>
                             <option id="producerDes">Name(Z-a)</option>
                             <option id="priceAcs">Cheap first</option>
                             <option id="priceDes">Expensive first</option>
+                                        <#break>
+                                    <#case "producerDes">
+                                    <option id="producerDes" selected>Name(Z-a)</option>
+                                    <option id="producerAcs">Name(A-z)</option>
+                                     <option id="priceAcs">Cheap first</option>
+                             <option id="priceDes">Expensive first</option>
+                                        <#break>
+                                    <#case "priceAcs">
+                                         <option id="priceAcs" selected>Cheap first</option>
+                                    <option id="producerDes">Name(Z-a)</option>
+                                    <option id="producerAcs">Name(A-z)</option>
+                                     <option id="priceDes">Expensive first</option>
+                                        <#break>
+                                    <#case "priceDes">
+                                         <option id="priceDes" selected>Expensive first</option>
+                                    <option id="producerDes">Name(Z-a)</option>
+                                    <option id="producerAcs">Name(A-z)</option>
+                                     <option id="priceAcs">Cheap first</option>
+                                        <#break>
+                                </#switch>
+
+                            <#else>
+                                <option id="producerAcs" selected>Name(A-z)</option>
+                            <option id="producerDes">Name(Z-a)</option>
+                            <option id="priceAcs">Cheap first</option>
+                            <option id="priceDes">Expensive first</option>
+                            </#if>
+
                         </select>
+                    </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
 <div class="row">
-    <div class="col s3">
-        <div class="collection z-depth-1 hoverable">
+    <div id="categories">
+        <div class="col s3">
+            <div class="collection z-depth-1 hoverable">
     <#list categories as category>
-        <div><a href="/items?category=${category.name}" class="collection-item">${category.name}</a></div>
+        <div><a href="javascript: getByCategory('${category.name}')" class="collection-item">${category.name}</a></div>
+   <#if selectedCategory??>
+    <input id="chosenCategory" type="text" hidden value="${selectedCategory}">
+   </#if>
     </#list>
+            </div>
         </div>
     </div>
-
 
 <#if  items?size==0>
   <div class="col s2 offset-s1 card horizontal">
@@ -49,7 +88,9 @@
   </div>
 </#if>
 
-    <div  class="col s8">
+    <div id="verifyCategory"></div>
+
+    <div class="col s8">
         <div class="row">
             <div class="col s8 offset-s1">
                 <div id="items_div">
@@ -84,7 +125,7 @@
             </div>
         </div>
     </#list>
-            </div>
+                </div>
             </div>
         </div>
     </div>

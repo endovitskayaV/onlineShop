@@ -6,12 +6,10 @@ import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.controller.util.SortCriteria;
 import ru.reksoft.onlineShop.model.domain.converter.ItemConverter;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
-import ru.reksoft.onlineShop.model.domain.repository.CharacteristicRepository;
 import ru.reksoft.onlineShop.model.domain.repository.ItemRepository;
-import ru.reksoft.onlineShop.model.dto.CharacterisricValueDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -22,17 +20,15 @@ import java.util.stream.Collectors;
 public class ItemService {
     private ItemRepository itemRepository;
     private ItemConverter itemConverter;
-    private CharacteristicRepository characteristicRepository;
 
     /**
      * @param itemRepository repository for item
      * @param itemConverter  converter for item
      */
     @Autowired
-    public ItemService(ItemRepository itemRepository, ItemConverter itemConverter,CharacteristicRepository characteristicRepository) {
+    public ItemService(ItemRepository itemRepository, ItemConverter itemConverter) {
         this.itemRepository = itemRepository;
         this.itemConverter = itemConverter;
-        this.characteristicRepository=characteristicRepository;
     }
 
     /**
@@ -40,8 +36,8 @@ public class ItemService {
      *
      * @return all item dtos
      */
-    public List<ItemDto> getAll() {
-        return itemRepository.findAll()
+    private List<ItemDto> getAll() {
+        return itemRepository.findAll(Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase()))
                 .stream()
                 .map(itemConverter::toDto)
                 .collect(Collectors.toList());
@@ -55,55 +51,114 @@ public class ItemService {
         return itemConverter.toDto(itemRepository.findById(id).orElse(null));
     }
 
+    public List<ItemDto> getByCategoryId(long categoryId, boolean isAscSort, SortCriteria sortCriteria) {
+        return sortCriteria == null ?
+                getByCategoryId(categoryId) :
+                itemRepository.findAllByCategoryId(categoryId, Sort.by(getDirection(isAscSort), sortCriteria.name().toLowerCase()))
+                        .stream()
+                        .map(itemConverter::toDto).collect(Collectors.toList());
+    }
+
+    public List<ItemDto> getByCharacteristic(long categoryId, Map<Long, List<String>> filterCharacteristics,
+                                             boolean isAcsSort, SortCriteria sortCriteria) {
+        List<ItemDto> foundItems = new ArrayList<>();
+
+        getByCategoryId(categoryId, isAcsSort, sortCriteria).forEach(itemDto -> {
+            if (itemDto.getCharacteristics().stream().anyMatch(characteristicDto ->
+                    (filterCharacteristics.keySet().contains(characteristicDto.getId()) &&
+                            filterCharacteristics.get(characteristicDto.getId()).contains(characteristicDto.getValue()))))
+                foundItems.add(itemDto);
+        });
+        return foundItems;
+        // return sortCriteria == null ? foundItems : getSorted(foundItems, isAcsSort, sortCriteria);
+    }
+
+//    private List<ItemDto> getSorted(List<ItemDto> itemDtos, boolean isAcsSort, SortCriteria sortCriteria) {
+//        if (isAcsSort) {
+//            itemDtos.sort(new ItemComparator(sortCriteria));
+//        } else {
+//            itemDtos.sort(Collections.reverseOrder(new ItemComparator(sortCriteria)));
+//        }
+//        return itemDtos;
+//    }
+
+
+    public Map<Long, List<String>> getCharacteristicByCategoryId(long categoryId, boolean isAcsSort, SortCriteria sortCriteria) {
+        Map<Long, List<String>> characteristics = new HashMap<>();
+        getByCategoryId(categoryId, isAcsSort, sortCriteria).forEach(itemDto ->
+                itemDto.getCharacteristics().forEach(characteristicDto -> {
+                    if (characteristics.containsKey(characteristicDto.getId())) {
+                        List<String> values = characteristics.get(characteristicDto.getId());
+                        values.add(characteristicDto.getValue());
+                        characteristics.put(characteristicDto.getId(), values);
+                    } else {
+                        List<String> values = new ArrayList<>();
+                        values.add(characteristicDto.getValue());
+                        characteristics.put(characteristicDto.getId(), values);
+                    }
+                })
+        );
+        return characteristics;
+    }
+
+//    private class ItemComparator implements Comparator<ItemDto> {
+//        SortCriteria sortCriteria;
+//
+//        ItemComparator(SortCriteria sortCriteria) {
+//            this.sortCriteria = sortCriteria;
+//        }
+//
+//        public int compare(ItemDto itemDto1, ItemDto itemDto2) {
+//            switch (sortCriteria) {
+//                case PRICE:
+//                    return itemDto1.getPrice().compareTo(itemDto2.getPrice());
+//                case PRODUCER:
+//                    return itemDto1.getPrice().compareTo(itemDto2.getPrice());
+//            }
+//            return 0;
+//        }
+//    }
+
     /**
      * @param categoryId category id
      * @return item dtos having given categoryId
      */
-    public List<ItemDto> getByCategoryId(long categoryId) {
+    private List<ItemDto> getByCategoryId(long categoryId) {
         return itemRepository.findAllByCategoryIdOrderByProducer(categoryId).stream()
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
-    public List<ItemDto> getByCategoryId(long categoryId, boolean isAscSort, SortCriteria sortCriteria) {
-        if (sortCriteria==null) return getByCategoryId(categoryId);
-        Sort.Direction direction;
-        if (isAscSort) {
-            direction = Sort.Direction.ASC;
-        } else {
-            direction = Sort.Direction.DESC;
-        }
-        return itemRepository.findAllByCategoryId(categoryId, Sort.by(direction, sortCriteria.name().toLowerCase()))
-                .stream()
-                .map(itemConverter::toDto).collect(Collectors.toList());
+    private Sort.Direction getDirection(boolean isAcsSort) {
+        return isAcsSort ? Sort.Direction.ASC : Sort.Direction.DESC;
     }
 
+    public List<ItemDto> getByNameOrProducer(String query, boolean isAcsSort, SortCriteria sortCriteria) {
+        return sortCriteria == null ?
+                itemRepository.findAllByNameContainsOrProducerContains(
+                        query, query, Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase())).stream()
+                        .map(itemConverter::toDto).collect(Collectors.toList()) :
 
-    public List<ItemDto> getByCharacteristic(long categoryId, List<CharacterisricValueDto>characterisricValueDtos) {
-    //    characteristicRepository.
-
-        return itemRepository.findAllByCategoryIdOrderByProducer(categoryId)
-                .stream()
-                .map(itemConverter::toDto).collect(Collectors.toList());
+                itemRepository.findAllByNameContainsOrProducerContains(
+                        query, query, Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
+                        .map(itemConverter::toDto).collect(Collectors.toList());
     }
-
-
-
-    public List<ItemDto> getByNameOrProducer(String query) {
-        return itemRepository.findAllByNameContainsOrProducerContainsOrderByProducer(query, query).stream()
-                .map(itemConverter::toDto).collect(Collectors.toList());
-    }
-
 
     public List<ItemDto> getAll(boolean isAcsSort, SortCriteria sortCriteria) {
-        Sort.Direction direction;
-        if (isAcsSort) {
-            direction = Sort.Direction.ASC;
-        } else {
-            direction = Sort.Direction.DESC;
-        }
-        return itemRepository.findAll(Sort.by(direction, sortCriteria.name().toLowerCase()))
-                .stream()
-                .map(itemConverter::toDto).collect(Collectors.toList());
+        return sortCriteria == null ?
+                getAll() :
+                itemRepository.findAll(Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase()))
+                        .stream()
+                        .map(itemConverter::toDto).collect(Collectors.toList());
+    }
+
+
+    public List<ItemDto> getByQueryAndCategoryId(String query, long categoryId, boolean isAcsSort, SortCriteria sortCriteria) {
+        return itemRepository.findAllByNameContainsOrProducerContains(
+                query, query, Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
+                .map(itemConverter::toDto)
+                .collect(Collectors.toList())
+                .stream().filter(itemDto -> itemDto.getCategoryId() == categoryId)
+                .collect(Collectors.toList());
     }
 
     /**
