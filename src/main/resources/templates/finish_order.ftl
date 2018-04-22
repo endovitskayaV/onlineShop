@@ -23,7 +23,11 @@
         <div id="${item.id}" class="card horizontal hoverable">
 
             <div class="card-image">
-                 <#include "item_photo.ftl">
+                 <#if item.photoName??>
+                     <img width="60" height="200" src="../../img/${item.photoName}">
+                 <#else>
+                    <img width="60" height="200" src="../../img/no_photo.png">
+                 </#if>
             </div>
             <div id="anyCardLeft">
                 <div class="card-stacked">
