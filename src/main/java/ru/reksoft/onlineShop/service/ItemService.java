@@ -73,15 +73,6 @@ public class ItemService {
         // return sortCriteria == null ? foundItems : getSorted(foundItems, isAcsSort, sortCriteria);
     }
 
-//    private List<ItemDto> getSorted(List<ItemDto> itemDtos, boolean isAcsSort, SortCriteria sortCriteria) {
-//        if (isAcsSort) {
-//            itemDtos.sort(new ItemComparator(sortCriteria));
-//        } else {
-//            itemDtos.sort(Collections.reverseOrder(new ItemComparator(sortCriteria)));
-//        }
-//        return itemDtos;
-//    }
-
 
     public Map<Long, List<String>> getCharacteristicByCategoryId(long categoryId, boolean isAcsSort, SortCriteria sortCriteria) {
         Map<Long, List<String>> characteristics = new HashMap<>();
@@ -100,24 +91,6 @@ public class ItemService {
         );
         return characteristics;
     }
-
-//    private class ItemComparator implements Comparator<ItemDto> {
-//        SortCriteria sortCriteria;
-//
-//        ItemComparator(SortCriteria sortCriteria) {
-//            this.sortCriteria = sortCriteria;
-//        }
-//
-//        public int compare(ItemDto itemDto1, ItemDto itemDto2) {
-//            switch (sortCriteria) {
-//                case PRICE:
-//                    return itemDto1.getPrice().compareTo(itemDto2.getPrice());
-//                case PRODUCER:
-//                    return itemDto1.getPrice().compareTo(itemDto2.getPrice());
-//            }
-//            return 0;
-//        }
-//    }
 
     /**
      * @param categoryId category id

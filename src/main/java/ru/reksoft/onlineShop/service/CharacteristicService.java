@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 public class CharacteristicService {
     private CharacteristicRepository characteristicRepository;
     private CharacteristicConverter characteristicConverter;
-    private CategoryRepository categoryRepository;
-    private ItemRepository itemRepository;
 
     /**
      * @param characteristicRepository repository for characteristic
@@ -30,12 +28,9 @@ public class CharacteristicService {
      */
     @Autowired
     public CharacteristicService(CharacteristicRepository characteristicRepository,
-                                 CharacteristicConverter characteristicConverter,
-                                 CategoryRepository categoryRepository, ItemRepository itemRepository) {
+                                 CharacteristicConverter characteristicConverter) {
         this.characteristicRepository = characteristicRepository;
         this.characteristicConverter = characteristicConverter;
-        this.categoryRepository = categoryRepository;
-        this.itemRepository = itemRepository;
     }
 
     /**
@@ -48,17 +43,6 @@ public class CharacteristicService {
                 .map(characteristicEntity ->
                         characteristicConverter
                                 .toDto(characteristicEntity, false))
-                .collect(Collectors.toList());
-    }
-
-
-    public List<CharacteristicDto> getAllByCategoryId(long categoryId) {
-        return characteristicRepository.findAll().stream()
-                .map(characteristicEntity ->
-                        characteristicConverter
-                                .toDto(characteristicEntity,
-                                        categoryRepository.findById(categoryId).orElse(null)
-                                                .getCharacteristicsRequired().get(characteristicEntity)))
                 .collect(Collectors.toList());
     }
 

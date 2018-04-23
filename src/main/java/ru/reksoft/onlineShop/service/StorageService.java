@@ -14,7 +14,7 @@ import java.nio.file.StandardCopyOption;
 
 @Service
 public class StorageService {
-    public static final Path ROOT_LOCATION = Paths.get("src/main/resources/static/img");
+    private static final Path ROOT_LOCATION = Paths.get("src/main/resources/static/img");
 
 
     public void store(MultipartFile file) {

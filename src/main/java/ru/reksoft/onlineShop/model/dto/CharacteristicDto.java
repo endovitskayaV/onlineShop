@@ -1,7 +1,7 @@
 package ru.reksoft.onlineShop.model.dto;
 
 import lombok.*;
-import ru.reksoft.onlineShop.controller.util.CreateCharacteristic;
+import ru.reksoft.onlineShop.controller.util.NewCharacteristic;
 import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
 import ru.reksoft.onlineShop.validating.characteristicValueDataType.CharacteristicDataTypeValueProvider;
 import ru.reksoft.onlineShop.validating.characteristicValueDataType.CheckCharacteristicValueDataType;
@@ -31,7 +31,7 @@ public class CharacteristicDto implements CharacteristicValueRequiredProvider, C
     /**
      * eg: metres, gramms, etc
      */
-    @NotBlank(groups = CreateCharacteristic.class, message = "Type must contain at least one not blank character")
+    @NotBlank(groups = NewCharacteristic.class, message = "Type must contain at least one not blank character")
     private String measureUnit;
 
     private String value;
