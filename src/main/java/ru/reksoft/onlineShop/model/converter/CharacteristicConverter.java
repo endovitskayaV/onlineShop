@@ -1,9 +1,14 @@
-package ru.reksoft.onlineShop.model.domain.converter;
+package ru.reksoft.onlineShop.model.converter;
 
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
+import ru.reksoft.onlineShop.model.dto.CharacteristicValueDto;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Converts CharacteristicEntity to Characteristic dtos and v.v
@@ -31,6 +36,7 @@ public class CharacteristicConverter {
                     .measureUnit(characteristicEntity.getMeasureUnit())
                     .required(required)
                     .valueDataType(characteristicEntity.getValueDataType())
+                    .code(characteristicEntity.getCode())
                     .build();
         }
     }
@@ -50,7 +56,16 @@ public class CharacteristicConverter {
                     .name(characteristicDto.getName())
                     .measureUnit(characteristicDto.getMeasureUnit())
                     .valueDataType(characteristicDto.getValueDataType())
+                    .code(characteristicDto.getCode())
                     .build();
         }
     }
+
+    public List<CharacteristicValueDto> toCharacteristicValueDtoList(Map<String, String> characteristics){
+        List<CharacteristicValueDto> characteristicValueDtos=new ArrayList<>();
+       characteristics.forEach((key, value)->
+               characteristicValueDtos
+                       .add(new CharacteristicValueDto(key, key, value)));
+    }
+
 }

@@ -60,7 +60,6 @@ function getSortingParams() {
 
 function sortItems() {
     if ($('#search').val() !== "") {
-var e=document.getElementById('specifiedCategory');
         if (document.getElementById('specifiedCategory')===null || $('#specifiedCategory').val() === "") {
             setCategories(document.location.origin + '/items/search?query=' + $('#search').val() + '&' + getSortingParams());
         } else {
@@ -75,5 +74,15 @@ var e=document.getElementById('specifiedCategory');
 }
 
 function getByCategory(categoryName) {
-    location.href = document.location.origin + '/items?category=' + categoryName + '&' + getSortingParams();
+    var e=document.getElementById('chosenCharacteristics');
+    if (document.getElementById('chosenCharacteristics')!==null){
+        location.href=document.location.origin + '/items/filter?category=' + categoryName + '&' + getSortingParams()+'&'+getChosenCharacteristicParams();
+    }else {
+         location.href = document.location.origin + '/items?category=' + categoryName + '&' + getSortingParams();
+    }
+
+}
+
+function getChosenCharacteristicParams(){
+
 }

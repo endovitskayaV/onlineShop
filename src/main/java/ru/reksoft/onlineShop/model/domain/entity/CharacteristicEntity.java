@@ -20,6 +20,9 @@ public class CharacteristicEntity {
     @Column(name = "id", nullable = false)
     private long id;
 
+    @Column(name = "code", nullable = false, unique = true)
+    private String code;
+
     @Column(name = "name", nullable = false)
     private String name;
 

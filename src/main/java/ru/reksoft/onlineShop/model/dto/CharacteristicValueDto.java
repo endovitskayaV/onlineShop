@@ -5,16 +5,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "code")
 public class CharacteristicValueDto {
-    private long id;
-    private String values;
+    private String name;
+    private String code;
+    private List<String> values;
 
 }

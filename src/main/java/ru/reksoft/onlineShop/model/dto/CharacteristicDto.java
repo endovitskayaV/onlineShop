@@ -41,4 +41,5 @@ public class CharacteristicDto implements CharacteristicValueRequiredProvider, C
      * whether characterisitc value is a String, fractional number or integer number
      */
     private DataType valueDataType;
+    private String code;
 }

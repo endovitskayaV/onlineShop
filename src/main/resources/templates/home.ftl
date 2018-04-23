@@ -76,6 +76,21 @@
             </div>
         </div>
     </div>
+
+    <div id="chosenCharacteristics" class="col s3">
+        <ul class="collapsible">
+            <#list characteristics as characteristic>
+            <li>
+                <div class="collapsible-header">${characteristic.name}</div>
+                <div class="collapsible-body">
+                    <#if characteristic.id==>
+                        </#if>
+                    <p>Lorem ipsum dolor sit amet.</p>
+                </div>
+            </li>
+                </#list>
+        </ul>
+    </div>
 </div>
 
 <div id="info-modal" class="modal modal-content">

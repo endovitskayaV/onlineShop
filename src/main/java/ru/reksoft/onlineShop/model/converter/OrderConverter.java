@@ -1,4 +1,4 @@
-package ru.reksoft.onlineShop.model.domain.converter;
+package ru.reksoft.onlineShop.model.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

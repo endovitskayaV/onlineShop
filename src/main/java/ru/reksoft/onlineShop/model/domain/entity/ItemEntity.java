@@ -64,8 +64,8 @@ public class ItemEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "characteristic_item", joinColumns = @JoinColumn(name = "item_id"))
     @MapKeyJoinColumn(name = "characteristic_id")
-    @Column(name = "value")
-    private Map<CharacteristicEntity, String> characteristicsValues;
+    @Column(name = "characteristic_value_id")
+    private Map<CharacteristicEntity, CharactersticValueEntity> characteristicValue;
 
 
     @Column(name = "photo_name")

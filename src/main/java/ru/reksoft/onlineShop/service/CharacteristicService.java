@@ -2,15 +2,11 @@ package ru.reksoft.onlineShop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.reksoft.onlineShop.controller.util.SortCriteria;
-import ru.reksoft.onlineShop.model.domain.converter.CharacteristicConverter;
-import ru.reksoft.onlineShop.model.domain.repository.CategoryRepository;
-import ru.reksoft.onlineShop.model.domain.repository.ItemRepository;
+import ru.reksoft.onlineShop.model.converter.CharacteristicConverter;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.model.domain.repository.CharacteristicRepository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**

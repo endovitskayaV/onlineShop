@@ -3,7 +3,6 @@ package ru.reksoft.onlineShop.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +23,7 @@ import ru.reksoft.onlineShop.service.ItemService;
 import ru.reksoft.onlineShop.service.StorageService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -52,22 +48,51 @@ public class ItemController {
     @GetMapping
     public String getAll(Model model, @RequestParam(required = false) String category,
                          @RequestParam(required = false) SortCriteria sortBy,
-                         @RequestParam(required = false) Boolean acs,
-                         @RequestParam(required = false) List<CharacteristicValueDto> characteristics) {
+                         @RequestParam(required = false) Boolean acs) {
         List<ItemDto> items;
         if (category == null) {
             items = itemService.getAll(getSafeBoolean(acs), sortBy);
-        } else if (characteristics == null) {
+        } else {
             items = itemService.getByCategoryId(categoryService.getByName(category).getId(), acs, sortBy);
             model.addAttribute("characteristicValues",
                     itemService.getCharacteristicByCategoryId(categoryService.getByName(category).getId(), acs, sortBy));
-        } else {
-            items = new ArrayList<>();//itemService.getByCharacteristic(categoryService.getByName(category).getId(), characteristics, acs, sortBy);
         }
         setModel(model, items, sortBy, acs, categoryService.getAll());
 
         if (category != null) model.addAttribute("selectedCategory", category);
         return "home";
+    }
+
+    @GetMapping("/filter")
+    public String getByCharacteristics(Model model, @RequestParam String category,
+                                       @RequestParam Map<String, String> characteristics,
+                                       @RequestParam(required = false) SortCriteria sortBy,
+                                       @RequestParam(required = false) Boolean acs) {
+        characteristics.remove("category");
+        if (sortBy != null) {
+            characteristics.remove("sortBy");
+        }
+        if (acs != null) {
+            characteristics.remove("acs");
+        }
+        setModel(model,
+                itemService.getByCharacteristic(categoryService.getByName(category).getId(), getStringListMap(characteristics), getSafeBoolean(acs), sortBy),
+                sortBy, acs,
+                categoryService.getAll());
+        if (characteristics.size() == 0) {
+            model.addAttribute("characteristics", categoryService.getByName(category).getCharacteristics());
+        } else {
+            model.addAttribute("chosenCharacteristics", characteristics);
+        }
+        //  List<ItemDto> items = itemService.getByCharacteristic(categoryService.getByName(category).getId(), characteristics, getSafeBoolean(acs), sortBy);
+        return "home";
+    }
+
+    private Map<String, List<String>> getStringListMap(Map<String, String> stringStringMap) {
+        Map<String, List<String>> stringListMap = new HashMap<>();
+        stringStringMap.forEach((key, value) ->
+                stringListMap.put(key, Arrays.asList(value.split(","))));
+        return stringListMap;
     }
 
     @GetMapping("/search")

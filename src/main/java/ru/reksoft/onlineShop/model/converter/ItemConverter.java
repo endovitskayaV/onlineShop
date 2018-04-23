@@ -1,10 +1,12 @@
-package ru.reksoft.onlineShop.model.domain.converter;
+package ru.reksoft.onlineShop.model.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
+import ru.reksoft.onlineShop.model.domain.entity.CharactersticValueEntity;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.model.domain.repository.CategoryRepository;
+import ru.reksoft.onlineShop.model.domain.repository.CharactersticValueRepository;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 
@@ -25,6 +27,7 @@ public class ItemConverter {
     private CategoryRepository categoryRepository;
     private CategoryConverter categoryConverter;
     private CharacteristicConverter characteristicConverter;
+    private CharactersticValueRepository charactersticValueRepository;
 
     /**
      * @param categoryRepository      repository for category
@@ -34,10 +37,11 @@ public class ItemConverter {
     @Autowired
     public ItemConverter(CategoryRepository categoryRepository,
                          CategoryConverter categoryConverter,
-                         CharacteristicConverter characteristicConverter) {
+                         CharacteristicConverter characteristicConverter, CharactersticValueRepository charactersticValueRepository) {
         this.categoryRepository = categoryRepository;
         this.categoryConverter = categoryConverter;
         this.characteristicConverter = characteristicConverter;
+        this.charactersticValueRepository = charactersticValueRepository;
     }
 
     /**
@@ -51,13 +55,15 @@ public class ItemConverter {
             return null;
         } else {
             //construct characteristicDtoList for entityDto
-            List<CharacteristicDto> characteristicDtos = itemEntity.getCharacteristicsValues()
+            List<CharacteristicDto> characteristicDtos = itemEntity.getCharacteristicValue()
                     .keySet().stream() //key is characteristic
-                    .map(characteristicEntity ->characteristicConverter
+                    .map(characteristicEntity -> characteristicConverter
                             .toDto(characteristicEntity,
                                     itemEntity.getCategory().getCharacteristicsRequired().get(characteristicEntity)))
                     .collect(Collectors.toList());
-            List<String> values = new ArrayList<>(itemEntity.getCharacteristicsValues().values());
+            List<String> values = new ArrayList<>();
+
+            itemEntity.getCharacteristicValue().values().forEach(charactersticValueEntity -> values.add(charactersticValueEntity.getValue()));
             for (int i = 0; i < values.size(); i++) {
                 characteristicDtos.get(i).setValue(values.get(i));
             }
@@ -91,12 +97,13 @@ public class ItemConverter {
                             .filter(characteristicDto -> !characteristicDto.getValue().equals(""))
                             .collect(Collectors.toList()));
             //construct characteristicsValues for itemEntity
-            Map<CharacteristicEntity, String> characteristicsValues = new HashMap<>();
+            Map<CharacteristicEntity, CharactersticValueEntity> characteristicsValues = new HashMap<>();
             itemDto.getCharacteristics().forEach(
                     characteristicDto ->
                             characteristicsValues.put
                                     (characteristicConverter.toEntity(characteristicDto),
-                                            characteristicDto.getValue()));
+                                            charactersticValueRepository.findByCharacteristicIdAndValue(characteristicDto.getId(), characteristicDto.getValue())
+                                    ));
             return ItemEntity.builder()
                     .id(itemDto.getId())
                     .name(itemDto.getName())
@@ -105,10 +112,11 @@ public class ItemConverter {
                     .storage(itemDto.getStorage())
                     .price(itemDto.getPrice())
                     .category(categoryRepository.findById(itemDto.getCategoryId()).orElse(null))
-                    .characteristicsValues(characteristicsValues)
+                    .characteristicValue(characteristicsValues)
                     .photoName(itemDto.getPhotoName())
                     .build();
         }
     }
+
 
 }

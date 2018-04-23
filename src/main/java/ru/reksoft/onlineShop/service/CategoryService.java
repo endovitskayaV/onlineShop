@@ -2,7 +2,7 @@ package ru.reksoft.onlineShop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.reksoft.onlineShop.model.domain.converter.CategoryConverter;
+import ru.reksoft.onlineShop.model.converter.CategoryConverter;
 import ru.reksoft.onlineShop.model.domain.entity.CategoryEntity;
 import ru.reksoft.onlineShop.model.domain.repository.CategoryRepository;
 import ru.reksoft.onlineShop.model.dto.CategoryDto;

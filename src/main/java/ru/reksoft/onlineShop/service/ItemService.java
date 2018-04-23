@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.controller.util.SortCriteria;
-import ru.reksoft.onlineShop.model.domain.converter.ItemConverter;
+import ru.reksoft.onlineShop.model.converter.ItemConverter;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.model.domain.repository.ItemRepository;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
@@ -59,14 +59,14 @@ public class ItemService {
                         .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
-    public List<ItemDto> getByCharacteristic(long categoryId, Map<Long, List<String>> filterCharacteristics,
-                                             boolean isAcsSort, SortCriteria sortCriteria) {
+    public List<ItemDto> getByCharacteristic(long categoryId, Map<String, List<String>> filterCharacteristics,
+                                              boolean isAcsSort, SortCriteria sortCriteria) {
         List<ItemDto> foundItems = new ArrayList<>();
 
         getByCategoryId(categoryId, isAcsSort, sortCriteria).forEach(itemDto -> {
             if (itemDto.getCharacteristics().stream().anyMatch(characteristicDto ->
-                    (filterCharacteristics.keySet().contains(characteristicDto.getId()) &&
-                            filterCharacteristics.get(characteristicDto.getId()).contains(characteristicDto.getValue()))))
+                    (filterCharacteristics.keySet().contains(characteristicDto.getCode()) &&
+                            filterCharacteristics.get(characteristicDto.getCode()).contains(characteristicDto.getValue()))))
                 foundItems.add(itemDto);
         });
         return foundItems;
