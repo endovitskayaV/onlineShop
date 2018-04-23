@@ -103,7 +103,7 @@
                     <div id="characteristicDiv">
                           <#if selectedCategory??>
                               <#assign i=0>
-                               <#list characteristics as characteristic>
+                               <#list item_characteristics as characteristic>
                               <input type="number" name="characteristics[${i}].id"
                                hidden="hidden" value="${characteristic.id}">
                               <input type="text" name="characteristics[${i}].measureUnit"
@@ -120,7 +120,11 @@
 
                                   <div class="row">
                                               <div class="input-field col s10 offset-s1">
+                                                  <#if characteristic.value??>
                                                   <input id="value" name="characteristics[${i}].value" type="text" value="${characteristic.value}">
+                                                      <#else>
+                                                  <input id="value" name="characteristics[${i}].value" type="text" value="">
+                                                      </#if>
                                                       <label for="value" >${characteristic.name}</label>
                                                    <div name="characteristics[${i}]-errors"></div>
                                    <span class="helper-text">${characteristic.measureUnit}</span>
