@@ -13,7 +13,7 @@
 <#include "sorting_select.ftl">
 <div class="row">
     <div id="categories">
-        <div class="col s3">
+        <div class="col s2">
             <div class="collection z-depth-1 hoverable">
     <#list categories as category>
         <div><a href="javascript: getByCategory('${category.name}')" class="collection-item">${category.name}</a></div>
@@ -76,20 +76,32 @@
             </div>
         </div>
     </div>
-
     <div id="chosenCharacteristics" class="col s3">
+        <#if characteristics??>
         <ul class="collapsible">
             <#list characteristics as characteristic>
             <li>
                 <div class="collapsible-header">${characteristic.name}</div>
                 <div class="collapsible-body">
-                    <#if characteristic.id==>
-                        </#if>
-                    <p>Lorem ipsum dolor sit amet.</p>
+                    <#list characteristic.values as valueChecked>
+                         <#list chosenCharacteristics?values as chosenCharacteristicValue>
+                             <#if chosenCharacteristicValue==valueChecked>
+                              <p><input type="checkbox" checked name="${valueChecked}" value="${valueChecked}">
+                                  <label for="${valueChecked}">${valueChecked}</label></p>
+                             <#break>
+                             <#else>
+
+                        <p><input type="checkbox" name="${valueChecked}" value="${valueChecked}">
+                            <label for="${valueChecked}">${valueChecked}</label></p>
+                             </#if>
+                         </#list>
+                        </#list>
                 </div>
             </li>
                 </#list>
+
         </ul>
+            </#if>
     </div>
 </div>
 

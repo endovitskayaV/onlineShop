@@ -1,10 +1,13 @@
 package ru.reksoft.onlineShop.model.converter;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
+import ru.reksoft.onlineShop.model.domain.repository.CharacteristicRepository;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.model.dto.CharacteristicValueDto;
+import ru.reksoft.onlineShop.service.CharacteristicService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +19,14 @@ import java.util.Map;
  * @see CharacteristicEntity
  * @see CharacteristicDto
  */
-@NoArgsConstructor
+
 @Service
 public class CharacteristicConverter {
+    private CharacteristicRepository characteristicRepository;
+
+    public CharacteristicConverter(CharacteristicRepository characteristicRepository) {
+        this.characteristicRepository = characteristicRepository;
+    }
 
     /**
      * Converts CharacteristicEntity to CharacteristicDto
@@ -59,13 +67,6 @@ public class CharacteristicConverter {
                     .code(characteristicDto.getCode())
                     .build();
         }
-    }
-
-    public List<CharacteristicValueDto> toCharacteristicValueDtoList(Map<String, String> characteristics){
-        List<CharacteristicValueDto> characteristicValueDtos=new ArrayList<>();
-       characteristics.forEach((key, value)->
-               characteristicValueDtos
-                       .add(new CharacteristicValueDto(key, key, value)));
     }
 
 }

@@ -80,7 +80,7 @@ public class ItemController {
                 sortBy, acs,
                 categoryService.getAll());
         if (characteristics.size() == 0) {
-            model.addAttribute("characteristics", categoryService.getByName(category).getCharacteristics());
+            model.addAttribute("characteristics", toCharacteristicValueDtoList(categoryService.getByName(category).getCharacteristics()));
         } else {
             model.addAttribute("chosenCharacteristics", characteristics);
         }
@@ -214,7 +214,6 @@ public class ItemController {
         }
     }
 
-
     private ItemDto toItemDto(EditableItemDto editableItemDto) {
         return ItemDto.builder()
                 .id(editableItemDto.getId())
@@ -347,5 +346,26 @@ public class ItemController {
     private class ItemsCategories {
         List<ItemDto> items;
         Set<CategoryDto> categories;
+    }
+
+    private List<CharacteristicValueDto> toCharacteristicValueDtoList(List<CharacteristicDto> characteristicDtos) {
+        List<CharacteristicValueDto> characteristicValueDtos = new ArrayList<>();
+        characteristicDtos.forEach(characteristicDto -> {
+            if (characteristicValueDtos.stream()
+                    .anyMatch(characteristicValueDto ->
+                            characteristicValueDto.getCode().equals(characteristicDto.getCode()))) {
+                characteristicValueDtos.get(characteristicValueDtos.indexOf((characteristicValueDtos.stream()
+                        .filter(characteristicValueDto -> characteristicValueDto
+                                .getCode().equals(characteristicDto.getCode()))
+                        .findFirst().get()))).getValues().add(characteristicDto.getValue());
+            } else {
+                List<String> values = new ArrayList<>();
+                values.add(characteristicDto.getValue());
+                characteristicValueDtos
+                        .add(new CharacteristicValueDto
+                                (characteristicDto.getName(), characteristicDto.getCode(), values));
+            }
+        });
+        return characteristicValueDtos;
     }
 }

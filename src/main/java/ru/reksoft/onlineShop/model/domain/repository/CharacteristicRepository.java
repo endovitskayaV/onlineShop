@@ -7,5 +7,6 @@ import ru.reksoft.onlineShop.model.domain.entity.CharacteristicEntity;
  * Iteracts with database regarding characteristic
  */
 public interface CharacteristicRepository extends JpaRepository<CharacteristicEntity, Long> {
+    CharacteristicEntity getByCode(String code);
 
 }

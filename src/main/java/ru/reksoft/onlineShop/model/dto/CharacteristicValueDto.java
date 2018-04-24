@@ -1,9 +1,6 @@
 package ru.reksoft.onlineShop.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "code")
+@Builder
 public class CharacteristicValueDto {
     private String name;
     private String code;
