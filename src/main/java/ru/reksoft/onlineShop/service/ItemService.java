@@ -67,7 +67,9 @@ public class ItemService {
         List<ItemDto> foundItems = new ArrayList<>();
 
         getByCategoryId(categoryId, isAcsSort, sortCriteria).forEach(itemDto -> {
+
             if (itemDto.getCharacteristics().stream().anyMatch(characteristicDto ->
+
                     (filterCharacteristics.keySet().contains(characteristicDto.getCode()) &&
                             filterCharacteristics.get(characteristicDto.getCode()).contains(characteristicDto.getValue()))))
                 foundItems.add(itemDto);

@@ -74,27 +74,45 @@ function sortItems() {
 }
 
 function getByCategory(categoryName) {
-    var e = document.getElementById('chosenCharacteristics');
-    if (document.getElementById('chosenCharacteristics') !== null) {
-        location.href = document.location.origin + '/items/filter?category=' + categoryName + '&' + getSortingParams() + '&' + getChosenCharacteristicParams();
-    } else {
-        location.href = document.location.origin + '/items?category=' + categoryName + '&' + getSortingParams();
-    }
+    location.href = document.location.origin + '/items?category=' + categoryName + '&' + getSortingParams();
+}
 
+function findByCharacteristics() {
+    location.href =
+        document.location.origin + '/items/filter?category=' +$('#chosenCategory').val() + '&' + getSortingParams() +  getChosenCharacteristicParams();
+}
+
+function anyCharacteristicWasChosen() {
+    $("li[id*='characteristics_values']").each(function () {
+        var characterisricName = $("#characteristic_name").text();
+        var children = $("div[id*='values']");
+        $.each(children, function (key, child) {
+            $.each(child.children, function (key, ch) {
+                if ((((ch.children)[0].children)[0]).checked) return true;
+            })
+        });
+    });
+    return false;
 }
 
 function getChosenCharacteristicParams() {
     var params = '';
-    $("li[id*='characteristics_values']").each(function () {
-        var characterisricName = $("#characteristic_name").text();
-        var div = document.getElementById("values");
-        div.childrenNodes.each(function (index, child) {
-                if (child.id === "characteristic_value" && child.prop('checked')) {
-                    params.append(characterisricName + '=' + child.value);
+  //  if (anyCharacteristicWasChosen()) {
+        $("li[id*='characteristics_values']").each(function (index, li) {
+            var values='';
+            var characteristicName = ((li.children)[1]).value;
+            var valuesDiv = li.children[2];
+            $.each(valuesDiv.children, function (key, ch) {
+                var characteristic = ((ch.children)[0].children)[0]; //checkBox
+                if ((((ch.children)[0].children)[0]).checked) {
+                   values += ',' +characteristic.value;
                 }
-            }
-        )
-    });
+            });
 
+            if (values.length>1){
+                params+='&'+characteristicName+'='+values.substring(1, values.length);
+            }
+        });
+   // }
     return params;
 }
