@@ -75,27 +75,8 @@ public class ItemService {
                 foundItems.add(itemDto);
         });
         return foundItems;
-        // return sortCriteria == null ? foundItems : getSorted(foundItems, isAcsSort, sortCriteria);
     }
 
-
-//    public Map<Long, List<String>> getCharacteristicByCategoryId(long categoryId, boolean isAcsSort, SortCriteria sortCriteria) {
-    //     Map<Long, List<String>> characteristics = new HashMap<>();
-    //     getByCategoryId(categoryId, isAcsSort, sortCriteria).forEach(itemDto ->
-    //            itemDto.getCharacteristics().forEach(characteristicDto -> {
-    //               if (characteristics.containsKey(characteristicDto.getId())) {
-    //                   List<String> values = characteristics.get(characteristicDto.getId());
-    //                   values.add(characteristicDto.getValue());
-    //                  characteristics.put(characteristicDto.getId(), values);
-    //              } else {
-    //                 List<String> values = new ArrayList<>();
-    //                 values.add(characteristicDto.getValue());
-    //                  characteristics.put(characteristicDto.getId(), values);
-    //             }
-    //         })
-    //     );
-    //     return characteristics;
-    //  }
 
     /**
      * @param categoryId category id
