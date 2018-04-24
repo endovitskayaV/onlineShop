@@ -54,8 +54,9 @@ public class ItemController {
             items = itemService.getAll(getSafeBoolean(acs), sortBy);
         } else {
             items = itemService.getByCategoryId(categoryService.getByName(category).getId(), acs, sortBy);
-            model.addAttribute("characteristicValues",
-                    itemService.getCharacteristicByCategoryId(categoryService.getByName(category).getId(), acs, sortBy));
+            model.addAttribute("characteristics",itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
+                //    toCharacteristicValueDtoList(categoryService.getByName(category).getCharacteristics()));
+                  //  itemService.getCharacteristicByCategoryId(categoryService.getByName(category).getId(), acs, sortBy));
         }
         setModel(model, items, sortBy, acs, categoryService.getAll());
 
@@ -80,7 +81,9 @@ public class ItemController {
                 sortBy, acs,
                 categoryService.getAll());
         if (characteristics.size() == 0) {
-            model.addAttribute("characteristics", toCharacteristicValueDtoList(categoryService.getByName(category).getCharacteristics()));
+            model.addAttribute("characteristics", itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
+                    //itemService.getByCategoryId(categoryService.getByName(category))
+                   // toCharacteristicValueDtoList(categoryService.getByName(category).getCharacteristics()));
         } else {
             model.addAttribute("chosenCharacteristics", characteristics);
         }
@@ -348,24 +351,24 @@ public class ItemController {
         Set<CategoryDto> categories;
     }
 
-    private List<CharacteristicValueDto> toCharacteristicValueDtoList(List<CharacteristicDto> characteristicDtos) {
-        List<CharacteristicValueDto> characteristicValueDtos = new ArrayList<>();
-        characteristicDtos.forEach(characteristicDto -> {
-            if (characteristicValueDtos.stream()
-                    .anyMatch(characteristicValueDto ->
-                            characteristicValueDto.getCode().equals(characteristicDto.getCode()))) {
-                characteristicValueDtos.get(characteristicValueDtos.indexOf((characteristicValueDtos.stream()
-                        .filter(characteristicValueDto -> characteristicValueDto
-                                .getCode().equals(characteristicDto.getCode()))
-                        .findFirst().get()))).getValues().add(characteristicDto.getValue());
-            } else {
-                List<String> values = new ArrayList<>();
-                values.add(characteristicDto.getValue());
-                characteristicValueDtos
-                        .add(new CharacteristicValueDto
-                                (characteristicDto.getName(), characteristicDto.getCode(), values));
-            }
-        });
-        return characteristicValueDtos;
-    }
+//    private List<CharacteristicValueDto> toCharacteristicValueDtoList(List<CharacteristicDto> characteristicDtos) {
+//        List<CharacteristicValueDto> characteristicValueDtos = new ArrayList<>();
+//        characteristicDtos.forEach(characteristicDto -> {
+//            if (characteristicValueDtos.stream()
+//                    .anyMatch(characteristicValueDto ->
+//                            characteristicValueDto.getCode().equals(characteristicDto.getCode()))) {
+//                characteristicValueDtos.get(characteristicValueDtos.indexOf((characteristicValueDtos.stream()
+//                        .filter(characteristicValueDto -> characteristicValueDto
+//                                .getCode().equals(characteristicDto.getCode()))
+//                        .findFirst().get()))).getValues().add(characteristicDto.getValue());
+//            } else {
+//                List<String> values = new ArrayList<>();
+//                values.add(characteristicDto.getValue());
+//                characteristicValueDtos
+//                        .add(new CharacteristicValueDto
+//                                (characteristicDto.getName(), characteristicDto.getCode(), values));
+//            }
+//        });
+//        return characteristicValueDtos;
+//    }
 }

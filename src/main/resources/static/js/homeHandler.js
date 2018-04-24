@@ -60,7 +60,7 @@ function getSortingParams() {
 
 function sortItems() {
     if ($('#search').val() !== "") {
-        if (document.getElementById('specifiedCategory')===null || $('#specifiedCategory').val() === "") {
+        if (document.getElementById('specifiedCategory') === null || $('#specifiedCategory').val() === "") {
             setCategories(document.location.origin + '/items/search?query=' + $('#search').val() + '&' + getSortingParams());
         } else {
             getByCategoryAndQuery($('#specifiedCategory').val(), $('#search').val());
@@ -74,15 +74,27 @@ function sortItems() {
 }
 
 function getByCategory(categoryName) {
-    var e=document.getElementById('chosenCharacteristics');
-    if (document.getElementById('chosenCharacteristics')!==null){
-        location.href=document.location.origin + '/items/filter?category=' + categoryName + '&' + getSortingParams()+'&'+getChosenCharacteristicParams();
-    }else {
-         location.href = document.location.origin + '/items?category=' + categoryName + '&' + getSortingParams();
+    var e = document.getElementById('chosenCharacteristics');
+    if (document.getElementById('chosenCharacteristics') !== null) {
+        location.href = document.location.origin + '/items/filter?category=' + categoryName + '&' + getSortingParams() + '&' + getChosenCharacteristicParams();
+    } else {
+        location.href = document.location.origin + '/items?category=' + categoryName + '&' + getSortingParams();
     }
 
 }
 
-function getChosenCharacteristicParams(){
+function getChosenCharacteristicParams() {
+    var params = '';
+    $("li[id*='characteristics_values']").each(function () {
+        var characterisricName = $("#characteristic_name").text();
+        var div = document.getElementById("values");
+        div.childrenNodes.each(function (index, child) {
+                if (child.id === "characteristic_value" && child.prop('checked')) {
+                    params.append(characterisricName + '=' + child.value);
+                }
+            }
+        )
+    });
 
+    return params;
 }

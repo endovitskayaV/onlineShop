@@ -37,9 +37,9 @@
 
     <div id="verifyCategory"></div>
 
-    <div class="col s8">
+
         <div class="row">
-            <div class="col s8 offset-s1">
+            <div class="col s5 offset-s1">
                 <div id="items_div">
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
@@ -74,44 +74,69 @@
     </#list>
                 </div>
             </div>
-        </div>
-    </div>
-    <div id="chosenCharacteristics" class="col s3">
+
+
+    <div class="col s3 offset-s1">
         <#if characteristics??>
-        <ul class="collapsible">
+            <#if chosenCharacteristics??>
+            <div id="chosenCharacteristics">
+            <#else>
+            <div>
+            </#if>
+                <ul class="collapsible expandable">
             <#list characteristics as characteristic>
-            <li>
-                <div class="collapsible-header">${characteristic.name}</div>
-                <div class="collapsible-body">
+                <li id="characteristics_values">
+                    <div id="characteristic_name" class="collapsible-header">${characteristic.name}</div>
+                    <div id="values" class="collapsible-body">
                     <#list characteristic.values as valueChecked>
+                          <#if chosenCharacteristics??>
                          <#list chosenCharacteristics?values as chosenCharacteristicValue>
                              <#if chosenCharacteristicValue==valueChecked>
-                              <p><input type="checkbox" checked name="${valueChecked}" value="${valueChecked}">
-                                  <label for="${valueChecked}">${valueChecked}</label></p>
-                             <#break>
+                              <p>
+                                  <label>
+                                      <input type="checkbox" checked="checked" id="characteristic_value"/>
+                                      <span>${valueChecked}</span>
+                                  </label>
+                              </p>
+                                 <#break>
                              <#else>
 
-                        <p><input type="checkbox" name="${valueChecked}" value="${valueChecked}">
-                            <label for="${valueChecked}">${valueChecked}</label></p>
+                        <p>
+                            <label>
+                                <input type="checkbox"  id="characteristic_value"/>
+                                <span>${valueChecked}</span>
+                            </label>
+                        </p>
                              </#if>
                          </#list>
-                        </#list>
-                </div>
-            </li>
-                </#list>
+                    <#else>
+                             <p>
+                                 <label>
+                                     <input type="checkbox"  id="characteristic_value"/>
+                                     <span>${valueChecked}</span>
+                                 </label>
+                             </p>
+                        </#if>
+                    </#list>
+                    </div>
+                </li>
+            </#list>
 
-        </ul>
-            </#if>
+                </ul>
+            </div>
+        </#if>
     </div>
-</div>
+    </div>
+        </div>
 
-<div id="info-modal" class="modal modal-content">
-</div>
+    <div id="info-modal" class="modal modal-content">
+    </div>
 
-<script type="text/javascript" src="js/homeHandler.js"></script>
-<script type="text/javascript" src="js/searchHandler.js"></script>
-<script type="text/javascript" src="js/addToBasket.js"></script>
-<script type="text/javascript" src="js/materialize.min.js"></script>
-<script id="initSelect" type="text/javascript" src="../js/initSelect.js"></script>
+    <script type="text/javascript" src="js/homeHandler.js"></script>
+    <script type="text/javascript" src="js/searchHandler.js"></script>
+    <script type="text/javascript" src="js/addToBasket.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script id="initSelect" type="text/javascript" src="js/initSelect.js"></script>
+    <script id="initSelect" type="text/javascript" src="js/initCollapsible.js"></script>
 </body>
 </html>

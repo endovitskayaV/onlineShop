@@ -1,8 +1,7 @@
 <div class="row" style="margin-top: 30px">
-    <div class="col s3"></div>
-    <div  class="col s8">
-        <div class="row">
-            <div class="col s8 offset-s1">
+    <div class="col s2"></div>
+    <div class="row">
+        <div class="col s5 offset-s1">
                 <div class="card horizontal hoverable">
                     <div class="card-content">
                         <div id="message_div"></div><div id="sort_criteria_div">
@@ -49,4 +48,4 @@
             </div>
         </div>
     </div>
-</div>
+

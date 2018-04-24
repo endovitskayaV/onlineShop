@@ -7,9 +7,12 @@ import ru.reksoft.onlineShop.controller.util.SortCriteria;
 import ru.reksoft.onlineShop.model.converter.ItemConverter;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.model.domain.repository.ItemRepository;
+import ru.reksoft.onlineShop.model.dto.CharacteristicValueDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -60,7 +63,7 @@ public class ItemService {
     }
 
     public List<ItemDto> getByCharacteristic(long categoryId, Map<String, List<String>> filterCharacteristics,
-                                              boolean isAcsSort, SortCriteria sortCriteria) {
+                                             boolean isAcsSort, SortCriteria sortCriteria) {
         List<ItemDto> foundItems = new ArrayList<>();
 
         getByCategoryId(categoryId, isAcsSort, sortCriteria).forEach(itemDto -> {
@@ -74,23 +77,23 @@ public class ItemService {
     }
 
 
-    public Map<Long, List<String>> getCharacteristicByCategoryId(long categoryId, boolean isAcsSort, SortCriteria sortCriteria) {
-        Map<Long, List<String>> characteristics = new HashMap<>();
-        getByCategoryId(categoryId, isAcsSort, sortCriteria).forEach(itemDto ->
-                itemDto.getCharacteristics().forEach(characteristicDto -> {
-                    if (characteristics.containsKey(characteristicDto.getId())) {
-                        List<String> values = characteristics.get(characteristicDto.getId());
-                        values.add(characteristicDto.getValue());
-                        characteristics.put(characteristicDto.getId(), values);
-                    } else {
-                        List<String> values = new ArrayList<>();
-                        values.add(characteristicDto.getValue());
-                        characteristics.put(characteristicDto.getId(), values);
-                    }
-                })
-        );
-        return characteristics;
-    }
+//    public Map<Long, List<String>> getCharacteristicByCategoryId(long categoryId, boolean isAcsSort, SortCriteria sortCriteria) {
+    //     Map<Long, List<String>> characteristics = new HashMap<>();
+    //     getByCategoryId(categoryId, isAcsSort, sortCriteria).forEach(itemDto ->
+    //            itemDto.getCharacteristics().forEach(characteristicDto -> {
+    //               if (characteristics.containsKey(characteristicDto.getId())) {
+    //                   List<String> values = characteristics.get(characteristicDto.getId());
+    //                   values.add(characteristicDto.getValue());
+    //                  characteristics.put(characteristicDto.getId(), values);
+    //              } else {
+    //                 List<String> values = new ArrayList<>();
+    //                 values.add(characteristicDto.getValue());
+    //                  characteristics.put(characteristicDto.getId(), values);
+    //             }
+    //         })
+    //     );
+    //     return characteristics;
+    //  }
 
     /**
      * @param categoryId category id
@@ -99,6 +102,35 @@ public class ItemService {
     private List<ItemDto> getByCategoryId(long categoryId) {
         return itemRepository.findAllByCategoryIdOrderByProducer(categoryId).stream()
                 .map(itemConverter::toDto).collect(Collectors.toList());
+    }
+
+    public List<CharacteristicValueDto> getCharacteristicValues(long categoryId) {
+        List<CharacteristicValueDto> characteristicValueDtos = new ArrayList<>();
+
+        itemRepository.findAllByCategoryId(categoryId).forEach(itemEntity -> {
+            itemEntity.getCharacteristicValue().values().forEach(charactersticValueEntity -> {
+                if (characteristicValueDtos.stream()
+                        .anyMatch(characteristicValueDto ->
+                                characteristicValueDto.getCode().equals(charactersticValueEntity.getCharacteristic().getCode()))) {
+                    CharacteristicValueDto foundCharacteristicValueDto =
+                            characteristicValueDtos.get(characteristicValueDtos.indexOf((characteristicValueDtos.stream()
+                                    .filter(characteristicValueDto -> characteristicValueDto
+                                            .getCode().equals(charactersticValueEntity.getCharacteristic().getCode()))
+                                    .findFirst().get())));
+
+                    List<String> values = foundCharacteristicValueDto.getValues();
+                    values.add(charactersticValueEntity.getValue());
+                    foundCharacteristicValueDto.setValues(values);
+                } else {
+                    List<String> values = new ArrayList<>();
+                    values.add(charactersticValueEntity.getValue());
+                    characteristicValueDtos.add(new CharacteristicValueDto(
+                            charactersticValueEntity.getCharacteristic().getName(), charactersticValueEntity.getCharacteristic().getCode(), values));
+                }
+            });
+        });
+
+        return characteristicValueDtos;
     }
 
     private Sort.Direction getDirection(boolean isAcsSort) {
