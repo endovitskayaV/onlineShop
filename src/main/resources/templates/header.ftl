@@ -1,10 +1,10 @@
 <div class="white hoverable">
     <div class="row">
         <div class="input-field col s1 offset-s10">
-            <a href="" class="cl-4db6ac">log in</a>
+            <a href="/login" class="cl-4db6ac">log in</a>
         </div>
         <div class="input-field col">
-            <a href="" class="cl-4db6ac">register</a>
+            <a href="/signup" class="cl-4db6ac">register</a>
         </div>
     </div>
 

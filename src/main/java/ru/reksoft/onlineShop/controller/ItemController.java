@@ -54,13 +54,10 @@ public class ItemController {
             items = itemService.getAll(getSafeBoolean(acs), sortBy);
         } else {
             items = itemService.getByCategoryId(categoryService.getByName(category).getId(), acs, sortBy);
-            model.addAttribute("characteristics",itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
-                //    toCharacteristicValueDtoList(categoryService.getByName(category).getCharacteristics()));
-                  //  itemService.getCharacteristicByCategoryId(categoryService.getByName(category).getId(), acs, sortBy));
+            model.addAttribute("characteristics", itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
         }
-        setModel(model, items, sortBy, acs, categoryService.getAll());
+        setModel(model, items, sortBy, acs, categoryService.getAll(), category, null);
 
-        if (category != null) model.addAttribute("selectedCategory", category);
         return "home";
     }
 
@@ -79,13 +76,21 @@ public class ItemController {
         setModel(model,
                 itemService.getByCharacteristic(categoryService.getByName(category).getId(), getStringListMap(characteristics), getSafeBoolean(acs), sortBy),
                 sortBy, acs,
-                categoryService.getAll());
-        if (characteristics.size() == 0) {
-            model.addAttribute("characteristics", itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
-        } else {
+                categoryService.getAll(),
+                category,
+                itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
+
+        if (characteristics.size() != 0) {
             model.addAttribute("chosenCharacteristics", characteristics);
         }
         return "home";
+    }
+
+    private List<CharacteristicValueDto> toCharacteristicValueDtos(Map<String, List<String>> codeValues) {
+        List<CharacteristicValueDto> characteristicValueDtos = new ArrayList<>();
+        codeValues.forEach((key, values) ->
+                characteristicValueDtos.add(new CharacteristicValueDto(null, key, values)));
+        return characteristicValueDtos;
     }
 
     private Map<String, List<String>> getStringListMap(Map<String, String> stringStringMap) {
@@ -333,11 +338,17 @@ public class ItemController {
     }
 
     private void setModel(Model model, List<ItemDto> itemDto, SortCriteria sortBy, Boolean acs,
-                          List<CategoryDto> categories) {
+                          List<CategoryDto> categories, String selectedCategory, List<CharacteristicValueDto> characteristics) {
         model.addAttribute("items", itemDto);
         model.addAttribute("categories", categories);
         if (sortBy != null) {
             model.addAttribute("selectedSortCriteria", setSelectedSortCriteria(sortBy, acs));
+        }
+        if (selectedCategory != null) {
+            model.addAttribute("selectedCategory", selectedCategory);
+        }
+        if (characteristics != null) {
+            model.addAttribute("characteristics", characteristics);
         }
     }
 

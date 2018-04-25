@@ -90,28 +90,30 @@
                     <div id="values" class="collapsible-body">
                     <#list characteristic.values as valueChecked>
                           <#if chosenCharacteristics??>
+
+
                          <#list chosenCharacteristics?values as chosenCharacteristicValue>
+
                              <#if chosenCharacteristicValue==valueChecked>
-                              <p>
-                                  <label>
+                              <p> <label id="1">
                                       <input type="checkbox" checked="checked" id="characteristic_value" value="${valueChecked}"/>
                                       <span>${valueChecked}</span>
-                                  </label>
-                              </p>
-                                 <#break>
+                                  </label> </p>
+                             <#break>
                              <#else>
 
-                        <p>
-                            <label>
+                        <p><label id="2">
                                 <input type="checkbox"  id="characteristic_value" value="${valueChecked}"/>
                                 <span>${valueChecked}</span>
-                            </label>
-                        </p>
+                            </label></p>
                              </#if>
+                         <#break>
                          </#list>
+
+
                     <#else>
                              <p>
-                                 <label>
+                                 <label id="3">
                                      <input type="checkbox"  id="characteristic_value" value="${valueChecked}"/>
                                      <span>${valueChecked}</span>
                                  </label>

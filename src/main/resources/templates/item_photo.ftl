@@ -5,10 +5,10 @@
 </#if>
 
 
-<script>
+<!--<script>
     $(document).ready(function(){
         $('img').each(function(){
             $(this).error(function(){ $(this).attr('src', '../../img/no_photo.png'); });
         });
     });
-</script>
+</script>-->
