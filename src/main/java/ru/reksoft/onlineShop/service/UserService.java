@@ -21,6 +21,7 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private RoleRepository roleRepository;
+    private static final String ROLE_PREFIX = "ROLE_";
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
@@ -35,12 +36,12 @@ public class UserService implements UserDetailsService {
         if (userEntity == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
-        UserDetails u = new User(userEntity.getEmail(), userEntity.getPassword(), getAuthority("ROLE_ADMIN"));
-        return new User(userEntity.getEmail(), userEntity.getPassword(), getAuthority("ROLE_ADMIN"));
+        UserDetails u = new User(userEntity.getEmail(), userEntity.getPassword(), getAuthority(userEntity.getRole().getName()));
+        return new User(userEntity.getEmail(), userEntity.getPassword(), getAuthority(userEntity.getRole().getName()));
     }
 
     private List<SimpleGrantedAuthority> getAuthority(String role) {
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
+        return Collections.singletonList(new SimpleGrantedAuthority(ROLE_PREFIX+role.toUpperCase()));
     }
 
     public boolean add(SignupUserDto signupUserDto) {

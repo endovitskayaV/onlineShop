@@ -9,7 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.reksoft.onlineShop.security.CustomAccessDeniedHandler;
+import ru.reksoft.onlineShop.security.LogoutHandlerImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -32,6 +34,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/basket/**")
                 .permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .logout()
+                .addLogoutHandler(new LogoutHandlerImpl())
+                .logoutSuccessUrl("/items").permitAll()
                 .and()
                 .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
     }

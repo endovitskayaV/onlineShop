@@ -123,10 +123,4 @@ public class AuthentificationController {
         }
         return true;
     }
-
-    @GetMapping("/logout")
-    public ModelAndView logout() {
-        SecurityContextHolder.getContext().setAuthentication(null);
-        return new ModelAndView("redirect:/items");
-    }
 }
