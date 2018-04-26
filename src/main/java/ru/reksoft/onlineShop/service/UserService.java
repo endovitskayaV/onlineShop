@@ -64,20 +64,23 @@ public class UserService implements UserDetailsService {
         return toDto(userRepository.findByEmail(email));
     }
 
-    public RoleEntity getRoleByEmail(String email){
+    public RoleEntity getRoleByEmail(String email) {
         return userRepository.findByEmail(email).getRole();
     }
+
     private UserDto toDto(UserEntity userEntity) {
-        return UserDto.builder()
-                .id(userEntity.getId())
-                .email(userEntity.getEmail())
-                .password(userEntity.getPassword())
-                .roleId(userEntity.getRole().getId())
-                .name(userEntity.getName())
-                .parentalName(userEntity.getParentalName())
-                .surname(userEntity.getSurname())
-                .address(userEntity.getAddress())
-                .phoneNumber(userEntity.getPhoneNumber())
-                .build();
+        return userEntity == null ?
+                null :
+                UserDto.builder()
+                        .id(userEntity.getId())
+                        .email(userEntity.getEmail())
+                        .password(userEntity.getPassword())
+                        .roleId(userEntity.getRole().getId())
+                        .name(userEntity.getName())
+                        .parentalName(userEntity.getParentalName())
+                        .surname(userEntity.getSurname())
+                        .address(userEntity.getAddress())
+                        .phoneNumber(userEntity.getPhoneNumber())
+                        .build();
     }
 }

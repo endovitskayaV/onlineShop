@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class OrderService {
     private static final long STATUS_ID_BASKET = 1;
     private static final long STATUS_ID_ORDER = 2;
+
     private OrderRepository orderRepository;
     private OrderConverter orderConverter;
     private StatusRepository statusRepository;
@@ -85,7 +86,7 @@ public class OrderService {
                     .stream()
                     .anyMatch(addableItem::equals);
             if (equal) {
-                itemsQuantity.put(addableItem, itemsQuantity.get(addableItem)+1);
+                itemsQuantity.put(addableItem, itemsQuantity.get(addableItem) + 1);
             } else {
                 itemsQuantity.put(itemRepository.getOne(itemId), 1);
             }

@@ -105,3 +105,7 @@ function setOverall() {
     }
     $("#overall").html("").append(overall);
 }
+
+function setItemsList(){
+
+}
