@@ -219,12 +219,6 @@ public class ItemController {
 
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
 
-        if (file.isEmpty() && editableItemDto.getPhotoName() == null) {
-            editableItemDto.setPhotoName(NO_PHOTO_NAME);
-        } else if (!file.isEmpty()) {
-            editableItemDto.setPhotoName(file.getOriginalFilename());
-        }
-
         checkIntegerFields(editableItemDto, errors);
 
         if (errors.size() > 0) {
@@ -232,6 +226,12 @@ public class ItemController {
             setItemModel(modelMap, editableItemDto);
             return new ModelAndView("edit");
         } else {
+            if (file.isEmpty() && editableItemDto.getPhotoName() == null) {
+                editableItemDto.setPhotoName(NO_PHOTO_NAME);
+            } else if (!file.isEmpty()) {
+                editableItemDto.setPhotoName(file.getOriginalFilename());
+            }
+
             if (!file.isEmpty()) {
                 storageService.store(file);
             }
