@@ -17,7 +17,7 @@
     <div class="col s6 offset-s3">
         <div class="card hoverable">
             <div class="card-content">
-                <form method="post" action="/login">
+                <form method="post" action="/login?destination=${destination}">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                             <div name="form-errors"></div>

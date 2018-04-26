@@ -17,13 +17,6 @@ import ru.reksoft.onlineShop.security.LogoutHandlerImpl;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private CustomAccessDeniedHandler customAccessDeniedHandler;
-
-    @Autowired
-    public WebSecurityConfig(CustomAccessDeniedHandler customAccessDeniedHandler) {
-        this.customAccessDeniedHandler = customAccessDeniedHandler;
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -39,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addLogoutHandler(new LogoutHandlerImpl())
                 .logoutSuccessUrl("/items").permitAll()
                 .and()
-                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
+                .exceptionHandling().authenticationEntryPoint(new CustomAccessDeniedHandler());
     }
 
     @Override

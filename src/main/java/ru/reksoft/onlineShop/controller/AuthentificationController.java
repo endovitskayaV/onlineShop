@@ -24,6 +24,7 @@ import java.util.List;
 
 @Controller
 public class AuthentificationController {
+    private static final String DEFAULT_DESTINATION = "/items";
     private static final int CUSTOMER_ROLE_ID = 2;
     private AuthenticationManager authenticationManager;
     private UserService userService;
@@ -35,8 +36,9 @@ public class AuthentificationController {
     }
 
     @GetMapping("/login")
-    public String login(ModelMap model) {
-        setLoginUserModel(model, LoginUserDto.builder().email("").password("").build());
+    public String login(ModelMap model, @RequestParam(required = false) String destination) {
+        setLoginUserModel(model, LoginUserDto.builder().email("").password("").build(), destination);
+
         return "login";
     }
 
@@ -44,7 +46,8 @@ public class AuthentificationController {
     public ModelAndView login(ModelMap modelMap,
                               @Valid LoginUserDto loginUserDto,
                               BindingResult bindingResult,
-                              @RequestParam(required = false) String destination) {
+                              @RequestParam String destination) {
+
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
         if (errors.size() == 0) {
             if (!login(loginUserDto.getEmail(), loginUserDto.getPassword())) {
@@ -54,20 +57,19 @@ public class AuthentificationController {
 
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
-            setLoginUserModel(modelMap, loginUserDto);
+            setLoginUserModel(modelMap, loginUserDto, destination);
             return new ModelAndView("login");
         } else {
-            if (destination == null) {
-                destination = "/items";
-            }
             return new ModelAndView("redirect:" + destination);
         }
 
     }
 
     @GetMapping("/signup")
-    public String signup(ModelMap model) {
-        setSignupUserModel(model, SignupUserDto.builder().email("").password("").confirmPassword("").roleId(CUSTOMER_ROLE_ID).build());
+    public String signup(ModelMap model, @RequestParam(required = false) String destination) {
+        setSignupUserModel(model,
+                SignupUserDto.builder().email("").password("").confirmPassword("").roleId(CUSTOMER_ROLE_ID).build(),
+                destination);
         return "signup";
     }
 
@@ -87,29 +89,28 @@ public class AuthentificationController {
 
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
-            setSignupUserModel(modelMap, signupUserDto);
+            setSignupUserModel(modelMap, signupUserDto, destination);
             return new ModelAndView("signup");
         } else {
             login(signupUserDto.getEmail(), signupUserDto.getPassword());
-            if (destination == null) {
-                destination = "/items";
-            }
-            return new ModelAndView("redirect:" + destination);
+            return new ModelAndView("redirect:" + (destination == null ? DEFAULT_DESTINATION : destination));
         }
     }
 
 
-    private void setLoginUserModel(ModelMap modelMap, LoginUserDto loginUserDto) {
+    private void setLoginUserModel(ModelMap modelMap, LoginUserDto loginUserDto, String destination) {
         modelMap.addAttribute("user", LoginUserDto.builder().email(loginUserDto.getEmail()).password("").build());
+        modelMap.addAttribute("destination", destination == null ? DEFAULT_DESTINATION : destination);
     }
 
-    private void setSignupUserModel(ModelMap modelMap, SignupUserDto signupUserDto) {
+    private void setSignupUserModel(ModelMap modelMap, SignupUserDto signupUserDto, String destination) {
         modelMap.addAttribute("user", SignupUserDto.builder()
                 .email(signupUserDto.getEmail())
                 .roleId(signupUserDto.getRoleId())
                 .confirmPassword("")
                 .password("")
                 .build());
+        modelMap.addAttribute("destination", destination == null ? DEFAULT_DESTINATION : destination);
     }
 
     private boolean login(String email, String password) {
