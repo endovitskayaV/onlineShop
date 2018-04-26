@@ -79,7 +79,7 @@
             </div>
 
 <#if (items?size >0)>
-    <div class="col s3 offset-s1">
+    <div  id="characteristrics_filter" class="col s3 offset-s1">
         <#if characteristics??>
             <div>
                 <ul class="collapsible expandable">
@@ -156,6 +156,5 @@
    <script type="text/javascript" src="../js/materialize.min.js"></script>+
    <script id="initSelect" type="text/javascript" src="../js/initSelect.js"></script>
     <script id="initSelect" type="text/javascript" src="../js/initCollapsible.js"></script>
-
 </body>
 </html>

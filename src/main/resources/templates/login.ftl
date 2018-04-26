@@ -40,6 +40,9 @@
                         <div class="input-field col s2 offset-s1">
                             <button class="waves-effect waves-light btn" type="submit">Login</button>
                         </div>
+                        <div class="input-field col s2 offset-s7">
+                            <a href="/signup" class="cl-4db6ac">register</a>
+                        </div>
                     </div>
                 </form>
             </div>

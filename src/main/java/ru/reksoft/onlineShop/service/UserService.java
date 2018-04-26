@@ -56,4 +56,8 @@ public class UserService implements UserDetailsService {
             return true;
         }
     }
+
+    public long getUserIdByEmail(String email) {
+        return userRepository.findByEmail(email).getId();
+    }
 }

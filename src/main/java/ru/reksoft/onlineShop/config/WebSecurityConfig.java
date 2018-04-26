@@ -9,17 +9,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.reksoft.onlineShop.security.AuthEntryPoint;
+import ru.reksoft.onlineShop.security.CustomAccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private AuthEntryPoint authEntryPoint;
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Autowired
-    public WebSecurityConfig(AuthEntryPoint authEntryPoint) {
-        this.authEntryPoint = authEntryPoint;
+    public WebSecurityConfig(CustomAccessDeniedHandler customAccessDeniedHandler) {
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
 //    @Override
@@ -29,7 +29,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-       // http
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/css/**", "/js/**", "/fonts/**", "/img/**",
+                        "/login","/signup",
+                        "/", "/items","/items/{\\d+}", "/items/filter", "/items/search",
+                        "/basket/**")
+                .permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
+
+        //.accessDeniedHandler()
+               // .accessDeniedPage("/accessDenied.jsp");;
+        //http.csrf().disable().authorizeRequests().antMatchers("/login").permitAll(); //.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+        //  http.cors().and().csrf().disable().authorizeRequests().antMatchers("/login").permitAll();
+        //   http.formLogin().loginPage("/login").permitAll().and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+        // http
 //                .authorizeRequests()
 //                .antMatchers("/login", "/items/**").permitAll()
 //                .anyRequest().authenticated();
@@ -40,9 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and()
 //                .logout()
 //                .permitAll();
-
-        http.cors().and().csrf().disable().authorizeRequests().antMatchers("/login").permitAll();
-                //.anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll();
+        //.anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll();
         //.authorizeRequests().antMatchers("/login*").anonymous().anyRequest().permitAll();
 // .cors().and().csrf().disable()
 //                .sessionManagement()
@@ -50,9 +64,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 ////                .and()
 ////                .headers().disable()
 //               .and()
-
-
-
 //                .authorizeRequests()
 //                .antMatchers("/css/**", "/js/**", "/fonts/**", "/img/**",
 //                        "/login/**", "/signup/**",
@@ -60,8 +71,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                        "/", "/items", "items/filter", "items/search", "items/{id}")
 //                .permitAll()
 //                .anyRequest().authenticated();
-
-
 
 
 //                .and()

@@ -10,6 +10,7 @@ import ru.reksoft.onlineShop.model.dto.OrderDto;
 import ru.reksoft.onlineShop.model.dto.OrderedItemDto;
 import ru.reksoft.onlineShop.service.ItemService;
 import ru.reksoft.onlineShop.service.OrderService;
+import ru.reksoft.onlineShop.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +20,18 @@ import java.util.List;
 public class BasketController {
     private OrderService orderService;
     private ItemService itemService;
+    private UserService userService;
 
     @Autowired
-    public BasketController(OrderService orderService, ItemService itemService) {
+    public BasketController(OrderService orderService, ItemService itemService, UserService userService) {
         this.orderService = orderService;
         this.itemService = itemService;
+        this.userService = userService;
     }
 
     @PostMapping("/add")
     public ResponseEntity add(long itemId) {
+        //  long userId = userService.getUserIdByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         long userId = 1; //TODO: get user id
         return orderService.addToBasket(userId, itemId) ?
                 ResponseEntity.noContent().build() :

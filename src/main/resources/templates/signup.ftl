@@ -72,6 +72,9 @@
                         <div class="input-field col s2 offset-s1">
                             <button class="waves-effect waves-light btn" type="submit">Signup</button>
                         </div>
+                        <div class="input-field col s2 offset-s7">
+                            <a href="/login" class="cl-4db6ac">login</a>
+                        </div>
                     </div>
                 </form>
             </div>

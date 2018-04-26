@@ -13,14 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class AuthEntryPoint implements AccessDeniedHandler{//AuthenticationEntryPoint {
-//  AuthenticationEntryPoint  @Override
-//    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-//        response.sendRedirect("/login");
-//    }
+public class CustomAccessDeniedHandler implements AccessDeniedHandler{
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         response.sendRedirect("/login");
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.controller.util.Error;
@@ -26,8 +27,6 @@ public class AuthentificationController {
     private AuthenticationManager authenticationManager;
     private UserService userService;
 
-    //TODO: make logout
-
     @Autowired
     public AuthentificationController(AuthenticationManager authenticationManager, UserService userService) {
         this.authenticationManager = authenticationManager;
@@ -41,7 +40,10 @@ public class AuthentificationController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(ModelMap modelMap, @Valid LoginUserDto loginUserDto, BindingResult bindingResult) {
+    public ModelAndView login(ModelMap modelMap,
+                              @Valid LoginUserDto loginUserDto,
+                              BindingResult bindingResult,
+                              @RequestParam(required = false) String destination) {
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
         if (errors.size() == 0) {
             if (!login(loginUserDto.getEmail(), loginUserDto.getPassword())) {
@@ -53,19 +55,25 @@ public class AuthentificationController {
             setLoginUserModel(modelMap, loginUserDto);
             return new ModelAndView("login");
         } else {
-            return new ModelAndView("redirect:/items");
+            if (destination == null) {
+                destination = "/items";
+            }
+            return new ModelAndView("redirect:" + destination);
         }
 
     }
 
     @GetMapping("/signup")
     public String signup(ModelMap model) {
-        setSignupUserModel(model, SignupUserDto.builder().email("").password("").confirmPassword("").roleId(1).build());
+        setSignupUserModel(model, SignupUserDto.builder().email("").password("").confirmPassword("").roleId(2).build());
         return "signup";
     }
 
     @PostMapping("/signup")
-    public ModelAndView signup(ModelMap modelMap, @Valid SignupUserDto signupUserDto, BindingResult bindingResult) {
+    public ModelAndView signup(ModelMap modelMap,
+                               @Valid SignupUserDto signupUserDto,
+                               BindingResult bindingResult,
+                               @RequestParam(required = false) String destination) {
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
 
         if (errors.size() == 0) {
@@ -80,7 +88,10 @@ public class AuthentificationController {
             return new ModelAndView("signup");
         } else {
             login(signupUserDto.getEmail(), signupUserDto.getPassword());
-            return new ModelAndView("redirect:/items");
+            if (destination == null) {
+                destination = "/items";
+            }
+            return new ModelAndView("redirect:" + destination);
         }
     }
 
@@ -107,5 +118,11 @@ public class AuthentificationController {
             return false;
         }
         return true;
+    }
+
+    @GetMapping("/logout")
+    public ModelAndView logout() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+        return new ModelAndView("redirect:/items");
     }
 }

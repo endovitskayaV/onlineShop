@@ -1,6 +1,7 @@
 function findItems() {
     var search = $('#search').val();
     if (search !== "") {
+        $('#characteristrics_filter').html("");
         var url = document.location.origin + '/items/search?query=' + search + '&' + getSortingParams();
         setCategories(url);
     }
@@ -29,7 +30,7 @@ function setCategories(query) {
 
 
             if (data.categories.length > 1) {
-                var div = '<div class="col s3"> <div class="collection z-depth-1">' +
+                var div = '<div class="col s2"> <div class="collection z-depth-1">' +
                     '<div style="background-color: white">' +
                     '<span>Specify category:</span></div>';
 
@@ -50,7 +51,7 @@ function setCategories(query) {
 }
 
 function getByCategoryAndQuery(categoryId, query) {
-    $('#verifyCategory').html("").append('<div class="col s3"></div>');
+    $('#verifyCategory').html("").append('<div class="col s2"></div>');
     $('#specifiedCategory').remove();
     $('<input id="specifiedCategory" hidden value="' + categoryId + '">').appendTo(document.body);
     var search = $('#search').val();
