@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CheckCharacteristicValueDataType {
 
-    String message() default "Wrong data type";
+    String message() default "";
 
     Class<?>[] groups() default {};
 

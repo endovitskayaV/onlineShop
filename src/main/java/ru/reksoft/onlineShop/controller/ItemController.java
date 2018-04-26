@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -128,6 +129,7 @@ public class ItemController {
      * @param model
      * @return "add_item" template
      */
+    @Secured("ROLE_SELLER")
     @GetMapping("add")
     public String add(ModelMap model) {
         ItemDto itemDto = ItemDto.builder()
@@ -143,6 +145,7 @@ public class ItemController {
         return "add_item";
     }
 
+    @Secured("ROLE_SELLER")
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ModelAndView add(ModelMap modelMap,
                             @Valid @ModelAttribute EditableItemDto editableItemDto,
@@ -150,6 +153,7 @@ public class ItemController {
                             @RequestParam("file") MultipartFile file) {
 
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+
         editableItemDto.setPhotoName(file.isEmpty() ? NO_PHOTO_NAME : file.getOriginalFilename());
         checkIntegerFields(editableItemDto, errors);
 
@@ -180,6 +184,7 @@ public class ItemController {
      * @return "edit_item" template
      * or "error" template if item id does not exist
      */
+    @Secured("ROLE_SELLER")
     @GetMapping("/edit/{id}")
     public String edit(ModelMap model, @PathVariable long id) {
         ItemDto itemDto = itemService.getById(id);
@@ -205,6 +210,7 @@ public class ItemController {
         return "edit";
     }
 
+    @Secured("ROLE_SELLER")
     @PostMapping("/edit")
     public ModelAndView edit(ModelMap modelMap,
                              @Valid @ModelAttribute EditableItemDto editableItemDto,
@@ -241,6 +247,7 @@ public class ItemController {
      * or ResponseEntity.badRequest() if item cannot be added
      * @see ResponseEntity
      */
+    @Secured("ROLE_SELLER")
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity delete(@PathVariable long id) {
         if (itemService.delete(id)) {

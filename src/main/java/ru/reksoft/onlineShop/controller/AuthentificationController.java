@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,7 +21,10 @@ import ru.reksoft.onlineShop.model.dto.SignupUserDto;
 import ru.reksoft.onlineShop.service.UserService;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
+
+import static ru.reksoft.onlineShop.service.UserService.ROLE_PREFIX;
 
 @Controller
 public class AuthentificationController {
@@ -114,7 +118,8 @@ public class AuthentificationController {
     }
 
     private boolean login(String email, String password) {
-        UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(email, password);
+        UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(email, password,
+                Collections.singletonList(new SimpleGrantedAuthority(ROLE_PREFIX + userService.getRoleByEmail(email).getName().toUpperCase())));
 
         try {
             Authentication authentication = authenticationManager.authenticate(user);

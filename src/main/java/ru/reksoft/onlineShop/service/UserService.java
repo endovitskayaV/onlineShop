@@ -8,10 +8,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.reksoft.onlineShop.model.domain.entity.RoleEntity;
 import ru.reksoft.onlineShop.model.domain.entity.UserEntity;
 import ru.reksoft.onlineShop.model.domain.repository.RoleRepository;
 import ru.reksoft.onlineShop.model.domain.repository.UserRepository;
 import ru.reksoft.onlineShop.model.dto.SignupUserDto;
+import ru.reksoft.onlineShop.model.dto.UserDto;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +23,7 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private RoleRepository roleRepository;
-    private static final String ROLE_PREFIX = "ROLE_";
+    public static final String ROLE_PREFIX = "ROLE_";
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
@@ -41,7 +43,7 @@ public class UserService implements UserDetailsService {
     }
 
     private List<SimpleGrantedAuthority> getAuthority(String role) {
-        return Collections.singletonList(new SimpleGrantedAuthority(ROLE_PREFIX+role.toUpperCase()));
+        return Collections.singletonList(new SimpleGrantedAuthority(ROLE_PREFIX + role.toUpperCase()));
     }
 
     public boolean add(SignupUserDto signupUserDto) {
@@ -58,7 +60,24 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public long getUserIdByEmail(String email) {
-        return userRepository.findByEmail(email).getId();
+    public UserDto getByEmail(String email) {
+        return toDto(userRepository.findByEmail(email));
+    }
+
+    public RoleEntity getRoleByEmail(String email){
+        return userRepository.findByEmail(email).getRole();
+    }
+    private UserDto toDto(UserEntity userEntity) {
+        return UserDto.builder()
+                .id(userEntity.getId())
+                .email(userEntity.getEmail())
+                .password(userEntity.getPassword())
+                .roleId(userEntity.getRole().getId())
+                .name(userEntity.getName())
+                .parentalName(userEntity.getParentalName())
+                .surname(userEntity.getSurname())
+                .address(userEntity.getAddress())
+                .phoneNumber(userEntity.getPhoneNumber())
+                .build();
     }
 }

@@ -31,7 +31,7 @@ public class BasketController {
 
     @PostMapping("/add")
     public ResponseEntity add(long itemId) {
-        //  long userId = userService.getUserIdByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        //  long userId = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         long userId = 1; //TODO: get user id
         return orderService.addToBasket(userId, itemId) ?
                 ResponseEntity.noContent().build() :

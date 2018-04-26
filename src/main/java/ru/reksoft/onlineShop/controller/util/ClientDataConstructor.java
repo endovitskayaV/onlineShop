@@ -10,7 +10,11 @@ public class ClientDataConstructor {
     public static List<Error> getFormErrors(BindingResult bindingResult) {
         List<Error> errors = new ArrayList<>();
 
-        bindingResult.getFieldErrors().forEach(fieldError -> errors.add(new Error(fieldError.getField(), fieldError.getDefaultMessage())));
+        bindingResult.getFieldErrors().forEach(fieldError -> {
+            if (!fieldError.getDefaultMessage().isEmpty()) {
+                errors.add(new Error(fieldError.getField(), fieldError.getDefaultMessage()));
+            }
+        });
 
         //add errors not belonging to any field
         bindingResult.getAllErrors().forEach(objectError -> {
