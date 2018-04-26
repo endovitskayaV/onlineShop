@@ -6,14 +6,12 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="css/my_style.css"/>
+    <title>Cart</title>
 </head>
 
 <body>
 <#include "header.ftl">
-
 <div id="top" class="row" style="margin-top: 100px">
-
-
 <#if  items?size==0>
     <div class="col s2 offset-s4 card horizontal">
         <div class="card-stacked">
@@ -67,7 +65,6 @@
                             </div>
                             <div id="error-quantity-${item.id}" class="input-field col s1">
                             </div>
-
                         </div>
                         </div>
                         <div class="row">
@@ -79,9 +76,7 @@
                                     <#assign i=i+1>
                                 </div>
                             </div>
-
                     </div>
-
                     <div class="card-action">
                         <div class="row">
                             <div class="input-field col s1 offset-s12">
@@ -92,10 +87,8 @@
                         </div>
                     </div>
                 </div>
-
         </div>
     </#list>
-
                 <div class="card hoverable">
                     <div class="card-content">
                         <div class="row">
@@ -114,19 +107,15 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
-
 </#if>
-
 </div>
 
 
-<div id="info-modal" class="modal modal-content">
-</div>
+<div id="info-modal" class="modal modal-content"></div>
+
 <script type="text/javascript" src="js/basketHandler.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>
 </body>

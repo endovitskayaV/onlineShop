@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="/css/my_style.css"/>
+    <title>Finish order</title>
 </head>
 
 <body>
@@ -49,7 +50,6 @@
             </div>
         </div>
     </#list>
-
                 <div class="card hoverable">
                     <div class="card-content">
                         <div class="row">
@@ -69,15 +69,10 @@
                     </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
-
-
 </div>
-
 
 <div id="info-modal" class="modal modal-content">
 </div>

@@ -9,6 +9,8 @@
 
     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="../css/my_style.css"/>
+
+    <title>VOlT-Home</title>
 </head>
 
 <body id="body">
@@ -41,9 +43,9 @@
     <div id="verifyCategory"></div>
 
 
-        <div class="row">
-            <div class="col s5 offset-s1">
-                <div id="items_div">
+<div class="row">
+    <div class="col s5 offset-s1">
+        <div id="items_div">
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
             <div class="card-image">
@@ -75,50 +77,49 @@
             </div>
         </div>
     </#list>
-                </div>
-            </div>
+        </div>
+    </div>
 
 <#if (items?size >0)>
-    <div  id="characteristrics_filter" class="col s3 offset-s1">
+    <div id="characteristrics_filter" class="col s3 offset-s1">
         <#if characteristics??>
             <div>
                 <ul class="collapsible expandable">
             <#list characteristics as characteristic>
                 <li id="characteristics_values">
                     <div id="characteristic_name" class="collapsible-header">${characteristic.name}</div>
-                    <input hidden id="characteristic_code"  value="${characteristic.code}"/>
+                    <input hidden id="characteristic_code" value="${characteristic.code}"/>
                     <div id="values" class="collapsible-body">
                     <#list characteristic.values as valueChecked>
                           <#if chosenCharacteristics??>
 
 
-                         <#list chosenCharacteristics?values as chosenCharacteristicValue>
+                              <#list chosenCharacteristics?values as chosenCharacteristicValue>
 
-                             <#if chosenCharacteristicValue==valueChecked>
-                              <p> <label id="1">
-                                      <input type="checkbox" checked="checked" id="characteristic_value" value="${valueChecked}"/>
-                                      <span>${valueChecked}</span>
-                                  </label> </p>
-                             <#break>
-                             <#else>
+                                  <#if chosenCharacteristicValue==valueChecked>
+                              <p><label id="1">
+                                  <input type="checkbox" checked="checked" id="characteristic_value"
+                                         value="${valueChecked}"/>
+                                  <span>${valueChecked}</span>
+                              </label></p>
+                                      <#break>
+                                  <#else>
 
                         <p><label id="2">
-                                <input type="checkbox"  id="characteristic_value" value="${valueChecked}"/>
-                                <span>${valueChecked}</span>
-                            </label></p>
-                             </#if>
-                         <#break>
-                         </#list>
-
-
-                    <#else>
+                            <input type="checkbox" id="characteristic_value" value="${valueChecked}"/>
+                            <span>${valueChecked}</span>
+                        </label></p>
+                                  </#if>
+                                  <#break>
+                              </#list>
+                          <#else>
                              <p>
                                  <label id="3">
-                                     <input type="checkbox"  id="characteristic_value" value="${valueChecked}"/>
+                                     <input type="checkbox" id="characteristic_value" value="${valueChecked}"/>
                                      <span>${valueChecked}</span>
                                  </label>
                              </p>
-                        </#if>
+                          </#if>
                     </#list>
                     </div>
                 </li>
@@ -130,31 +131,28 @@
 
         <a style="visibility: hidden" id="apply_btn" href="javascript: findByCharacteristics()"
            class="waves-effect waves-light btn">apply</a>
-
-
     </div>
     </div>
 </#if>
-        </div>
+</div>
 
-    <div id="info-modal" class="modal modal-content">
-    </div>
+<div id="info-modal" class="modal modal-content"></div>
 
 <script type="text/javascript" src="js/initHome.js"></script>
 <script type="text/javascript" src="js/homeHandler.js"></script>
-   <script type="text/javascript" src="js/searchHandler.js"></script>
-    <script type="text/javascript" src="js/addToBasket.js"></script>
-    <script type="text/javascript" src="js/materialize.min.js"></script>
-    <script id="initSelect" type="text/javascript" src="js/initSelect.js"></script>
-    <script id="initSelect" type="text/javascript" src="js/initCollapsible.js"></script>
+<script type="text/javascript" src="js/searchHandler.js"></script>
+<script type="text/javascript" src="js/addToBasket.js"></script>
+<script type="text/javascript" src="js/materialize.min.js"></script>
+<script id="initSelect" type="text/javascript" src="js/initSelect.js"></script>
+<script id="initSelect" type="text/javascript" src="js/initCollapsible.js"></script>
 
 
 <script type="text/javascript" src="../js/initHome.js"></script>
 <script type="text/javascript" src="../js/homeHandler.js"></script>
-    <script type="text/javascript" src="../js/searchHandler.js"></script>
-    <script type="text/javascript" src="../js/addToBasket.js"></script>
-   <script type="text/javascript" src="../js/materialize.min.js"></script>+
-   <script id="initSelect" type="text/javascript" src="../js/initSelect.js"></script>
-    <script id="initSelect" type="text/javascript" src="../js/initCollapsible.js"></script>
+<script type="text/javascript" src="../js/searchHandler.js"></script>
+<script type="text/javascript" src="../js/addToBasket.js"></script>
+<script type="text/javascript" src="../js/materialize.min.js"></script>
+<script id="initSelect" type="text/javascript" src="../js/initSelect.js"></script>
+<script id="initSelect" type="text/javascript" src="../js/initCollapsible.js"></script>
 </body>
 </html>

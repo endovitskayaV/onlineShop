@@ -1,11 +1,8 @@
 package ru.reksoft.onlineShop.security;
 
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
-import ru.reksoft.onlineShop.model.dto.LoginUserDto;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

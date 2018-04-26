@@ -6,8 +6,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/../css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="/../css/my_style.css"/>
+    <title>Edit ${item.producer} ${item.name}</title>
 </head>
-
 
 <body>
 <script type="text/javascript" src="/../js/addItemsHandler.js"></script>
@@ -23,7 +23,6 @@
                             <label for="name">Name</label>
                             <div name="name-errors"></div>
                         </div>
-
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
@@ -75,8 +74,6 @@
                    <option id="${category.id}" value="${category.id}">${category.name}</option>
               </#list>
                             </select>
-
-
                             <label for="categoryId">Category</label>
                             <div name="characteristics-errors">
                             </div>
@@ -87,8 +84,6 @@
                             </a>
                         </div>
                     </div>
-
-
                     <div id="characteristicDiv">
                           <#if selectedCategory??>
                               <#assign i=0>
@@ -166,8 +161,7 @@
 </div>
 
 
-<div id="error-modal" class="modal modal-content">
-</div>
+<div id="error-modal" class="modal modal-content"></div>
 
 <#if errors??>
     <#list errors as error>

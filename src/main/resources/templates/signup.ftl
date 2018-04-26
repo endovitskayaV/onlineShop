@@ -7,6 +7,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="../css/my_style.css"/>
+
+    <title>VOLT-signup</title>
 </head>
 
 <body>
@@ -34,7 +36,6 @@
                             <div name="password-errors"></div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                             <input id="confirmPassword" name="confirmPassword" type="password"

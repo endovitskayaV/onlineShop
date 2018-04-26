@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../css/my_style.css"/>
     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
+    <title>${item.producer} ${item.name}</title>
 </head>
 
 <body id="body">
@@ -62,8 +63,6 @@
                                     <td>${characteristic.name}</td>
 
                                      <td style="text-align: right">${characteristic.value} ${characteristic.measureUnit}</td>
-
-
                                 </tr>
                                         </#list>
                                     </#if>
@@ -78,8 +77,7 @@
     </div>
 </div>
 
-<div id="info-modal" class="modal modal-content">
-</div>
+<div id="info-modal" class="modal modal-content"></div>
 
 <script type="text/javascript" src="../js/homeHandler.js"></script>
 <script type="text/javascript" src="../js/searchHandler.js"></script>

@@ -24,6 +24,7 @@ import java.util.List;
 
 @Controller
 public class AuthentificationController {
+    private static final int CUSTOMER_ROLE_ID = 2;
     private AuthenticationManager authenticationManager;
     private UserService userService;
 
@@ -50,6 +51,7 @@ public class AuthentificationController {
                 errors.add(new Error("form", "Wrong email or password"));
             }
         }
+
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
             setLoginUserModel(modelMap, loginUserDto);
@@ -65,7 +67,7 @@ public class AuthentificationController {
 
     @GetMapping("/signup")
     public String signup(ModelMap model) {
-        setSignupUserModel(model, SignupUserDto.builder().email("").password("").confirmPassword("").roleId(2).build());
+        setSignupUserModel(model, SignupUserDto.builder().email("").password("").confirmPassword("").roleId(CUSTOMER_ROLE_ID).build());
         return "signup";
     }
 
@@ -74,6 +76,7 @@ public class AuthentificationController {
                                @Valid SignupUserDto signupUserDto,
                                BindingResult bindingResult,
                                @RequestParam(required = false) String destination) {
+
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
 
         if (errors.size() == 0) {
@@ -111,6 +114,7 @@ public class AuthentificationController {
 
     private boolean login(String email, String password) {
         UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(email, password);
+
         try {
             Authentication authentication = authenticationManager.authenticate(user);
             SecurityContextHolder.getContext().setAuthentication(authentication);

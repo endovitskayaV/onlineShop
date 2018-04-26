@@ -13,12 +13,11 @@ import java.util.List;
 @Service
 public class OrderConverter {
     private OrderRepository orderRepository;
-    private ItemConverter itemConverter;
 
     @Autowired
-    public OrderConverter(OrderRepository orderRepository, ItemConverter itemConverter) {
+    public OrderConverter(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.itemConverter = itemConverter;
+
     }
 
     public OrderEntity toEntity(OrderDto orderDto) {

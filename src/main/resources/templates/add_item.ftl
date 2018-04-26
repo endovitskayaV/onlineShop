@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="../css/my_style.css"/>
+    <title>Add item</title>
 </head>
 
 <body>
@@ -22,7 +23,6 @@
                             <label for="name" >Name</label>
                             <div name="name-errors"></div>
                         </div>
-
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
@@ -77,16 +77,11 @@
                                       <#else>
                    <option id="${category.id}" value="${category.id}">${category.name}</option>
                                       </#if>
-
                                     <#else>
                                    <option id="${category.id}" value="${category.id}">${category.name}</option>
                                       </#if>
                                   </#list>
-
-
                             </select>
-
-
                             <label for="categoryId" >Category</label>
                             <div name="characteristics-errors">
                             </div>
@@ -97,9 +92,6 @@
                             </a>
                         </div>
                     </div>
-
-
-
                     <div id="characteristicDiv">
                           <#if selectedCategory??>
                               <#assign i=0>
@@ -134,8 +126,6 @@
                               </#list>
                           </#if>
                     </div>
-
-
                     <div class="row">
                         <label for="file">File</label>
                         <input type="file" id="file" name="file"/>

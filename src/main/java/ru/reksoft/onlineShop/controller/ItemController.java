@@ -50,14 +50,15 @@ public class ItemController {
                          @RequestParam(required = false) SortCriteria sortBy,
                          @RequestParam(required = false) Boolean acs) {
         List<ItemDto> items;
+
         if (category == null) {
             items = itemService.getAll(getSafeBoolean(acs), sortBy);
         } else {
             items = itemService.getByCategoryId(categoryService.getByName(category).getId(), acs, sortBy);
             model.addAttribute("characteristics", itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
         }
-        setModel(model, items, sortBy, acs, categoryService.getAll(), category, null);
 
+        setModel(model, items, sortBy, acs, categoryService.getAll(), category, null);
         return "home";
     }
 
@@ -66,13 +67,16 @@ public class ItemController {
                                        @RequestParam Map<String, String> characteristics,
                                        @RequestParam(required = false) SortCriteria sortBy,
                                        @RequestParam(required = false) Boolean acs) {
+
         characteristics.remove("category");
+
         if (sortBy != null) {
             characteristics.remove("sortBy");
         }
         if (acs != null) {
             characteristics.remove("acs");
         }
+
         setModel(model,
                 itemService.getByCharacteristic(categoryService.getByName(category).getId(), getStringListMap(characteristics), getSafeBoolean(acs), sortBy),
                 sortBy, acs,
@@ -83,22 +87,10 @@ public class ItemController {
         if (characteristics.size() != 0) {
             model.addAttribute("chosenCharacteristics", characteristics);
         }
+
         return "home";
     }
 
-    private List<CharacteristicValueDto> toCharacteristicValueDtos(Map<String, List<String>> codeValues) {
-        List<CharacteristicValueDto> characteristicValueDtos = new ArrayList<>();
-        codeValues.forEach((key, values) ->
-                characteristicValueDtos.add(new CharacteristicValueDto(null, key, values)));
-        return characteristicValueDtos;
-    }
-
-    private Map<String, List<String>> getStringListMap(Map<String, String> stringStringMap) {
-        Map<String, List<String>> stringListMap = new HashMap<>();
-        stringStringMap.forEach((key, value) ->
-                stringListMap.put(key, Arrays.asList(value.split(","))));
-        return stringListMap;
-    }
 
     @GetMapping("/search")
     public ResponseEntity getAll(String query,
@@ -137,7 +129,7 @@ public class ItemController {
      * @return "add_item" template
      */
     @GetMapping("add")
-    public String add(Model model) {
+    public String add(ModelMap model) {
         ItemDto itemDto = ItemDto.builder()
                 .name("")
                 .producer("")
@@ -147,14 +139,7 @@ public class ItemController {
                 .build();
         model.addAttribute("item", itemDto);
 
-        model.addAttribute("categories", categoryService.getAll());
-        NewCategoryDto newCategoryDto = NewCategoryDto.builder()
-                .name("")
-                .rating(0)
-                .description("")
-                .build();
-        model.addAttribute("category", newCategoryDto);
-        model.addAttribute("characteristics", characteristicService.getAll());
+        setNewCategoryDtoModel(model, characteristicService.getAll(), categoryService.getAll());
         return "add_item";
     }
 
@@ -187,16 +172,87 @@ public class ItemController {
         }
     }
 
+    /**
+     * Prepares item for updating
+     *
+     * @param model
+     * @param id    item id
+     * @return "edit_item" template
+     * or "error" template if item id does not exist
+     */
+    @GetMapping("/edit/{id}")
+    public String edit(ModelMap model, @PathVariable long id) {
+        ItemDto itemDto = itemService.getById(id);
+        if (itemDto == null) {
+            return "error";
+        }
+
+        if (itemDto.getPhotoName() != null) {
+            if (itemDto.getPhotoName().equals(NO_PHOTO_NAME)) {
+                itemDto.setPhotoName(null);
+            }
+        }
+
+        model.addAttribute("item", itemDto);
+        model.addAttribute("item_characteristics", itemDto.getCharacteristics());
+        model.addAttribute("selectedCategory", categoryService.getById(itemDto.getCategoryId()));
+        setNewCategoryDtoModel(model,
+                characteristicService.getAll(),
+                /*categories*/ categoryService.getAll().stream()
+                        .filter(categoryDto -> (categoryDto.getId() != (itemDto.getCategoryId())))
+                        .collect(Collectors.toList()));
+
+        return "edit";
+    }
+
+    @PostMapping("/edit")
+    public ModelAndView edit(ModelMap modelMap,
+                             @Valid @ModelAttribute EditableItemDto editableItemDto,
+                             BindingResult bindingResult,
+                             @RequestParam("file") MultipartFile file) {
+
+        List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+
+        if (file.isEmpty() && editableItemDto.getPhotoName() == null) {
+            editableItemDto.setPhotoName(NO_PHOTO_NAME);
+        } else if (!file.isEmpty()) {
+            editableItemDto.setPhotoName(file.getOriginalFilename());
+        }
+
+        checkIntegerFields(editableItemDto, errors);
+
+        if (errors.size() > 0) {
+            modelMap.addAttribute("errors", errors);
+            setItemModel(modelMap, editableItemDto);
+            return new ModelAndView("edit");
+        } else {
+            if (!file.isEmpty()) {
+                storageService.store(file);
+            }
+            return new ModelAndView("redirect:/items/" + itemService.edit(toItemDto(editableItemDto)));
+        }
+    }
+
+    /**
+     * Deletes item by its id
+     *
+     * @param id item id
+     * @return ResponseEntity.noContent()
+     * or ResponseEntity.badRequest() if item cannot be added
+     * @see ResponseEntity
+     */
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity delete(@PathVariable long id) {
+        if (itemService.delete(id)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.badRequest().body("Item cannot be deleted as it is ordered");
+        }
+    }
+
     private void setItemModel(ModelMap modelMap, EditableItemDto editableItemDto) {
         modelMap.addAttribute("item", editableItemDto);
-        modelMap.addAttribute("categories", categoryService.getAll());
-        NewCategoryDto newCategoryDto = NewCategoryDto.builder()
-                .name("")
-                .rating(0)
-                .description("")
-                .build();
-        modelMap.addAttribute("category", newCategoryDto);
-        modelMap.addAttribute("characteristics", characteristicService.getAll());
+        setNewCategoryDtoModel(modelMap, characteristicService.getAll(), categoryService.getAll());
 
         if (editableItemDto.getCategoryId() != 0) {
             modelMap.addAttribute("selectedCategory", categoryService.getById(editableItemDto.getCategoryId()));
@@ -233,87 +289,11 @@ public class ItemController {
                 .build();
     }
 
-    /**
-     * Prepares item for updating
-     *
-     * @param model
-     * @param id    item id
-     * @return "edit_item" template
-     * or "error" template if item id does not exist
-     */
-    @GetMapping("/edit/{id}")
-    public String edit(Model model, @PathVariable long id) {
-        ItemDto itemDto = itemService.getById(id);
-        if (itemDto == null) {
-            return "error";
-        }
-
-        if (itemDto.getPhotoName() != null) {
-            if (itemDto.getPhotoName().equals(NO_PHOTO_NAME)) {
-                itemDto.setPhotoName(null);
-            }
-        }
-        model.addAttribute("item", itemDto);
-        model.addAttribute("categories",
-                categoryService.getAll().stream()
-                        .filter(categoryDto -> (categoryDto.getId() != (itemDto.getCategoryId())))
-                        .collect(Collectors.toList()));
-        model.addAttribute("item_characteristics", itemDto.getCharacteristics());
-        model.addAttribute("selectedCategory",
-                categoryService.getById(itemDto.getCategoryId()));
-
-
-        NewCategoryDto newCategoryDto = NewCategoryDto.builder()
-                .name("")
-                .rating(0)
-                .description("")
-                .build();
-        model.addAttribute("category", newCategoryDto);
-        model.addAttribute("characteristics", characteristicService.getAll());
-        return "edit";
-    }
-
-    @PostMapping("/edit")
-    public ModelAndView edit(ModelMap modelMap,
-                             @Valid @ModelAttribute EditableItemDto editableItemDto,
-                             BindingResult bindingResult,
-                             @RequestParam("file") MultipartFile file) {
-
-        List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
-        if (file.isEmpty() && editableItemDto.getPhotoName() == null) {
-            editableItemDto.setPhotoName(NO_PHOTO_NAME);
-        } else if (!file.isEmpty()) {
-            editableItemDto.setPhotoName(file.getOriginalFilename());
-        }
-        checkIntegerFields(editableItemDto, errors);
-
-        if (errors.size() > 0) {
-            modelMap.addAttribute("errors", errors);
-            setItemModel(modelMap, editableItemDto);
-            return new ModelAndView("edit");
-        } else {
-            if (!file.isEmpty()) {
-                storageService.store(file);
-            }
-            return new ModelAndView("redirect:/items/" + itemService.edit(toItemDto(editableItemDto)));
-        }
-    }
-
-    /**
-     * Deletes item by its id
-     *
-     * @param id item id
-     * @return ResponseEntity.noContent()
-     * or ResponseEntity.badRequest() if item cannot be added
-     * @see ResponseEntity
-     */
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity delete(@PathVariable long id) {
-        if (itemService.delete(id)) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.badRequest().body("Item cannot be deleted as it is ordered");
-        }
+    private Map<String, List<String>> getStringListMap(Map<String, String> stringStringMap) {
+        Map<String, List<String>> stringListMap = new HashMap<>();
+        stringStringMap.forEach((key, value) ->
+                stringListMap.put(key, Arrays.asList(value.split(","))));
+        return stringListMap;
     }
 
     private Boolean getSafeBoolean(Boolean booleanValue) {
@@ -350,6 +330,18 @@ public class ItemController {
         if (characteristics != null) {
             model.addAttribute("characteristics", characteristics);
         }
+    }
+
+    private void setNewCategoryDtoModel(ModelMap modelMap, List<CharacteristicDto> characteristics, List<CategoryDto> categories) {
+        NewCategoryDto newCategoryDto = NewCategoryDto.builder()
+                .name("")
+                .rating(0)
+                .description("")
+                .build();
+        modelMap.addAttribute("category", newCategoryDto);
+
+        modelMap.addAttribute("categories", categories);
+        modelMap.addAttribute("characteristics", characteristics);
     }
 
     @Data

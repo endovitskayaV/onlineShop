@@ -76,9 +76,7 @@ public class CategoryConverter {
                     .name(categoryEntity.getName())
                     .description(categoryEntity.getDescription())
                     .rating(categoryEntity.getRating())
-                    .characteristics(categoryEntity.getCharacteristicsRequired()//.entrySet().stream()
-                            // .filter(Map.Entry::getValue) //get only required characteristics (value==true)
-                            // .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                    .characteristics(categoryEntity.getCharacteristicsRequired()
                             .keySet().stream() //select keys - characteristics
                             .map(characteristicEntity ->
                                     characteristicConverter

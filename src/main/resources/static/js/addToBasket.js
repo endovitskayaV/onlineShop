@@ -1,6 +1,6 @@
 function addItemToBasket(id) {
     $.post(document.location.origin + "/basket/add?itemId=" + id, function () {
-        //alert( "success" );
+
     })
         .done(function () {
             showModal('<div class="row">' +
