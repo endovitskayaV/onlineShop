@@ -1,7 +1,7 @@
 <#if item.photoName??>
-                <img width="60" height="200" src="../img/${item.photoName}">
+                <img  id="img" width="60" height="200" src="../img/${item.photoName}">
 <#else>
-                    <img width="60" height="200" src="../img/no_photo.png">
+                    <img id="img" width="60" height="200" src="../img/no_photo.png">
 </#if>
 
 
@@ -12,3 +12,24 @@
         });
     });
 </script>-->
+
+
+<#--<script>-->
+    <#--$("#img")-->
+            <#--.load(function(){-->
+                <#--alert("cooll");-->
+            <#--})-->
+            <#--.error(function(){-->
+                <#--alert("coole");-->
+            <#--});-->
+
+<#--</script>-->
+
+
+<#--<script>-->
+    <#--$("#container").waitForImages(function() {-->
+    <#--}, function(loaded, count, success) {-->
+        <#--alert(loaded + ' of ' + count + ' images has ' + (success ? 'loaded' : 'failed to load') +  '.');-->
+        <#--$(this).addClass('loaded');-->
+    <#--});-->
+<#--</script>-->
