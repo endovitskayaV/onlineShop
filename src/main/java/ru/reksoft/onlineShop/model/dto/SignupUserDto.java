@@ -8,6 +8,8 @@ import ru.reksoft.onlineShop.validating.passwordMatch.PasswordMatch;
 import ru.reksoft.onlineShop.validating.passwordMatch.PasswordsProvider;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
@@ -17,6 +19,8 @@ import javax.validation.constraints.Size;
 @PasswordMatch
 public class SignupUserDto implements PasswordsProvider{
 
+    //TODO: make up regexp
+    @NotBlank(message = "Enter email")
     @Email(message = "Enter valid email")//(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$" ,message = "Enter valid email")
     private String email;
 

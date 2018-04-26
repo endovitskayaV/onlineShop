@@ -2,6 +2,7 @@ package ru.reksoft.onlineShop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,10 +26,12 @@ public class AuthentificationController {
     private AuthenticationManager authenticationManager;
     private UserService userService;
 
+    //TODO: make logout
+
     @Autowired
     public AuthentificationController(AuthenticationManager authenticationManager, UserService userService) {
         this.authenticationManager = authenticationManager;
-        this.userService=userService;
+        this.userService = userService;
     }
 
     @GetMapping("/login")
@@ -40,51 +43,69 @@ public class AuthentificationController {
     @PostMapping("/login")
     public ModelAndView login(ModelMap modelMap, @Valid LoginUserDto loginUserDto, BindingResult bindingResult) {
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+        if (errors.size() == 0) {
+            if (!login(loginUserDto.getEmail(), loginUserDto.getPassword())) {
+                errors.add(new Error("form", "Wrong email or password"));
+            }
+        }
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
             setLoginUserModel(modelMap, loginUserDto);
             return new ModelAndView("login");
         } else {
-           UsernamePasswordAuthenticationToken user=new UsernamePasswordAuthenticationToken(
-                   loginUserDto.getEmail(),
-                   loginUserDto.getPassword());
-            Authentication authentication = authenticationManager.authenticate(user);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            // errors.add(new Error("price", "Price must be greater than 0"));
-
-        //    userService.loadUserByUsername()
-
-
             return new ModelAndView("redirect:/items");
         }
+
     }
 
     @GetMapping("/signup")
     public String signup(ModelMap model) {
-        setSignupUserModel(model, SignupUserDto.builder().email("").password("").confirmPassword("").roleId(0).build());
+        setSignupUserModel(model, SignupUserDto.builder().email("").password("").confirmPassword("").roleId(1).build());
         return "signup";
     }
 
     @PostMapping("/signup")
     public ModelAndView signup(ModelMap modelMap, @Valid SignupUserDto signupUserDto, BindingResult bindingResult) {
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+
+        if (errors.size() == 0) {
+            if (!userService.add(signupUserDto)) {
+                errors.add(new Error("form", "User with such email already exists"));
+            }
+        }
+
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
             setSignupUserModel(modelMap, signupUserDto);
             return new ModelAndView("signup");
         } else {
-            //TODO: signup here and login
+            login(signupUserDto.getEmail(), signupUserDto.getPassword());
             return new ModelAndView("redirect:/items");
         }
     }
 
 
     private void setLoginUserModel(ModelMap modelMap, LoginUserDto loginUserDto) {
-        modelMap.addAttribute("user", loginUserDto);
+        modelMap.addAttribute("user", LoginUserDto.builder().email(loginUserDto.getEmail()).password("").build());
     }
 
     private void setSignupUserModel(ModelMap modelMap, SignupUserDto signupUserDto) {
-        modelMap.addAttribute("user", signupUserDto);
+        modelMap.addAttribute("user", SignupUserDto.builder()
+                .email(signupUserDto.getEmail())
+                .roleId(signupUserDto.getRoleId())
+                .confirmPassword("")
+                .password("")
+                .build());
     }
-    //TODO: make logout
+
+    private boolean login(String email, String password) {
+        UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(email, password);
+        try {
+            Authentication authentication = authenticationManager.authenticate(user);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (BadCredentialsException e) {
+            return false;
+        }
+        return true;
+    }
 }

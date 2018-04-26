@@ -17,15 +17,20 @@
                 <form method="post" action="/signup">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
+                            <div name="form-errors"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s10 offset-s1">
                             <input id="email" name="email" type="text" value="${user.email}">
-                            <label for="email">Email</label>
+                            <label class="active" for="email">Email</label>
                             <div name="email-errors"></div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                             <input id="password" name="password" type="password" value="${user.password}">
-                            <label for="password">Password</label>
+                            <label class="active" for="password">Password</label>
                             <div name="password-errors"></div>
                         </div>
                     </div>
@@ -34,19 +39,33 @@
                         <div class="input-field col s10 offset-s1">
                             <input id="confirmPassword" name="confirmPassword" type="password"
                                    value="${user.confirmPassword}">
-                            <label for="confirmPassword">Confirm password</label>
+                            <label class="active" for="confirmPassword">Confirm password</label>
                             <div name="confirmPassword-errors"></div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s4 offset-s1">
                             <span>I`m </span>
+                             <#if user.roleId==1>
                             <p><label>
-                                <input type="radio" name="roleId" id="roleId" value="${user.roleId}"/>
+                                <input type="radio" name="roleId" id="roleId" value="1" checked/>
                                 <span>Seller</span>
-                                <input type="radio" name="roleId" id="roleId" value="${user.roleId}"/>
-                                 <span>Customer</span>
                             </label></p>
+                            <p><label>
+                                <input type="radio" name="roleId" id="roleId" value="2"/>
+                                <span>Customer</span>
+                            </label></p>
+
+                             <#else>
+                              <p><label>
+                                  <input type="radio" name="roleId" id="roleId" value="1"/>
+                                  <span>Seller</span>
+                              </label></p>
+                            <p><label>
+                                <input type="radio" name="roleId" id="roleId" value="2" checked/>
+                                <span>Customer</span>
+                            </label></p>
+                             </#if>
                         </div>
                     </div>
                     <div class="row">

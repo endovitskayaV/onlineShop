@@ -12,6 +12,11 @@ public class ClientDataConstructor {
     public static List<Error> getFormErrors(BindingResult bindingResult){
         List<Error> errors = new ArrayList<>();
         bindingResult.getFieldErrors().forEach(fieldError -> errors.add(new Error(fieldError.getField(), fieldError.getDefaultMessage())));
+
+        bindingResult.getAllErrors().forEach(objectError -> {
+            if (bindingResult.getFieldErrors().stream().noneMatch(fieldError -> fieldError.equals(objectError)))
+                errors.add(new Error("form", objectError.getDefaultMessage()));
+        });
         return errors;
     }
 }

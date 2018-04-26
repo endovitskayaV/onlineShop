@@ -14,18 +14,24 @@
     <div class="col s6 offset-s3">
         <div class="card hoverable">
             <div class="card-content">
-                <form  method="post" action="/login">
+                <form method="post" action="/login">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="email" class="active" name="email" type="text" value="${user.email}">
-                            <label for="email" >Email</label>
+                            <div name="form-errors"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s10 offset-s1">
+                            <input id="email" name="email" type="text" value="${user.email}">
+                            <label class="active" for="email">Email</label>
                             <div name="email-errors"></div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="password" class="active" name="password" type="password" value="${user.password}">
-                            <label for="password" >Password</label>
+                            <input id="password"  name="password" type="password"
+                                   value="${user.password}">
+                            <label class="active" for="password">Password</label>
                             <div name="password-errors"></div>
                         </div>
                     </div>
@@ -45,7 +51,7 @@
 
 <#if errors??>
     <#list errors as error>
-<script>showError("${error.field}","${error.message}");</script>
+<script>showError("${error.field}", "${error.message}");</script>
     </#list>
 </#if>
 
