@@ -13,6 +13,7 @@
 </head>
 
 <body>
+<#assign itemsCount=0>
 <#include "header.ftl">
 <div id="top" class="row" style="margin-top: 100px">
 <#if  items?size==0>
@@ -48,63 +49,66 @@
         <div class="row">
             <div class="col s8 offset-s4">
     <#list items as item>
-    <#if item??>
+        <#if item??>
+
+            <#assign itemsCount=itemsCount+1>
         <div id="${item.id}" class="card horizontal hoverable">
 
             <div class="card-image">
                 <#include "item_photo.ftl">
             </div>
-                <div id="anyCardLeft">
-                    <div class="card-content">
-                        <label for="itemId"></label>
-                        <input id="itemId" hidden="hidden" type="number" value="${item.id}">
+            <div id="anyCardLeft">
+                <div class="card-content">
+                    <label for="itemId"></label>
+                    <input id="itemId" hidden="hidden" type="number" value="${item.id}">
 
-                        <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
+                    <p id="content" class="flow-text"><a href="/items/${item.id}">${item.producer} ${item.name}</a></p>
 
-                        <div class="row">
-                            <div class="input-field col s5">Price, rub:</div>
-                            <div class="input-field col s1">
-                                <div id="price-${item.id}"> ${item.price?string["0"]} </div>
-                            </div>
+                    <div class="row">
+                        <div class="input-field col s5">Price, rub:</div>
+                        <div class="input-field col s1">
+                            <div id="price-${item.id}"> ${item.price?string["0"]} </div>
                         </div>
-                        <div class="row">
+                    </div>
+                    <div class="row">
                         <div class="col s4">
                             <div class="input-field col s5">
                                 <a href="javascript: setItemQuantity(${basketId},${item.id},true)">
                                     <i class="material-icons cl-4db6a sz-20">add</i></a>
-                            <span id="quantity-${item.id}">
-                                ${quantities[i]?replace(",", "")}
-                            </span>ps
+                                <span id="quantity-${item.id}">
+                                    ${quantities[i]?replace(",", "")}
+                                </span>ps
                                 <a href="javascript: setItemQuantity(${basketId},${item.id},false)">
                                     <i class="material-icons cl-4db6a sz-20">remove</i></a>
                             </div>
                             <div id="error-quantity-${item.id}" class="input-field col s1">
                             </div>
                         </div>
-                        </div>
-                        <div class="row">
-                                <div class="input-field col s5">Sum, rub:</div>
-                                <div class="input-field col s1">
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s5">Sum, rub:</div>
+                        <div class="input-field col s1">
                                      <#assign sum=item.price*quantities[i]>
                                       <#assign overall=overall+sum>
-                                    <div name="sum-${i}" id="sum-${item.id}"> ${sum?string["0"]} </div>
+                            <div name="sum-${i}" id="sum-${item.id}"> ${sum?string["0"]} </div>
                                     <#assign i=i+1>
-                                </div>
-                            </div>
-                    </div>
-                    <div class="card-action">
-                        <div class="row">
-                            <div class="input-field col s1 offset-s12">
-                                <a href="javascript: deleteItem(${basketId},${item.id})"> <i
-                                        class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="card-action">
+                    <div class="row">
+                        <div class="input-field col s1 offset-s12">
+                            <a href="javascript: deleteItem(${basketId},${item.id})"> <i
+                                    class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </#if>
+        </#if>
     </#list>
+                <#if (itemsCount>0)>
                 <div class="card hoverable">
                     <div class="card-content">
                         <div class="row">
@@ -118,11 +122,13 @@
                         </div>
                         <div class="row">
                             <div class="input-field col s1 offset-s10">
-                                <a href="javascript: checkItemQuantity(${basketId})" class="waves-effect waves-light btn">Order</a>
+                                <a href="javascript: checkItemQuantity(${basketId})"
+                                   class="waves-effect waves-light btn">Order</a>
                             </div>
                         </div>
                     </div>
                 </div>
+                </#if>
             </div>
         </div>
     </div>

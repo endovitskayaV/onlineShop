@@ -3,6 +3,7 @@
 <html>
 <head>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.cookie.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="/css/my_style.css"/>
@@ -12,6 +13,7 @@
 </head>
 
 <body>
+<script type="text/javascript" src="/js/cookieHandler.js"></script>
 <#include "header.ftl">
 
 <div class="row" style="margin-top: 100px">
@@ -78,6 +80,12 @@
 
 <div id="info-modal" class="modal modal-content">
 </div>
+
+<#if cookies??>
+    <#list cookies as cookie>
+<script>setCookie("${cookie.name}");</script>
+    </#list>
+</#if>
 
 <script type="text/javascript" src="/js/orderHandler.js"></script>
 <script type="text/javascript" src="/js/materialize.min.js"></script>

@@ -3,6 +3,7 @@
 <html>
 <head>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.cookie.js"></script>
     <script type="text/javascript" src="../js/addItemsHandler.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
@@ -13,7 +14,7 @@
 </head>
 
 <body>
-
+<script type="text/javascript" src="../js/cookieHandler.js"></script>
 <div style="margin-top: 80px" class="row">
     <div class="col s6 offset-s3">
         <div class="card hoverable">
@@ -161,6 +162,13 @@
 <#if errors??>
     <#list errors as error>
 <script>showError("${error.field}","${error.message}");</script>
+    </#list>
+</#if>
+
+
+<#if cookies??>
+    <#list cookies as cookie>
+<script>setCookie("${cookie}");</script>
     </#list>
 </#if>
 

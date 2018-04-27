@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
@@ -43,7 +44,7 @@ public class OrderController {
     }
 
     @GetMapping("/finish")
-    public String finishOrder(ModelMap model) {
+    public String finishOrder(ModelMap model, RedirectAttributes redirectAttributes) {
 
         return setOrderModel(model,
                 orderService.getBasket(userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId())) ?

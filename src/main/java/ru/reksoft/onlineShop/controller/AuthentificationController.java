@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.controller.util.CookiesUtils;
 import ru.reksoft.onlineShop.controller.util.Error;
@@ -27,6 +28,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.reksoft.onlineShop.controller.util.CookiesUtils.*;
 import static ru.reksoft.onlineShop.service.UserService.ROLE_PREFIX;
@@ -58,10 +60,12 @@ public class AuthentificationController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(ModelMap modelMap,
-                              @Valid LoginUserDto loginUserDto,
-                              BindingResult bindingResult,
-                              @RequestParam String destination, HttpServletRequest request) {
+    public String login(ModelMap modelMap,
+                        @Valid LoginUserDto loginUserDto,
+                        BindingResult bindingResult,
+                        @RequestParam String destination,
+                        HttpServletRequest request,
+                        RedirectAttributes redirectAttributes) {
 
         List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
 
@@ -75,12 +79,15 @@ public class AuthentificationController {
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
             setLoginUserModel(modelMap, loginUserDto, destination);
-            return new ModelAndView("login");
+            return "login";
         } else {
             saveBasketFromCookiesToDb(
                     userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId(),
-                    request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>());
-            return new ModelAndView("redirect:" + destination);
+                    cookies);
+
+            deleteBasketCookies(cookies);
+            redirectAttributes.addFlashAttribute("cookies", deleteBasketCookies(cookies));
+            return "redirect:" + destination;
         }
 
     }
@@ -164,5 +171,10 @@ public class AuthentificationController {
             basket = orderService.createBasket(userId);
         }
         orderService.addItemsToBasket(basket.getId(), itemQuantity);
+    }
+
+    private List<Cookie> deleteBasketCookies(List<Cookie> cookies) {
+        return cookies.stream()
+                .filter(cookie -> cookie.getName().startsWith(COOKIE_BASKET_PREFIX)).collect(Collectors.toList());
     }
 }

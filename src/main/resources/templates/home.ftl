@@ -18,6 +18,7 @@
 </head>
 
 <body id="body">
+
 <#include "header.ftl">
 <#include "sorting_select.ftl">
 <div class="row">
@@ -149,7 +150,7 @@
 <script type="text/javascript" src="js/materialize.min.js"></script>
 <script id="initSelect" type="text/javascript" src="js/initSelect.js"></script>
 <script id="initSelect" type="text/javascript" src="js/initCollapsible.js"></script>
-
+<script type="text/javascript" src="js/cookieHandler.js"></script>
 
 <script type="text/javascript" src="../js/initHome.js"></script>
 <script type="text/javascript" src="../js/homeHandler.js"></script>
@@ -158,7 +159,13 @@
 <script type="text/javascript" src="../js/materialize.min.js"></script>
 <script id="initSelect" type="text/javascript" src="../js/initSelect.js"></script>
 <script id="initSelect" type="text/javascript" src="../js/initCollapsible.js"></script>
+<script type="text/javascript" src="../js/cookieHandler.js"></script>
 
+<#if cookies??>
+    <#list cookies as cookie>
+<script>setCookie("${cookie}");</script>
+    </#list>
+</#if>
 
 </body>
 </html>

@@ -3,6 +3,7 @@
 <html>
 <head>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.cookie.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../css/my_style.css"/>
     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
@@ -86,6 +87,14 @@
 <script type="text/javascript" src="../js/addToBasket.js"></script>
 <script type="text/javascript" src="../js/itemInfoHandler.js"></script>
 <script type="text/javascript" src="../js/materialize.min.js"></script>
+<script type="text/javascript" src="../js/cookieHandler.js"></script>
+
+
+<#if cookies??>
+    <#list cookies as cookie>
+<script>setCookie("${cookie}");</script>
+    </#list>
+</#if>
 
 </body>
 </html>
