@@ -8,7 +8,7 @@ function setItemQuantity(basketId, itemId, isIncrease) {
                 itemId: itemId,
                 quantity: parseInt(quantityElem.text())
             },
-            function () {
+            function (data) {
                 var newQuantity = parseInt(quantityElem.text());
                 if (isIncrease) {
                     newQuantity = newQuantity + 1;
@@ -20,6 +20,11 @@ function setItemQuantity(basketId, itemId, isIncrease) {
                     newQuantity * parseInt($("#price-" + itemId).text())
                 );
                 setOverall();
+
+
+                $.cookie(data.name, data.value, {
+                    expires: 60 * 60 * 24 * 7
+                });
             })
             .fail(function (data) {
                 $("#quantity-" + itemId).val(data.responseJSON);
@@ -104,8 +109,4 @@ function setOverall() {
         }
     }
     $("#overall").html("").append(overall);
-}
-
-function setItemsList(){
-
 }

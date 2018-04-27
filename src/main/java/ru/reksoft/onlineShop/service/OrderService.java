@@ -113,6 +113,14 @@ public class OrderService {
         }
     }
 
+
+    public boolean canChangeIemQuantity(OrderedItemDto orderedItemDto, boolean isIncrease) {
+        ItemEntity itemEntity = itemRepository.getOne(orderedItemDto.getItemId());
+
+        return ((isIncrease && (itemEntity.getStorage() >= orderedItemDto.getQuantity() + 1))
+                || (!isIncrease && (orderedItemDto.getQuantity() - 1 >= 0)));
+    }
+
     private int doOperation(boolean increase, int number) {
         return increase ? ++number : --number;
     }

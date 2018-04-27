@@ -33,7 +33,7 @@ public class BasketController {
     private static final String COOKIE_BASKET_ITEM_ID = "itemId-";
     private static final String COOKIE_BASKET_ITEM_QUANTITY = "quantity-";
     private static final String COOKIE_BASKET_ID = "basketId-";
-
+    private static final int cookieAge = 60 * 60 * 24 * 7;
     private int itemCount;
 
 
@@ -104,13 +104,23 @@ public class BasketController {
     }
 
     @PostMapping("/edit/{id}")
-    public ResponseEntity edit(@PathVariable long id, boolean isIncrease, OrderedItemDto orderedItemDto, HttpServletResponse response, HttpServletRequest request) {
-        int quantity = orderService.setItemQuantityInBasket(id, orderedItemDto, isIncrease);
-        if (quantity == -1) {
+    public ResponseEntity edit(@PathVariable long id, boolean isIncrease, OrderedItemDto orderedItemDto,
+                               HttpServletResponse response, HttpServletRequest request) {
+        UserDto user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
-           return ResponseEntity.ok().build();
+        if (user != null) {
+            int quantity = orderService.setItemQuantityInBasket(id, orderedItemDto, isIncrease);
+            if (quantity == -1) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.badRequest().body(quantity);
+            }
         } else {
-           return ResponseEntity.badRequest().body(quantity);
+            if (orderService.canChangeIemQuantity(orderedItemDto, isIncrease)) {
+                return  ResponseEntity.ok( editCookie(isIncrease, orderedItemDto, response, request));
+            } else {
+                return ResponseEntity.badRequest().body(orderedItemDto.getQuantity());
+            }
         }
     }
 
@@ -149,7 +159,7 @@ public class BasketController {
         final int basketCount = 0;
         List<Cookie> cookies = new ArrayList<>();
         Cookie cookie;
-        final int cookieAge = 60 * 60 * 24 * 7;
+
 
         List<Cookie> foundCookie = requestCookies.stream()
                 .filter(requestCookie ->
@@ -186,5 +196,27 @@ public class BasketController {
             cookies.add(cookie);
         }
         return cookies;
+    }
+
+    private Cookie editCookie(boolean isIncrease, OrderedItemDto orderedItemDto, HttpServletResponse response, HttpServletRequest request) {
+        List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
+
+        List<Cookie> foundCookies = cookies.stream()
+                .filter(cookie -> (cookie.getName()
+                        .startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_ID) && cookie.getValue().equals(Long.toString(orderedItemDto.getItemId())))).collect(Collectors.toList());
+
+       Cookie editedCookie= cookies.stream()
+                .filter(cookie -> cookie.getName()
+                        .equals(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + getCookieId(foundCookies.get(0).getName())))
+                .findFirst().orElse(null);
+
+            editedCookie.setValue(Integer.toString(doOperation(isIncrease, Integer.parseInt(editedCookie.getValue()))));
+            editedCookie.setMaxAge(cookieAge);
+            response.addCookie(editedCookie);
+        return editedCookie;
+    }
+
+    private int doOperation(boolean increase, int number) {
+        return increase ? ++number : --number;
     }
 }
