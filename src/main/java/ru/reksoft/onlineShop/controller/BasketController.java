@@ -30,9 +30,9 @@ public class BasketController {
     private UserService userService;
 
     private static final String COOKIE_BASKET_PREFIX = "basket-";
-    private static final String COOKIE_BASKET_ITEM_ID = "itemId";
-    private static final String COOKIE_BASKET_ITEM_QUANTITY = "quantity";
-    private static final String COOKIE_BASKET_ID = "basketId";
+    private static final String COOKIE_BASKET_ITEM_ID = "itemId-";
+    private static final String COOKIE_BASKET_ITEM_QUANTITY = "quantity-";
+    private static final String COOKIE_BASKET_ID = "basketId-";
 
     private int itemCount;
 
@@ -64,8 +64,11 @@ public class BasketController {
     public String getBasket(Model model, HttpServletRequest request) {
 
         List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
-        List<ItemDto> items = new ArrayList<>();
-        List<Integer> quatities = new ArrayList<>();
+        //  List<ItemDto> items = new ArrayList<>();
+        //  List<Integer> quatities = new ArrayList<>();
+
+        ItemDto[] items = new ItemDto[cookies.size() / 2 + 10];
+        Integer[] quatities = new Integer[cookies.size() / 2 + 10];
 
         UserDto user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
@@ -74,12 +77,12 @@ public class BasketController {
 
             if (basket != null) {
                 basket.getItems().forEach(item -> {
-                    quatities.add(item.getQuantity());
-                    items.add(itemService.getById(item.getItemId()));
+                    Arrays.asList(quatities).add(item.getQuantity());
+                    Arrays.asList(items).add(itemService.getById(item.getItemId()));
                 });
                 model.addAttribute("basketId", basket.getId());
             }
-        } else {
+        } else if (cookies.size()>0){
             cookies.stream()
                     .filter(cookie ->
                             cookie.getName().startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ID))
@@ -88,13 +91,13 @@ public class BasketController {
             cookies.forEach(cookie -> {
                 if (cookie.getName().startsWith(COOKIE_BASKET_PREFIX)) {
                     if (cookie.getName().contains(COOKIE_BASKET_ITEM_ID)) {
-                        items.add(itemService.getById(Long.parseLong(cookie.getValue())));
+                        items[getCookieId(cookie.getName())]=itemService.getById(Long.parseLong(cookie.getValue()));
                     } else if (cookie.getName().contains(COOKIE_BASKET_ITEM_QUANTITY)) {
-                        quatities.add(Integer.parseInt(cookie.getValue()));
+                        quatities[getCookieId(cookie.getName())]=Integer.parseInt(cookie.getValue());
                     }
                 }
             });
-        }
+        } else{ model.addAttribute("itemsSize", 0);}
 
 
         model.addAttribute("quantities", quatities);
@@ -128,6 +131,11 @@ public class BasketController {
     }
 
 
+    private int getCookieId(String cookieName) {
+        return Integer.parseInt(cookieName.substring(cookieName.lastIndexOf('-') + 1, cookieName.length()));
+
+    }
+
     private List<Cookie> createCookie(long itemId, int quantity, HttpServletRequest request) {
         List<Cookie> requestCookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
 
@@ -147,15 +155,19 @@ public class BasketController {
         Cookie cookie;
         final int cookieAge = 60 * 60 * 24 * 7;
 
-        if (requestCookies.stream()
+        List<Cookie> foundCookie = requestCookies.stream()
                 .filter(requestCookie ->
                         requestCookie.getName().startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_ID))
-                .collect(Collectors.toList()).stream()
-                .anyMatch(cookie1 -> cookie1.getValue().equals(Long.toString(itemId)))) {
+                .filter(cookie1 -> cookie1.getValue().equals(Long.toString(itemId))).collect(Collectors.toList());
+        //   .collect(Collectors.toList()).stream()
+        //    .anyMatch(cookie1 -> cookie1.getValue().equals(Long.toString(itemId)))
 
+        if (foundCookie.size() > 0) {
+            String cookieCount = foundCookie.get(0).getName().substring(foundCookie.get(0).getName().lastIndexOf('-') + 1, foundCookie.get(0).getName().length());
             requestCookies.stream()
                     .filter(requestCookie ->
-                            requestCookie.getName().startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY))
+                            requestCookie.getName().equals(
+                                    COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + cookieCount))
                     .findFirst().ifPresent(cookie1 -> {
                 cookie1.setValue(Integer.toString(Integer.parseInt(cookie1.getValue()) + 1));
                 cookies.add(cookie1);

@@ -26,6 +26,14 @@
     </div>
 
 
+<#elseif itemsSize??>
+ <div class="col s2 offset-s4 card horizontal">
+     <div class="card-stacked">
+         <div class="card-content">
+             <p>No items</p>
+         </div>
+     </div>
+ </div>
 <#else>
 <label for="id"></label>
     <input id="id" hidden="hidden" type="number" value="${basketId}">
@@ -40,6 +48,7 @@
         <div class="row">
             <div class="col s8 offset-s4">
     <#list items as item>
+    <#if item??>
         <div id="${item.id}" class="card horizontal hoverable">
 
             <div class="card-image">
@@ -94,6 +103,7 @@
                     </div>
                 </div>
         </div>
+    </#if>
     </#list>
                 <div class="card hoverable">
                     <div class="card-content">
