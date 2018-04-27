@@ -17,12 +17,15 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.controller.util.Error;
 import ru.reksoft.onlineShop.model.dto.LoginUserDto;
+import ru.reksoft.onlineShop.model.dto.OrderDto;
 import ru.reksoft.onlineShop.model.dto.SignupUserDto;
+import ru.reksoft.onlineShop.service.OrderService;
 import ru.reksoft.onlineShop.service.UserService;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static ru.reksoft.onlineShop.service.UserService.ROLE_PREFIX;
 
@@ -32,15 +35,21 @@ public class AuthentificationController {
     private static final int CUSTOMER_ROLE_ID = 2;
     private AuthenticationManager authenticationManager;
     private UserService userService;
+    private OrderService orderService;
 
     @Autowired
-    public AuthentificationController(AuthenticationManager authenticationManager, UserService userService) {
+    public AuthentificationController(AuthenticationManager authenticationManager, UserService userService, OrderService orderService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/login")
-    public String login(ModelMap model, @RequestParam(required = false) String destination) {
+    public String login(ModelMap model, @RequestParam(required = false) String destination, HttpServletRequest request) {
+
+        List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
+        model.addAttribute("cookies",cookies);
+
         setLoginUserModel(model, LoginUserDto.builder().email("").password("").build(), destination);
 
         return "login";
@@ -50,7 +59,9 @@ public class AuthentificationController {
     public ModelAndView login(ModelMap modelMap,
                               @Valid LoginUserDto loginUserDto,
                               BindingResult bindingResult,
-                              @RequestParam String destination) {
+                              @RequestParam String destination, HttpServletRequest request) {
+
+        List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
 
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
         if (errors.size() == 0) {
@@ -64,6 +75,7 @@ public class AuthentificationController {
             setLoginUserModel(modelMap, loginUserDto, destination);
             return new ModelAndView("login");
         } else {
+            saveBasketFromCookiesToDb(userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId());
             return new ModelAndView("redirect:" + destination);
         }
 
@@ -128,5 +140,16 @@ public class AuthentificationController {
             return false;
         }
         return true;
+    }
+
+    private void saveBasketFromCookiesToDb(long userId) {
+        Map<Integer, Integer> itemQuantity = new HashMap<>();
+
+
+        OrderDto basket = orderService.getBasket(userId);
+        if (basket == null) {
+            basket = orderService.createBasket(userId);
+        }
+        // orderService.setItemQuantityInBasket(basket.getId(), )
     }
 }

@@ -2,17 +2,19 @@ package ru.reksoft.onlineShop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
+import ru.reksoft.onlineShop.model.dto.UserDto;
 import ru.reksoft.onlineShop.service.ItemService;
 import ru.reksoft.onlineShop.service.OrderService;
+import ru.reksoft.onlineShop.service.UserService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -23,18 +25,20 @@ import java.util.List;
 public class OrderController {
     private OrderService orderService;
     private ItemService itemService;
-    private ObjectError objectError;
+    private UserService userService;
 
     @Autowired
-    public OrderController(OrderService orderService, ItemService itemService) {
+    public OrderController(OrderService orderService, ItemService itemService, UserService userService) {
         this.orderService = orderService;
         this.itemService = itemService;
+        this.userService = userService;
     }
 
     @GetMapping
     public String getAll(Model model) {
-        long userId = 1; //TODO: get user id
-        model.addAttribute("orders", orderService.getAllOrderedByUserId(userId));
+        UserDto user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        model.addAttribute("orders", orderService.getAllOrderedByUserId(user.getId()));
         return "orders";
     }
 

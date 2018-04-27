@@ -46,7 +46,7 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    /**
+    /**_
      * @param id item id
      * @return item dto found by its id
      */

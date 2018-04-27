@@ -21,9 +21,10 @@ function setItemQuantity(basketId, itemId, isIncrease) {
                 );
                 setOverall();
 
-
+                $.cookie(data.name, null,{ path: '/' });
                 $.cookie(data.name, data.value, {
-                    expires: 60 * 60 * 24 * 7
+                    expires: 60 * 60 * 24 * 7,
+                    path: '/'
                 });
             })
             .fail(function (data) {
@@ -59,6 +60,10 @@ function deleteItem(basketId, itemId) {
                 '          <div class="card-content">' +
                 '             <p class="center-align">Deleted</p>' +
                 '      </div></div></div>');
+
+            $.each(data, function (index, cookie) {
+                $.cookie(cookie.name, null,{ path: '/' });
+            });
         },
         error: function (data) {
             showModal('<div class="row">' +

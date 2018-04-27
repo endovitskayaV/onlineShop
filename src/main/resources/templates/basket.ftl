@@ -73,7 +73,7 @@
                                 <a href="javascript: setItemQuantity(${basketId},${item.id},true)">
                                     <i class="material-icons cl-4db6a sz-20">add</i></a>
                             <span id="quantity-${item.id}">
-                                ${quantities[i]?string["0"]}
+                                ${quantities[i]?replace(",", "")}
                             </span>ps
                                 <a href="javascript: setItemQuantity(${basketId},${item.id},false)">
                                     <i class="material-icons cl-4db6a sz-20">remove</i></a>

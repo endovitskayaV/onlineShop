@@ -44,6 +44,18 @@ public class OrderService {
         this.itemConverter = itemConverter;
     }
 
+
+    public OrderDto createBasket(long userId) {
+        OrderEntity basket = OrderEntity.builder()
+                .id(orderRepository.count() + 1)
+                .user(userRepository.getOne(userId))
+                .status(statusRepository.getOne(STATUS_ID_BASKET))
+                .itemsQuantity(new HashMap<>())
+                .build();
+        orderRepository.save(basket);
+        return orderConverter.toDto(basket);
+    }
+
     public OrderDto getById(long id) {
         return orderConverter.toDto(orderRepository.findById(id).orElse(null));
     }
@@ -113,7 +125,6 @@ public class OrderService {
         }
     }
 
-
     public boolean canChangeIemQuantity(OrderedItemDto orderedItemDto, boolean isIncrease) {
         ItemEntity itemEntity = itemRepository.getOne(orderedItemDto.getItemId());
 
@@ -175,6 +186,10 @@ public class OrderService {
             i++;
         }
         orderRepository.save(orderEntity);
+    }
+
+    public void addItemsToBasket(long basketId, Map<Integer, Integer> itemQuantity){
+
     }
 }
 

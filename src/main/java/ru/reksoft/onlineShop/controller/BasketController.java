@@ -55,7 +55,7 @@ public class BasketController {
                     ResponseEntity.noContent().build() :
                     ResponseEntity.badRequest().build();
         } else { //unknown user
-            createCookie(itemId, 1, request).forEach(response::addCookie);
+            createCookie(itemId, request).forEach(response::addCookie);
             return ResponseEntity.noContent().build();
         }
     }
@@ -72,17 +72,28 @@ public class BasketController {
             OrderDto basket = orderService.getBasket(user.getId());
 
             if (basket != null) {
-                basket.getItems().forEach(item -> {
-                    Arrays.asList(quatities).add(item.getQuantity());
-                    Arrays.asList(items).add(itemService.getById(item.getItemId()));
-                });
-                model.addAttribute("basketId", basket.getId());
+                for (int i = 0; i < basket.getItems().size(); i++) {
+                    OrderedItemDto item = basket.getItems().get(i);
+                    quatities[i] = item.getQuantity();
+                    items[i] = itemService.getById(item.getItemId());
+                }
+                if (basket.getItems().size() == 0) {
+                    model.addAttribute("itemsSize", 0);
+                }
+            } else {
+                basket = orderService.createBasket(user.getId());
+                model.addAttribute("itemsSize", 0);
             }
+
+            model.addAttribute("basketId", basket.getId());
+
         } else if (cookies.size() > 0) {
-            cookies.stream()
+            Cookie basketCookie = cookies.stream()
                     .filter(cookie ->
                             cookie.getName().startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ID))
-                    .findFirst().ifPresent(cookie -> model.addAttribute("basketId", cookie.getValue()));
+                    .findFirst().orElse(null);
+
+            model.addAttribute("basketId", basketCookie != null ? basketCookie.getValue() : 0);
 
             cookies.forEach(cookie -> {
                 if (cookie.getName().startsWith(COOKIE_BASKET_PREFIX)) {
@@ -95,6 +106,7 @@ public class BasketController {
             });
         } else {
             model.addAttribute("itemsSize", 0);
+            model.addAttribute("basketId", 0);
         }
 
 
@@ -110,25 +122,35 @@ public class BasketController {
 
         if (user != null) {
             int quantity = orderService.setItemQuantityInBasket(id, orderedItemDto, isIncrease);
-            if (quantity == -1) {
-                return ResponseEntity.ok().build();
-            } else {
-                return ResponseEntity.badRequest().body(quantity);
-            }
+            return quantity == -1 ?
+                    ResponseEntity.ok().build() :
+                    ResponseEntity.badRequest().body(quantity);
         } else {
             if (orderService.canChangeIemQuantity(orderedItemDto, isIncrease)) {
-                return  ResponseEntity.ok( editCookie(isIncrease, orderedItemDto, response, request));
+                return ResponseEntity.ok(editCookie(isIncrease, orderedItemDto, response, request));
             } else {
                 return ResponseEntity.badRequest().body(orderedItemDto.getQuantity());
             }
         }
+
     }
 
     @DeleteMapping("/delete/{basketId}/{itemId}")
-    public ResponseEntity delete(@PathVariable long basketId, @PathVariable long itemId) {
-        return orderService.deleteItem(basketId, itemId) ?
-                ResponseEntity.ok().build() :
-                ResponseEntity.badRequest().build();
+    public ResponseEntity delete(@PathVariable long basketId, @PathVariable long itemId, HttpServletRequest request) {
+        UserDto user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        if (user != null) {
+            return orderService.deleteItem(basketId, itemId) ?
+                    ResponseEntity.ok().build() :
+                    ResponseEntity.badRequest().build();
+        } else {
+            List<Cookie> cookies = deleteCookie(itemId, request);
+            return ResponseEntity.ok(cookies);
+//            //last item in basket: only basketId, itemId, itemQuantity left -> delete whole basket
+//            return cookies.size() == 3 ?
+//                    ResponseEntity.badRequest().build() :
+//                    ResponseEntity.ok(cookies);
+        }
     }
 
     @GetMapping("/check/{id}")
@@ -144,7 +166,7 @@ public class BasketController {
 
     }
 
-    private List<Cookie> createCookie(long itemId, int quantity, HttpServletRequest request) {
+    private List<Cookie> createCookie(long itemId, HttpServletRequest request) {
         List<Cookie> requestCookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
         itemCount = 0;
 
@@ -159,6 +181,7 @@ public class BasketController {
         final int basketCount = 0;
         List<Cookie> cookies = new ArrayList<>();
         Cookie cookie;
+        final String itemQuantity = "1";
 
 
         List<Cookie> foundCookie = requestCookies.stream()
@@ -181,7 +204,7 @@ public class BasketController {
             cookie.setMaxAge(cookieAge);
             cookies.add(cookie);
 
-            cookie = new Cookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + itemCount, Integer.toString(quantity));
+            cookie = new Cookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + itemCount, itemQuantity);
             cookie.setMaxAge(cookieAge);
             cookies.add(cookie);
         }
@@ -191,7 +214,7 @@ public class BasketController {
                         requestCookie.getName().
                                 startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ID))) {
 
-            cookie = new Cookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ID + basketCount, Integer.toString(quantity));
+            cookie = new Cookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ID + basketCount, itemQuantity);
             cookie.setMaxAge(cookieAge);
             cookies.add(cookie);
         }
@@ -205,15 +228,39 @@ public class BasketController {
                 .filter(cookie -> (cookie.getName()
                         .startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_ID) && cookie.getValue().equals(Long.toString(orderedItemDto.getItemId())))).collect(Collectors.toList());
 
-       Cookie editedCookie= cookies.stream()
+        Cookie editedCookie = cookies.stream()
                 .filter(cookie -> cookie.getName()
                         .equals(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + getCookieId(foundCookies.get(0).getName())))
                 .findFirst().orElse(null);
 
-            editedCookie.setValue(Integer.toString(doOperation(isIncrease, Integer.parseInt(editedCookie.getValue()))));
-            editedCookie.setMaxAge(cookieAge);
-            response.addCookie(editedCookie);
+        editedCookie.setValue(Integer.toString(doOperation(isIncrease, Integer.parseInt(editedCookie.getValue()))));
+        editedCookie.setMaxAge(cookieAge);
+        response.addCookie(editedCookie);
         return editedCookie;
+    }
+
+
+    private List<Cookie> deleteCookie(long itemId, HttpServletRequest request) {
+        List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
+
+        Cookie foundCookie = cookies.stream()
+                .filter(cookie -> (cookie.getName()
+                        .startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_ID) && cookie.getValue().equals(Long.toString(itemId))))
+                .findFirst().get();
+
+        List<Cookie> deletedCookies = new ArrayList<>();
+        deletedCookies.add(new Cookie(foundCookie.getName(), null));
+        deletedCookies.add(new Cookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + getCookieId(foundCookie.getName()), null));
+
+        //last item in basket: only basketId, itemId, itemQuantity left
+        if (cookies.stream().filter(cookie -> cookie.getName().startsWith(COOKIE_BASKET_PREFIX)).count() <= 3) {
+            //delete whole basket
+            deletedCookies.add(new Cookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ID + 0, null));
+        }
+
+
+        return deletedCookies;
+
     }
 
     private int doOperation(boolean increase, int number) {
