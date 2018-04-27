@@ -48,12 +48,12 @@
     </div>
 </div>
 
-
 <#if cookies??>
     <#list cookies as cookie>
-<script>setCookie("${cookie}");</script>
+<script>setCookie("${cookie.name}");</script>
     </#list>
 </#if>
+
 <script type="text/javascript" src="/js/materialize.min.js"></script>
 </body>
 </html>

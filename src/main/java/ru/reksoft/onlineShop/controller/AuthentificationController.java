@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.controller.util.CookiesUtils;
@@ -93,7 +92,10 @@ public class AuthentificationController {
     }
 
     @GetMapping("/signup")
-    public String signup(ModelMap model, @RequestParam(required = false) String destination) {
+    public String signup(ModelMap model, @RequestParam(required = false) String destination, HttpServletRequest request) {
+        List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
+        model.addAttribute("cookies", cookies);
+
         setSignupUserModel(model,
                 SignupUserDto.builder().email("").password("").confirmPassword("").roleId(CUSTOMER_ROLE_ID).build(),
                 destination);
@@ -101,10 +103,12 @@ public class AuthentificationController {
     }
 
     @PostMapping("/signup")
-    public ModelAndView signup(ModelMap modelMap,
-                               @Valid SignupUserDto signupUserDto,
-                               BindingResult bindingResult,
-                               @RequestParam(required = false) String destination) {
+    public String signup(ModelMap modelMap,
+                         @Valid SignupUserDto signupUserDto,
+                         BindingResult bindingResult,
+                         @RequestParam(required = false) String destination, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+
+        List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
 
         List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
 
@@ -117,10 +121,16 @@ public class AuthentificationController {
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
             setSignupUserModel(modelMap, signupUserDto, destination);
-            return new ModelAndView("signup");
+            return "signup";
         } else {
             login(signupUserDto.getEmail(), signupUserDto.getPassword());
-            return new ModelAndView("redirect:" + (destination == null ? DEFAULT_DESTINATION : destination));
+            saveBasketFromCookiesToDb(
+                    userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId(),
+                    cookies);
+
+            deleteBasketCookies(cookies);
+            redirectAttributes.addFlashAttribute("cookies", deleteBasketCookies(cookies));
+            return "redirect:" + (destination == null ? DEFAULT_DESTINATION : destination);
         }
     }
 

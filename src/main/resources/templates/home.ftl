@@ -163,7 +163,7 @@
 
 <#if cookies??>
     <#list cookies as cookie>
-<script>setCookie("${cookie}");</script>
+<script>setCookie("${cookie.name}");</script>
     </#list>
 </#if>
 
