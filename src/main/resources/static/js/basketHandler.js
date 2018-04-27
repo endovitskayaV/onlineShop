@@ -21,11 +21,15 @@ function setItemQuantity(basketId, itemId, isIncrease) {
                 );
                 setOverall();
 
-                $.cookie(data.name, null,{ path: '/' });
-                $.cookie(data.name, data.value, {
-                    expires: 60 * 60 * 24 * 7,
-                    path: '/'
-                });
+                if (data!=="") {
+                    $.cookie(data.name, null, {path: '/'});
+                     $.cookie(data.name, data.value)
+                    // , {
+                    //     expires: data.maxAge,
+                    //     path: data.path
+                    //
+                    // });
+                }
             })
             .fail(function (data) {
                 $("#quantity-" + itemId).val(data.responseJSON);
@@ -61,9 +65,11 @@ function deleteItem(basketId, itemId) {
                 '             <p class="center-align">Deleted</p>' +
                 '      </div></div></div>');
 
-            $.each(data, function (index, cookie) {
-                $.cookie(cookie.name, null,{ path: '/' });
-            });
+            if (data!=="") {
+                $.each(data, function (index, cookie) {
+                    $.cookie(cookie.name, null, {path: '/'});
+                });
+            }
         },
         error: function (data) {
             showModal('<div class="row">' +
@@ -78,7 +84,7 @@ function deleteItem(basketId, itemId) {
 
 function checkItemQuantity(basketId) {
      $.get("/basket/check/" + basketId,function () {
-             location.href = document.location.origin +'/orders/finish/'+basketId;
+             location.href = document.location.origin +'/orders/finish/';
          })
             .fail(function (data) {
                 $('[value ^= "#error-quantity-"]').html("");

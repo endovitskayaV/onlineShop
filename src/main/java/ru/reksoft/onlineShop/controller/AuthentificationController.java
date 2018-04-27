@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
+import ru.reksoft.onlineShop.controller.util.CookiesUtils;
 import ru.reksoft.onlineShop.controller.util.Error;
 import ru.reksoft.onlineShop.model.dto.LoginUserDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
+import static ru.reksoft.onlineShop.controller.util.CookiesUtils.*;
 import static ru.reksoft.onlineShop.service.UserService.ROLE_PREFIX;
 
 @Controller
@@ -48,7 +50,7 @@ public class AuthentificationController {
     public String login(ModelMap model, @RequestParam(required = false) String destination, HttpServletRequest request) {
 
         List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
-        model.addAttribute("cookies",cookies);
+        model.addAttribute("cookies", cookies);
 
         setLoginUserModel(model, LoginUserDto.builder().email("").password("").build(), destination);
 
@@ -75,7 +77,9 @@ public class AuthentificationController {
             setLoginUserModel(modelMap, loginUserDto, destination);
             return new ModelAndView("login");
         } else {
-            saveBasketFromCookiesToDb(userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId());
+            saveBasketFromCookiesToDb(
+                    userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId(),
+                    request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>());
             return new ModelAndView("redirect:" + destination);
         }
 
@@ -142,14 +146,23 @@ public class AuthentificationController {
         return true;
     }
 
-    private void saveBasketFromCookiesToDb(long userId) {
-        Map<Integer, Integer> itemQuantity = new HashMap<>();
-
+    private void saveBasketFromCookiesToDb(long userId, List<Cookie> cookies) {
+        Map<Long, Integer> itemQuantity = new HashMap<>();
+        cookies.stream()
+                .filter(cookie -> cookie.getName().startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_ID))
+                .forEach(cookie -> {
+                    itemQuantity.put(Long.parseLong(cookie.getValue()),
+                            /*quantity=*/ Integer.parseInt(cookies.stream()
+                                    .filter(cookie1 ->
+                                            cookie1.getName().equals(
+                                                    COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + CookiesUtils.getCookieId(cookie.getName())))
+                                    .findFirst().get().getValue()));
+                });
 
         OrderDto basket = orderService.getBasket(userId);
         if (basket == null) {
             basket = orderService.createBasket(userId);
         }
-        // orderService.setItemQuantityInBasket(basket.getId(), )
+        orderService.addItemsToBasket(basket.getId(), itemQuantity);
     }
 }

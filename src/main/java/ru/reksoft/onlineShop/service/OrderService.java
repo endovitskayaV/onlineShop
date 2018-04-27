@@ -188,8 +188,19 @@ public class OrderService {
         orderRepository.save(orderEntity);
     }
 
-    public void addItemsToBasket(long basketId, Map<Integer, Integer> itemQuantity){
-
+    public void addItemsToBasket(long basketId, Map<Long, Integer> itemQuantity) {
+        OrderEntity basket = orderRepository.getOne(basketId);
+        Map<ItemEntity, Integer> itemEntityQuantity = basket.getItemsQuantity();
+        itemQuantity.forEach((itemId, quantuty) -> {
+            ItemEntity itemEntity = itemRepository.getOne(itemId);
+            if (itemEntityQuantity.containsKey(itemEntity)) {
+                itemEntityQuantity.put(itemEntity, itemEntityQuantity.get(itemEntity) + quantuty);
+            } else {
+                itemEntityQuantity.put(itemEntity, quantuty);
+            }
+        });
+        basket.setItemsQuantity(itemEntityQuantity);
+        orderRepository.save(basket);
     }
 }
 

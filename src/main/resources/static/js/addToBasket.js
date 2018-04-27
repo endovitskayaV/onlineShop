@@ -2,7 +2,19 @@ function addItemToBasket(id) {
     $.post(document.location.origin + "/basket/add?itemId=" + id, function () {
 
     })
-        .done(function () {
+        .done(function (data) {
+            if (data!=="") {
+                $.each(data, function (index, cookie) {
+                     $.cookie(cookie.name, cookie.value, {
+                        expires: cookie.maxAge,
+                        path: cookie.path
+
+                    });
+                });
+
+
+            }
+
             showModal('<div class="row">' +
                 '          <div class="card-content">' +
                 '             <p class="center-align">Added to basket</p>' +

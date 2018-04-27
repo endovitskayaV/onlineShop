@@ -42,9 +42,12 @@ public class OrderController {
         return "orders";
     }
 
-    @GetMapping("/finish/{id}")
-    public String finishOrder(ModelMap model, @PathVariable long id) {
-        return setOrderModel(model, id) ? "finish_order" : "error";
+    @GetMapping("/finish")
+    public String finishOrder(ModelMap model) {
+
+        return setOrderModel(model,
+                orderService.getBasket(userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId())) ?
+                "finish_order" : "error";
     }
 
     @PostMapping(value = "/finish")
@@ -60,11 +63,10 @@ public class OrderController {
 
     @GetMapping("{id}")
     public String getById(ModelMap model, @PathVariable long id) {
-        return setOrderModel(model, id) ? "order_info" : "error";
+        return setOrderModel(model, orderService.getById(id)) ? "order_info" : "error";
     }
 
-    private boolean setOrderModel(ModelMap model, long id) {
-        OrderDto orderDto = orderService.getById(id);
+    private boolean setOrderModel(ModelMap model, OrderDto orderDto) {
 
         if (orderDto == null) {
             model.addAttribute("message", "No such order");

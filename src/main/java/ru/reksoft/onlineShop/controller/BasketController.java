@@ -22,18 +22,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.reksoft.onlineShop.controller.util.CookiesUtils.*;
+
+
 @Controller
 @RequestMapping("/basket")
 public class BasketController {
     private OrderService orderService;
     private ItemService itemService;
     private UserService userService;
-
-    private static final String COOKIE_BASKET_PREFIX = "basket-";
-    private static final String COOKIE_BASKET_ITEM_ID = "itemId-";
-    private static final String COOKIE_BASKET_ITEM_QUANTITY = "quantity-";
-    private static final String COOKIE_BASKET_ID = "basketId-";
-    private static final int cookieAge = 60 * 60 * 24 * 7;
     private int itemCount;
 
 
@@ -52,11 +49,12 @@ public class BasketController {
 
         if (user != null) {//authentificated user
             return (orderService.addToBasket(user.getId(), itemId)) ?
-                    ResponseEntity.noContent().build() :
+                    ResponseEntity.ok("") :
                     ResponseEntity.badRequest().build();
         } else { //unknown user
-            createCookie(itemId, request).forEach(response::addCookie);
-            return ResponseEntity.noContent().build();
+            List<Cookie> cookies = createCookie(itemId, request);
+           createCookie(itemId, request).forEach(response::addCookie);
+            return ResponseEntity.ok(cookies);
         }
     }
 
@@ -123,7 +121,7 @@ public class BasketController {
         if (user != null) {
             int quantity = orderService.setItemQuantityInBasket(id, orderedItemDto, isIncrease);
             return quantity == -1 ?
-                    ResponseEntity.ok().build() :
+                    ResponseEntity.ok("") :
                     ResponseEntity.badRequest().body(quantity);
         } else {
             if (orderService.canChangeIemQuantity(orderedItemDto, isIncrease)) {
@@ -161,10 +159,6 @@ public class BasketController {
                 ResponseEntity.badRequest().body(buggedItems);
     }
 
-    private int getCookieId(String cookieName) {
-        return Integer.parseInt(cookieName.substring(cookieName.lastIndexOf('-') + 1, cookieName.length()));
-
-    }
 
     private List<Cookie> createCookie(long itemId, HttpServletRequest request) {
         List<Cookie> requestCookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
@@ -200,13 +194,8 @@ public class BasketController {
                 cookies.add(cookie1);
             });
         } else {
-            cookie = new Cookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_ID + itemCount, Long.toString(itemId));
-            cookie.setMaxAge(cookieAge);
-            cookies.add(cookie);
-
-            cookie = new Cookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + itemCount, itemQuantity);
-            cookie.setMaxAge(cookieAge);
-            cookies.add(cookie);
+            cookies.add(newCookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_ID + itemCount, Long.toString(itemId)));
+            cookies.add(newCookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + itemCount, itemQuantity));
         }
 
         if (requestCookies.stream()
@@ -214,10 +203,9 @@ public class BasketController {
                         requestCookie.getName().
                                 startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ID))) {
 
-            cookie = new Cookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ID + basketCount, itemQuantity);
-            cookie.setMaxAge(cookieAge);
-            cookies.add(cookie);
+            cookies.add(newCookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ID + basketCount, itemQuantity));
         }
+
         return cookies;
     }
 
@@ -234,7 +222,6 @@ public class BasketController {
                 .findFirst().orElse(null);
 
         editedCookie.setValue(Integer.toString(doOperation(isIncrease, Integer.parseInt(editedCookie.getValue()))));
-        editedCookie.setMaxAge(cookieAge);
         response.addCookie(editedCookie);
         return editedCookie;
     }
@@ -265,5 +252,12 @@ public class BasketController {
 
     private int doOperation(boolean increase, int number) {
         return increase ? ++number : --number;
+    }
+
+    private Cookie newCookie(String name, String value) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setMaxAge(cookieAge);
+        cookie.setPath("/");
+        return cookie;
     }
 }
