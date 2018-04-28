@@ -65,7 +65,8 @@ public class UserService implements UserDetailsService {
     }
 
     public RoleEntity getRoleByEmail(String email) {
-        return userRepository.findByEmail(email).getRole();
+        UserEntity userEntity=userRepository.findByEmail(email);
+        return userEntity!=null? userEntity.getRole():null;
     }
 
     private UserDto toDto(UserEntity userEntity) {

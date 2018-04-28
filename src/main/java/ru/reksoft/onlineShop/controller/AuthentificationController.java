@@ -151,13 +151,12 @@ public class AuthentificationController {
     }
 
     private boolean login(String email, String password) {
-        UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(email, password,
-                Collections.singletonList(new SimpleGrantedAuthority(ROLE_PREFIX + userService.getRoleByEmail(email).getName().toUpperCase())));
-
         try {
+            UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(email, password,
+                    Collections.singletonList(new SimpleGrantedAuthority(ROLE_PREFIX + userService.getRoleByEmail(email).getName().toUpperCase())));
             Authentication authentication = authenticationManager.authenticate(user);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (BadCredentialsException e) {
+        } catch (BadCredentialsException  | NullPointerException e) {
             return false;
         }
         return true;
@@ -189,7 +188,7 @@ public class AuthentificationController {
     }
 
     @GetMapping("/logout")
-    public void logout(){
+    public void logout() {
         SecurityContextHolder.getContext().setAuthentication(null);
     }
 }
