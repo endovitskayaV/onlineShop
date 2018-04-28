@@ -57,20 +57,21 @@
                 <div class="card hoverable">
                     <div class="card-content">
                         <div class="row">
-                        <div> Overall sum: <b>${overall} rub</b></div>
+                            <div> Overall sum: <b>${overall} rub</b></div>
 
                             <div class="col s6">
+
                             <input id="deliveryAddress" name="deliveryAddress" type="text"
-                                   value="${order.deliveryAddress}">
-                            <label for="deliveryAddress">Delivery address</label>
-                       </div>
+                                   value=${order.deliveryAddress?html}>
+                                <label for="deliveryAddress">Delivery address</label>
+                            </div>
                             <div name="deliveryAddress-errors">
                             </div>
 
-                        <div class="col s1 offset-s10">
-                            <a href="javascript: confirmOrder()" class="waves-effect waves-light btn">Order</a>
+                            <div class="col s1 offset-s10">
+                                <a href="javascript: confirmOrder()" class="waves-effect waves-light btn">Order</a>
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
             </div>

@@ -17,7 +17,7 @@ function confirmOrder() {
             userId: 0,
             statusId: 1,
             date: 1488931200000,
-            deliveryAddress: $("#deliveryAddress").val(),
+            deliveryAddress: String($("#deliveryAddress").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'),
             items: query
         }),
 
