@@ -1,10 +1,3 @@
-$(document).ready(function(){
-    if (query!==""){
-        $('#search').val(query);
-    }
-});
-
-
 function deleteItem(id) {
     if (confirm("Are you sure?")) {
         $.ajax({
@@ -85,41 +78,59 @@ function getByCategory(categoryName) {
 }
 
 function findByCharacteristics() {
-    location.href =
-        document.location.origin + '/items/filter?category=' +$('#chosenCategory').val() + '&' + getSortingParams() +  getChosenCharacteristicParams();
+    if (anyCharacteristicWasChosen) {
+        location.href =
+            document.location.origin + '/items?category=' + $('#chosenCategory').val() + '&' + getSortingParams();
+
+    } else {
+        location.href =
+            document.location.origin + '/items/filter?category=' + $('#chosenCategory').val() + '&' + getSortingParams() + getChosenCharacteristicParams();
+    }
 }
 
 function anyCharacteristicWasChosen() {
-    $("li[id*='characteristics_values']").each(function () {
-        var characterisricName = $("#characteristic_name").text();
-        var children = $("div[id*='values']");
-        $.each(children, function (key, child) {
-            $.each(child.children, function (key, ch) {
-                if ((((ch.children)[0].children)[0]).checked) return true;
-            })
+    $("li[id*='characteristics_values']").each(function (index, li) {
+        var values = '';
+        var characteristicName = ((li.children)[1]).value;
+        var valuesDiv = li.children[2];
+        $.each(valuesDiv.children, function (key, ch) {
+            var characteristic = ((ch.children)[0].children)[0]; //checkBox
+            if ((((ch.children)[0].children)[0]).checked) {
+                return true;
+            }
         });
+
     });
+//     $("li[id*='characteristics_values']").each(function () {
+//         var characterisricName = $("#characteristic_name").text();
+//         var children = $("div[id*='values']");
+//         $.each(children, function (key, child) {
+//             $.each(child.children, function (key, ch) {
+//                 if ((((ch.children)[0].children)[0]).checked) return true;
+//             })
+//         });
+//     });
     return false;
 }
 
 function getChosenCharacteristicParams() {
     var params = '';
-  //  if (anyCharacteristicWasChosen()) {
+
         $("li[id*='characteristics_values']").each(function (index, li) {
-            var values='';
+            var values = '';
             var characteristicName = ((li.children)[1]).value;
             var valuesDiv = li.children[2];
             $.each(valuesDiv.children, function (key, ch) {
                 var characteristic = ((ch.children)[0].children)[0]; //checkBox
                 if ((((ch.children)[0].children)[0]).checked) {
-                   values += ',' +characteristic.value;
+                    values += ',' + characteristic.value;
                 }
             });
 
-            if (values.length>1){
-                params+='&'+characteristicName+'='+values.substring(1, values.length);
+            if (values.length > 1) {
+                params += '&' + characteristicName + '=' + values.substring(1, values.length);
             }
         });
-   // }
+
     return params;
 }

@@ -85,7 +85,7 @@
         </div>
     </div>
 
-<#if (items?size >0)>
+<#if (items?size >1)>
     <div id="characteristrics_filter" class="col s3 offset-s1">
         <#if characteristics??>
             <div>
