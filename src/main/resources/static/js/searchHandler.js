@@ -1,6 +1,9 @@
+var query="";
+
 function findItems() {
     var search = $('#search').val();
     if (search !== "") {
+        query=search;
         $('#characteristrics_filter').html("");
         var url = document.location.origin + '/items/search?query=' + search + '&' + getSortingParams();
         setCategories(url);

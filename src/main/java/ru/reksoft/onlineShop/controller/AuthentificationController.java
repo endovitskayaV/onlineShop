@@ -187,4 +187,9 @@ public class AuthentificationController {
         return cookies.stream()
                 .filter(cookie -> cookie.getName().startsWith(COOKIE_BASKET_PREFIX)).collect(Collectors.toList());
     }
+
+    @GetMapping("/logout")
+    public void logout(){
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
 }

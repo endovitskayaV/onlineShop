@@ -144,8 +144,8 @@
 <div id="info-modal" class="modal modal-content"></div>
 
 <script type="text/javascript" src="js/initHome.js"></script>
-<script type="text/javascript" src="js/homeHandler.js"></script>
 <script type="text/javascript" src="js/searchHandler.js"></script>
+<script type="text/javascript" src="js/homeHandler.js"></script>
 <script type="text/javascript" src="js/addToBasket.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>
 <script id="initSelect" type="text/javascript" src="js/initSelect.js"></script>
@@ -153,8 +153,8 @@
 <script type="text/javascript" src="js/cookieHandler.js"></script>
 
 <script type="text/javascript" src="../js/initHome.js"></script>
-<script type="text/javascript" src="../js/homeHandler.js"></script>
 <script type="text/javascript" src="../js/searchHandler.js"></script>
+<script type="text/javascript" src="../js/homeHandler.js"></script>
 <script type="text/javascript" src="../js/addToBasket.js"></script>
 <script type="text/javascript" src="../js/materialize.min.js"></script>
 <script id="initSelect" type="text/javascript" src="../js/initSelect.js"></script>

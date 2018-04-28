@@ -1,3 +1,10 @@
+$(document).ready(function(){
+    if (query!==""){
+        $('#search').val(query);
+    }
+});
+
+
 function deleteItem(id) {
     if (confirm("Are you sure?")) {
         $.ajax({
@@ -59,7 +66,7 @@ function getSortingParams() {
 }
 
 function sortItems() {
-    if ($('#search').val() !== "") {
+    if (query !== "") {
         if (document.getElementById('specifiedCategory') === null || $('#specifiedCategory').val() === "") {
             setCategories(document.location.origin + '/items/search?query=' + $('#search').val() + '&' + getSortingParams());
         } else {
