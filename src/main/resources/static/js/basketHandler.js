@@ -1,6 +1,6 @@
 function setItemQuantity(basketId, itemId, isIncrease) {
     var quantityElem = $("#quantity-" + itemId);
-    if (parseInt(quantityElem.text())===1 && !isIncrease) {
+    if (parseInt(quantityElem.text()) === 1 && !isIncrease) {
         //do nothing
     } else {
         $.post(document.location.origin + "/basket/edit/" + basketId + "?isIncrease=" + isIncrease,
@@ -21,9 +21,9 @@ function setItemQuantity(basketId, itemId, isIncrease) {
                 );
                 setOverall();
 
-                if (data!=="") {
+                if (data !== "") {
                     $.cookie(data.name, null, {path: '/'});
-                     $.cookie(data.name, data.value)
+                    $.cookie(data.name, data.value)
                     // , {
                     //     expires: data.maxAge,
                     //     path: data.path
@@ -43,62 +43,62 @@ function setItemQuantity(basketId, itemId, isIncrease) {
 
 
 function deleteItem(basketId, itemId) {
-    $.ajax({
-        url: document.location.origin + '/basket/delete/' + basketId + '/' + itemId,
-        type: "DELETE",
-        contentType: "application/x-www-form-urlencoded",
-        success: function (data) {
-            $('#' + itemId).html("");
-            setOverall();
-            if ($('#anyCardLeft').text() === "") {
-                $('#overall').html("");
-                $('#top').html("").append('<div class="col s2 offset-s4 card horizontal">\n' +
-                    '      <div class="card-stacked">\n' +
-                    '          <div class="card-content">\n' +
-                    '              <p>No items</p>\n' +
-                    '          </div>\n' +
-                    '      </div>\n' +
-                    '  </div>');
-            }
-            showModal('<div class="row">' +
-                '          <div class="card-content">' +
-                '             <p class="center-align">Deleted</p>' +
-                '      </div></div></div>');
+    if (confirm("Are you sure?")) {
+        $.ajax({
+            url: document.location.origin + '/basket/delete/' + basketId + '/' + itemId,
+            type: "DELETE",
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data) {
+                $('#' + itemId).html("");
+                setOverall();
+                if ($('#anyCardLeft').text() === "") {
+                    $('#overall').html("");
+                    $('#top').html("").append('<div class="col s2 offset-s4 card horizontal">\n' +
+                        '      <div class="card-stacked">\n' +
+                        '          <div class="card-content">\n' +
+                        '              <p>No items</p>\n' +
+                        '          </div>\n' +
+                        '      </div>\n' +
+                        '  </div>');
+                }
+                showModal('<div class="row">' +
+                    '          <div class="card-content">' +
+                    '             <p class="center-align">Deleted</p>' +
+                    '      </div></div></div>');
 
-            if (data!=="") {
-                $.each(data, function (index, cookie) {
-                    $.cookie(cookie.name, null, {path: '/'});
-                });
+                if (data !== "") {
+                    $.each(data, function (index, cookie) {
+                        $.cookie(cookie.name, null, {path: '/'});
+                    });
+                }
+            },
+            error: function (data) {
+                showModal('<div class="row">' +
+                    '          <div class="card-content">' +
+                    '             <p class="center-align">' + data.responseText +
+                    '</p></div></div>');
             }
-        },
-        error: function (data) {
-            showModal('<div class="row">' +
-                '          <div class="card-content">' +
-                '             <p class="center-align">' + data.responseText +
-                '</p></div></div>');
-        }
-    });
+        });
+    }
 }
-
 
 
 function checkItemQuantity(basketId) {
-     $.get("/basket/check/" + basketId,function () {
-             location.href = document.location.origin +'/orders/finish/';
-         })
-            .fail(function (data) {
-                $('[value ^= "#error-quantity-"]').html("");
-                $.each(data.responseJSON,function (index,itemDto) {
-                    $("#error-quantity-" + itemDto.id).html("").append('<span class="cl-c62828">In stock '+itemDto.storage+' ps</span>');
-                });
-                showModal('<div class="row">' +
-                    '          <div class="card-content">' +
-                    '             <p class="center-align">No more items in stock</p>' +
-                    '      </div></div></div>');
+    $.get("/basket/check/" + basketId, function () {
+        location.href = document.location.origin + '/orders/finish/';
+    })
+        .fail(function (data) {
+            $('[value ^= "#error-quantity-"]').html("");
+            $.each(data.responseJSON, function (index, itemDto) {
+                $("#error-quantity-" + itemDto.id).html("").append('<span class="cl-c62828">In stock ' + itemDto.storage + ' ps</span>');
             });
+            showModal('<div class="row">' +
+                '          <div class="card-content">' +
+                '             <p class="center-align">No more items in stock</p>' +
+                '      </div></div></div>');
+        });
 
 }
-
 
 
 function showModal(message) {
