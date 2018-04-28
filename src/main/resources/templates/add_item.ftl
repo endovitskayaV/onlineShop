@@ -23,7 +23,7 @@
                 <form enctype="multipart/form-data" class="container" method="post" action="/items/add">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="name" name="name" type="text" value="${item.name}">
+                            <input id="name" name="name" type="text" value="${item.name?html}">
                             <label for="name" >Name</label>
                             <div name="name-errors"></div>
                         </div>
