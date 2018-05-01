@@ -21,6 +21,7 @@
 
 <#include "header.ftl">
 <#include "sorting_select.ftl">
+
 <div class="row">
     <div id="categories">
         <div class="col s2">

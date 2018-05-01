@@ -1,13 +1,29 @@
 package ru.reksoft.onlineShop.controller.util;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import ru.reksoft.onlineShop.model.dto.UserDto;
+import ru.reksoft.onlineShop.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ClientDataConstructor {
-    public static List<Error> getFormErrors(BindingResult bindingResult) {
+    private UserService userService;
+
+    @Autowired
+    public ClientDataConstructor(UserService userService) {
+        this.userService = userService;
+    }
+
+    public List<Error> getFormErrors(BindingResult bindingResult) {
         List<Error> errors = new ArrayList<>();
 
         bindingResult.getFieldErrors().forEach(fieldError -> {
@@ -24,5 +40,11 @@ public class ClientDataConstructor {
         });
 
         return errors;
+    }
+
+    public void setCurrentUser(Model model) {
+        model.addAttribute("currentUser",
+                userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()));
+
     }
 }

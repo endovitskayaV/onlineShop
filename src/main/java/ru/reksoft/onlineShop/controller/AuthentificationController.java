@@ -39,12 +39,16 @@ public class AuthentificationController {
     private AuthenticationManager authenticationManager;
     private UserService userService;
     private OrderService orderService;
+    private ClientDataConstructor clientDataConstructor;
 
     @Autowired
-    public AuthentificationController(AuthenticationManager authenticationManager, UserService userService, OrderService orderService) {
+    public AuthentificationController(AuthenticationManager authenticationManager,
+                                      UserService userService,
+                                      OrderService orderService, ClientDataConstructor clientDataConstructor) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.orderService = orderService;
+        this.clientDataConstructor=clientDataConstructor;
     }
 
     @GetMapping("/login")
@@ -68,7 +72,7 @@ public class AuthentificationController {
 
         List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
 
-        List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+        List<Error> errors = clientDataConstructor.getFormErrors(bindingResult);
         if (errors.size() == 0) {
             if (!login(loginUserDto.getEmail(), loginUserDto.getPassword())) {
                 errors.add(new Error("form", "Wrong email or password"));
@@ -110,7 +114,7 @@ public class AuthentificationController {
 
         List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
 
-        List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+        List<Error> errors = clientDataConstructor.getFormErrors(bindingResult);
 
         if (errors.size() == 0) {
             if (!userService.add(signupUserDto)) {

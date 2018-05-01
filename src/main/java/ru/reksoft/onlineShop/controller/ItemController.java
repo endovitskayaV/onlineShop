@@ -35,15 +35,18 @@ public class ItemController {
     private CategoryService categoryService;
     private CharacteristicService characteristicService;
     private StorageService storageService;
+    private  ClientDataConstructor clientDataConstructor;
 
     @Autowired
     public ItemController(ItemService itemService,
                           CategoryService categoryService,
-                          CharacteristicService characteristicService, StorageService storageService) {
+                          CharacteristicService characteristicService,
+                          StorageService storageService, ClientDataConstructor clientDataConstructor) {
         this.itemService = itemService;
         this.categoryService = categoryService;
         this.characteristicService = characteristicService;
         this.storageService = storageService;
+        this.clientDataConstructor=clientDataConstructor;
     }
 
     @GetMapping
@@ -152,7 +155,7 @@ public class ItemController {
                             BindingResult bindingResult,
                             @RequestParam("file") MultipartFile file) {
 
-        List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+        List<Error> errors = clientDataConstructor.getFormErrors(bindingResult);
 
         editableItemDto.setPhotoName(file.isEmpty() ? NO_PHOTO_NAME : file.getOriginalFilename());
         checkIntegerFields(editableItemDto, errors);
@@ -217,7 +220,7 @@ public class ItemController {
                              BindingResult bindingResult,
                              @RequestParam("file") MultipartFile file) {
 
-        List<Error> errors = ClientDataConstructor.getFormErrors(bindingResult);
+        List<Error> errors = clientDataConstructor.getFormErrors(bindingResult);
 
         checkIntegerFields(editableItemDto, errors);
 
@@ -326,6 +329,8 @@ public class ItemController {
 
     private void setModel(Model model, List<ItemDto> itemDto, SortCriteria sortBy, Boolean acs,
                           List<CategoryDto> categories, String selectedCategory, List<CharacteristicValueDto> characteristics) {
+
+        clientDataConstructor.setCurrentUser(model);
         model.addAttribute("items", itemDto);
         model.addAttribute("categories", categories);
         if (sortBy != null) {

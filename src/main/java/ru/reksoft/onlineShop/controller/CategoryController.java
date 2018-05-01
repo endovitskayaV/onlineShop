@@ -20,12 +20,15 @@ import javax.validation.Valid;
 public class CategoryController {
     private CategoryService categoryService;
     private CharacteristicService characteristicService;
+    private ClientDataConstructor clientDataConstructor;
 
     @Autowired
     public CategoryController(CategoryService categoryService,
-                              CharacteristicService characteristicService) {
+                              CharacteristicService characteristicService,
+                              ClientDataConstructor clientDataConstructor) {
         this.categoryService = categoryService;
         this.characteristicService = characteristicService;
+        this.clientDataConstructor=clientDataConstructor;
     }
 
     /**
@@ -76,7 +79,7 @@ public class CategoryController {
             }
 
         } else {
-            return ResponseEntity.badRequest().body(ClientDataConstructor.getFormErrors(bindingResult));
+            return ResponseEntity.badRequest().body(clientDataConstructor.getFormErrors(bindingResult));
         }
     }
 }

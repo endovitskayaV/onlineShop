@@ -27,12 +27,14 @@ public class OrderController {
     private OrderService orderService;
     private ItemService itemService;
     private UserService userService;
+    private ClientDataConstructor clientDataConstructor;
 
     @Autowired
-    public OrderController(OrderService orderService, ItemService itemService, UserService userService) {
+    public OrderController(OrderService orderService, ItemService itemService, UserService userService, ClientDataConstructor clientDataConstructor) {
         this.orderService = orderService;
         this.itemService = itemService;
         this.userService = userService;
+        this.clientDataConstructor=clientDataConstructor;
     }
 
     @GetMapping
@@ -54,7 +56,7 @@ public class OrderController {
     @PostMapping(value = "/finish")
     public ResponseEntity finishOrder(@Valid @RequestBody OrderDto orderDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(ClientDataConstructor.getFormErrors(bindingResult));
+            return ResponseEntity.badRequest().body(clientDataConstructor.getFormErrors(bindingResult));
         } else {
             orderService.finishOrder(orderDto);
             return ResponseEntity.noContent().build();
