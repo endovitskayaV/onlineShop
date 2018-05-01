@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -18,10 +19,7 @@ import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.controller.util.Error;
 import ru.reksoft.onlineShop.controller.util.SortCriteria;
 import ru.reksoft.onlineShop.model.dto.*;
-import ru.reksoft.onlineShop.service.CategoryService;
-import ru.reksoft.onlineShop.service.CharacteristicService;
-import ru.reksoft.onlineShop.service.ItemService;
-import ru.reksoft.onlineShop.service.StorageService;
+import ru.reksoft.onlineShop.service.*;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -36,17 +34,20 @@ public class ItemController {
     private CharacteristicService characteristicService;
     private StorageService storageService;
     private ClientDataConstructor clientDataConstructor;
+    private UserService userService;
 
     @Autowired
     public ItemController(ItemService itemService,
                           CategoryService categoryService,
                           CharacteristicService characteristicService,
-                          StorageService storageService, ClientDataConstructor clientDataConstructor) {
+                          StorageService storageService, ClientDataConstructor clientDataConstructor,
+                          UserService userService) {
         this.itemService = itemService;
         this.categoryService = categoryService;
         this.characteristicService = characteristicService;
         this.storageService = storageService;
         this.clientDataConstructor = clientDataConstructor;
+        this.userService=userService;
     }
 
     @GetMapping
@@ -88,10 +89,6 @@ public class ItemController {
                 category,
                 setChosenCharacteristics(category, getStringListMap(characteristics)));
 
-//        if (characteristics.size() != 0) {
-//            model.addAttribute("chosenCharacteristics", toCharacteristicValueDtoList(getStringListMap(characteristics)));
-//        }
-
         return "home";
     }
 
@@ -113,10 +110,13 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity getAll(String query,
+    public ResponseEntity getAll(Model model, String query,
                                  @RequestParam(required = false) Long categoryId,
                                  @RequestParam(required = false) SortCriteria sortBy,
                                  @RequestParam(required = false) Boolean acs) {
+
+        clientDataConstructor.setCurrentUser(model);
+
         return categoryId == null ?
                 ResponseEntity.ok(new ItemsCategories(itemService.getByNameOrProducer(query, getSafeBoolean(acs), sortBy), categoryService.getByQuery(query))) :
                 ResponseEntity.ok(itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy));
@@ -302,6 +302,7 @@ public class ItemController {
     }
 
     private ItemDto toItemDto(EditableItemDto editableItemDto) {
+        UserDto u=userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         return ItemDto.builder()
                 .id(editableItemDto.getId())
                 .name(editableItemDto.getName())
@@ -312,6 +313,7 @@ public class ItemController {
                 .categoryId(editableItemDto.getCategoryId())
                 .characteristics(editableItemDto.getCharacteristics())
                 .photoName(editableItemDto.getPhotoName())
+                .sellerId(userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId())
                 .build();
     }
 
@@ -338,6 +340,8 @@ public class ItemController {
 
     private void setModel(Model model, ItemDto itemDto,
                           List<CategoryDto> categories, List<CharacteristicDto> characteristics) {
+        clientDataConstructor.setCurrentUser(model);
+
         model.addAttribute("item", itemDto);
         model.addAttribute("categories", categories);
         model.addAttribute("characteristics", characteristics);
@@ -347,6 +351,7 @@ public class ItemController {
                           List<CategoryDto> categories, String selectedCategory, List<CharacteristicValueDto> characteristics) {
 
         clientDataConstructor.setCurrentUser(model);
+
         model.addAttribute("items", itemDto);
         model.addAttribute("categories", categories);
         if (sortBy != null) {

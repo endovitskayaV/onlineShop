@@ -33,31 +33,46 @@
         <div class="row">
             <div class="col s8 offset-s1">
                 <div id="items_div">
-                <div class="card horizontal hoverable">
-                    <div class="card-image">
+                    <div class="card horizontal hoverable">
+                        <div class="card-image">
                         <#include "item_photo.ftl">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p><span class="card-title">${item.producer} ${item.name}</span></p>
-                            <p> ${item.price} rub</p>
-                            <p>${item.storage} ps</p>
-                            <p><a style="margin-top: 30px; margin-bottom: 30px" href="javascript: addItemToBasket(${item.id})"
-                                  class="waves-effect waves-light btn">buy</a></p>
                         </div>
-                        <div class="card-action">
-                            <a href="#!" onclick="dropdown_div('description')">Description</a>
-                            <div id="description" style="margin: 0 0 10px 10px; display:none">
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <p><span class="card-title">${item.producer} ${item.name}</span></p>
+                                <p> ${item.price} rub</p>
+                                <p>${item.storage} ps</p>
+                                <br>
+                                <div class="input-field col s1"><a href="javascript: addItemToBasket(${item.id})"
+                                                                   class="waves-effect waves-light btn">buy</a></div>
+
+                                 <#if currentUser??>
+                                     <#if currentUser.roleId==1 && currentUser.id==item.sellerId>
+                                <div class="input-field col s1 offset-s7">
+                                    <a href="/items/edit/${item.id}"> <i class="material-icons cl-4db6a sz-30">edit</i></a>
+                                </div>
+                                <div class="input-field col s1">
+                                    <a href="javascript: deleteItem(${item.id})"> <i
+                                            class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
+                                    </a>
+                                </div>
+                                     </#if>
+
+                                     </#if>
+                            </div>
+                            <div class="card-action">
+                                <a href="#!" onclick="dropdown_div('description')">Description</a>
+                                <div id="description" style="margin: 0 0 10px 10px; display:none">
                         <#if item.description=="">
                             -
                         <#else>
                             ${item.description}
                         </#if>
-                            </div>
+                                </div>
 
-                            <a href="#!" onclick="dropdown_div('characteristic_list')">Characteristics</a>
-                            <div id="characteristic_list" style="margin: 0 0 10px 10px; display:none">
-                                <table class="highlight" style="padding-left: 20px">
+                                <a href="#!" onclick="dropdown_div('characteristic_list')">Characteristics</a>
+                                <div id="characteristic_list" style="margin: 0 0 10px 10px; display:none">
+                                    <table class="highlight" style="padding-left: 20px">
                                     <#if characteristics?size==0>
                                         -
                                     <#else>
@@ -65,16 +80,16 @@
                                 <tr>
                                     <td>${characteristic.name}</td>
 
-                                     <td style="text-align: right">${characteristic.value} ${characteristic.measureUnit}</td>
+                                    <td style="text-align: right">${characteristic.value} ${characteristic.measureUnit}</td>
                                 </tr>
                                         </#list>
                                     </#if>
-                                </table>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>

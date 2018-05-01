@@ -59,7 +59,18 @@
                     </div>
                     </div>
                 </div>
+              <#if currentUser??>
+                  <#if currentUser.roleId==1>
+          <div  class="col s1">
+              <br>
+              <a href="/items/add">
+                  <i class="material-icons cl-4db6a sz-33 fw-b">add</i>
+              </a>
+          </div>
+                  </#if>
+              </#if>
             </div>
+
         </div>
     </div>
 

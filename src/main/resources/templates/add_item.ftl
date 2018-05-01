@@ -90,11 +90,6 @@
                             <div name="characteristics-errors">
                             </div>
                         </div>
-                        <div style="margin-top: 30px" class="input-field col s1">
-                            <a class="modal-trigger" href="#category_modal">
-                                <i class="material-icons cl-4db6a sz-33 fw-b">add</i>
-                            </a>
-                        </div>
                     </div>
                     <div id="characteristicDiv">
                           <#if selectedCategory??>

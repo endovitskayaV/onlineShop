@@ -120,7 +120,7 @@ public class ItemConverter {
                     .category(categoryRepository.findById(itemDto.getCategoryId()).orElse(null))
                     .characteristicValue(characteristicsValues)
                     .photoName(itemDto.getPhotoName())
-                    .seller(sellerRepository.getOne(itemDto.getId()))
+                    .seller(sellerRepository.getOne(itemDto.getSellerId()))
                     .build();
         }
     }

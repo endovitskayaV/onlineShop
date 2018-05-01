@@ -35,7 +35,6 @@
             </div>
         </div>
     </div>
-
 <#if  items?size==0>
   <div class="col s2 offset-s1 card horizontal">
       <div class="card-stacked">
