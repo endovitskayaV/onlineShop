@@ -17,7 +17,7 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
      * @param categoryId id of category
      * @return itemEntities found by categoryId
      */
-    List<ItemEntity> findAllByCategoryIdOrderByProducer(long categoryId);
+    List<ItemEntity> findAllByCategoryIdOrderByPopularity(long categoryId);
 
     List<ItemEntity> findAllByCategoryId(long categoryId);
 

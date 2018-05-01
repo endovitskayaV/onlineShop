@@ -49,8 +49,11 @@ function getSortingParams() {
             case 'priceDes':
                 params += 'sortBy=PRICE&acs=false';
                 break;
+            case 'popularityDes':
+                params += 'sortBy=POPULARITY&acs=false';
+                break;
             default:
-                params += 'sortBy=PRODUCER&acs=true';
+                params += 'sortBy=POPULARITY&acs=true';
                 break;
         }
     }

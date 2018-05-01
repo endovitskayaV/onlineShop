@@ -71,5 +71,8 @@ public class ItemEntity {
     @Column(name = "photo_name")
     private String photoName;
 
+    @Column(name = "popularity")
+    private int popularity;
+
 
 }

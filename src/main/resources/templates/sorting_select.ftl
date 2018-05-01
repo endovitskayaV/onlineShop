@@ -11,31 +11,45 @@
                                     <#case "producerAcs">
                                     <option id="producerAcs" selected>Name(A-z)</option>
                             <option id="producerDes">Name(Z-a)</option>
+                            <option id="popularityDes">Popularity</option>
                             <option id="priceAcs">Cheap first</option>
                             <option id="priceDes">Expensive first</option>
                                         <#break>
                                     <#case "producerDes">
                                     <option id="producerDes" selected>Name(Z-a)</option>
                                     <option id="producerAcs">Name(A-z)</option>
+                                     <option id="popularityDes">Popularity</option>
                                      <option id="priceAcs">Cheap first</option>
                              <option id="priceDes">Expensive first</option>
                                         <#break>
                                     <#case "priceAcs">
                                          <option id="priceAcs" selected>Cheap first</option>
+                                         <option id="priceDes">Expensive first</option>
+                                          <option id="popularityDes">Popularity</option>
                                     <option id="producerDes">Name(Z-a)</option>
                                     <option id="producerAcs">Name(A-z)</option>
-                                     <option id="priceDes">Expensive first</option>
+
                                         <#break>
                                     <#case "priceDes">
                                          <option id="priceDes" selected>Expensive first</option>
+                                         <option id="priceAcs">Cheap first</option>
+                                         <option id="popularityDes">Popularity</option>
                                     <option id="producerDes">Name(Z-a)</option>
                                     <option id="producerAcs">Name(A-z)</option>
-                                     <option id="priceAcs">Cheap first</option>
+
+                                        <#break>
+                                         <#case "popularityDes">
+                                         <option id="popularityDes">Popularity</option>
+                                    <option id="producerAcs">Name(A-z)</option>
+                            <option id="producerDes">Name(Z-a)</option>
+                            <option id="priceAcs">Cheap first</option>
+                            <option id="priceDes">Expensive first</option>
                                         <#break>
                                 </#switch>
 
                             <#else>
-                                <option id="producerAcs" selected>Name(A-z)</option>
+                            <option id="popularityDes" selected>Popularity</option>
+                                <option id="producerAcs">Name(A-z)</option>
                             <option id="producerDes">Name(Z-a)</option>
                             <option id="priceAcs">Cheap first</option>
                             <option id="priceDes">Expensive first</option>

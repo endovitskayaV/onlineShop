@@ -41,7 +41,7 @@ public class ItemService {
      * @return all item dtos
      */
     private List<ItemDto> getAll() {
-        return itemRepository.findAll(Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase()))
+        return itemRepository.findAll(Sort.by(Sort.Direction.DESC, SortCriteria.POPULARITY.name().toLowerCase()))
                 .stream()
                 .map(itemConverter::toDto)
                 .collect(Collectors.toList());
@@ -84,7 +84,7 @@ public class ItemService {
      * @return item dtos having given categoryId
      */
     private List<ItemDto> getByCategoryId(long categoryId) {
-        return itemRepository.findAllByCategoryIdOrderByProducer(categoryId).stream()
+        return itemRepository.findAllByCategoryIdOrderByPopularity(categoryId).stream()
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
 

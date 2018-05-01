@@ -58,11 +58,11 @@ public class ItemController {
         if (category == null) {
             items = itemService.getAll(getSafeBoolean(acs), sortBy);
         } else {
-            items = itemService.getByCategoryId(categoryService.getByName(category).getId(), acs, sortBy);
+            items = itemService.getByCategoryId(categoryService.getByName(category).getId(), getSafeBoolean(acs), sortBy);
             model.addAttribute("characteristics", itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
         }
 
-        setModel(model, items, sortBy, acs, categoryService.getAll(), category, null);
+        setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category, null);
         return "home";
     }
 
@@ -83,7 +83,7 @@ public class ItemController {
 
         setModel(model,
                 itemService.getByCharacteristic(categoryService.getByName(category).getId(), getStringListMap(characteristics), getSafeBoolean(acs), sortBy),
-                sortBy, acs,
+                sortBy, getSafeBoolean(acs),
                 categoryService.getAll(),
                 category,
                 setChosenCharacteristics(category, getStringListMap(characteristics)));
@@ -323,7 +323,7 @@ public class ItemController {
     }
 
     private Boolean getSafeBoolean(Boolean booleanValue) {
-        return booleanValue == null ? true : booleanValue;
+        return booleanValue == null ? false: booleanValue;
     }
 
     private String setSelectedSortCriteria(SortCriteria sortBy, Boolean acs) {
