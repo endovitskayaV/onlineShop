@@ -9,6 +9,7 @@ import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.model.domain.repository.ItemRepository;
 import ru.reksoft.onlineShop.model.dto.CharacteristicValueDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
+import ru.reksoft.onlineShop.model.dto.ValueChecked;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,12 +102,12 @@ public class ItemService {
                                             .getCode().equals(charactersticValueEntity.getCharacteristic().getCode()))
                                     .findFirst().get())));
 
-                    List<String> values = foundCharacteristicValueDto.getValues();
-                    values.add(charactersticValueEntity.getValue());
+                    List<ValueChecked> values = foundCharacteristicValueDto.getValues();
+                    values.add(new  ValueChecked(charactersticValueEntity.getValue(), false));
                     foundCharacteristicValueDto.setValues(values);
                 } else {
-                    List<String> values = new ArrayList<>();
-                    values.add(charactersticValueEntity.getValue());
+                    List<ValueChecked> values = new ArrayList<>();
+                    values.add(new  ValueChecked(charactersticValueEntity.getValue(), false));
                     characteristicValueDtos.add(new CharacteristicValueDto(
                             charactersticValueEntity.getCharacteristic().getName(), charactersticValueEntity.getCharacteristic().getCode(), values));
                 }

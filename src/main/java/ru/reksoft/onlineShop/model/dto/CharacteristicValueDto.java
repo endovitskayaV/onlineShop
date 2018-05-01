@@ -12,6 +12,5 @@ import java.util.List;
 public class CharacteristicValueDto {
     private String name;
     private String code;
-    private List<String> values;
-
+    private List<ValueChecked> values;
 }

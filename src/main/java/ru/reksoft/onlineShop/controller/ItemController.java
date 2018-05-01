@@ -35,7 +35,7 @@ public class ItemController {
     private CategoryService categoryService;
     private CharacteristicService characteristicService;
     private StorageService storageService;
-    private  ClientDataConstructor clientDataConstructor;
+    private ClientDataConstructor clientDataConstructor;
 
     @Autowired
     public ItemController(ItemService itemService,
@@ -46,7 +46,7 @@ public class ItemController {
         this.categoryService = categoryService;
         this.characteristicService = characteristicService;
         this.storageService = storageService;
-        this.clientDataConstructor=clientDataConstructor;
+        this.clientDataConstructor = clientDataConstructor;
     }
 
     @GetMapping
@@ -86,15 +86,31 @@ public class ItemController {
                 sortBy, acs,
                 categoryService.getAll(),
                 category,
-                itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
+                setChosenCharacteristics(category, getStringListMap(characteristics)));
 
-        if (characteristics.size() != 0) {
-            model.addAttribute("chosenCharacteristics", characteristics);
-        }
+//        if (characteristics.size() != 0) {
+//            model.addAttribute("chosenCharacteristics", toCharacteristicValueDtoList(getStringListMap(characteristics)));
+//        }
 
         return "home";
     }
 
+
+    private List<CharacteristicValueDto> setChosenCharacteristics(String category, Map<String, List<String>> characteristicMap) {
+        List<CharacteristicValueDto> dbcharacteristics = itemService.getCharacteristicValues(categoryService.getByName(category).getId());
+        dbcharacteristics.forEach(dbcharacteristicValueDto ->
+                dbcharacteristicValueDto.getValues().forEach(dbcharacteristicValue ->
+                        characteristicMap.forEach((code, values) -> {
+                            if (values.stream().anyMatch(dbcharacteristicValue.getValue()::equals)
+                                    && dbcharacteristicValueDto.getCode().equals(code)) {
+                                dbcharacteristicValue.setChecked(true);
+                            }
+                        })
+                )
+        );
+
+        return dbcharacteristics;
+    }
 
     @GetMapping("/search")
     public ResponseEntity getAll(String query,

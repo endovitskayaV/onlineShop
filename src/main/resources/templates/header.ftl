@@ -2,7 +2,7 @@
     <#if currentUser??>
     <div class="row">
         <div class="input-field col s2 offset-s9">
-            <a href="/users/${currentUser.id}" class="cl-4db6ac truncate"><b>${currentUser.email}</b></a>
+            <span class="cl-4db6ac truncate"><b>${currentUser.email}</b></span>
         </div>
         <div class="input-field col">
             <a href="/logout" class="cl-4db6ac">logout</a>

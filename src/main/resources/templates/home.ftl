@@ -49,9 +49,9 @@
     <div id="verifyCategory"></div>
 
 
-<div class="row">
-    <div class="col s5 offset-s1">
-        <div id="items_div">
+    <div class="row">
+        <div class="col s5 offset-s1">
+            <div id="items_div">
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
             <div class="card-image">
@@ -83,63 +83,38 @@
             </div>
         </div>
     </#list>
+            </div>
         </div>
-    </div>
 
-<#if (items?size >1)>
-    <div id="characteristrics_filter" class="col s3 offset-s1">
-        <#if characteristics??>
-            <div>
-                <ul class="collapsible expandable">
+<#if (items?size >0)>
+    <#if characteristics??>
+          <div id="characteristrics_filter" class="col s3 offset-s1">
+              <div><ul class="collapsible expandable">
             <#list characteristics as characteristic>
                 <li id="characteristics_values">
                     <div id="characteristic_name" class="collapsible-header">${characteristic.name}</div>
                     <input hidden id="characteristic_code" value="${characteristic.code}"/>
                     <div id="values" class="collapsible-body">
-                    <#list characteristic.values as valueChecked>
-                          <#if chosenCharacteristics??>
-
-
-                              <#list chosenCharacteristics?values as chosenCharacteristicValue>
-
-                                  <#if chosenCharacteristicValue==valueChecked>
-                              <p><label id="1">
-                                  <input type="checkbox" checked="checked" id="characteristic_value"
-                                         value="${valueChecked}"/>
-                                  <span>${valueChecked}</span>
-                              </label></p>
-                                      <#break>
-                                  <#else>
-
-                        <p><label id="2">
-                            <input type="checkbox" id="characteristic_value" value="${valueChecked}"/>
-                            <span>${valueChecked}</span>
-                        </label></p>
-                                  </#if>
-                                  <#break>
-                              </#list>
-                          <#else>
-                             <p>
-                                 <label id="3">
-                                     <input type="checkbox" id="characteristic_value" value="${valueChecked}"/>
-                                     <span>${valueChecked}</span>
-                                 </label>
-                             </p>
-                          </#if>
-                    </#list>
+                <#list characteristic.values as characteristicValue>
+                    <p><label id="3">
+                        <input type="checkbox" id="characteristic_value"  ${characteristicValue.checked?then('checked="checked"', '')}
+                               value="${characteristicValue.value}"/>
+                        <span>${characteristicValue.value}</span>
+                    </label></p>
+                </#list>
                     </div>
                 </li>
             </#list>
+                  </ul></div>
 
-                </ul>
-            </div>
-        </#if>
 
-        <a style="visibility: hidden" id="apply_btn" href="javascript: findByCharacteristics()"
-           class="waves-effect waves-light btn">apply</a>
-    </div>
-    </div>
+              <a style="visibility: hidden" id="apply_btn" href="javascript: findByCharacteristics()"
+                 class="waves-effect waves-light btn">apply</a>
+          </div>
+    </#if>
 </#if>
+    </div>
+
 </div>
 
 <div id="info-modal" class="modal modal-content"></div>

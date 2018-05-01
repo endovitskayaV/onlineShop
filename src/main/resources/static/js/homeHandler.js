@@ -21,7 +21,6 @@ function deleteItem(id) {
     }
 }
 
-
 function showModal(message) {
     var modalDiv = $('#info-modal');
     modalDiv.html("");
@@ -78,17 +77,14 @@ function getByCategory(categoryName) {
 }
 
 function findByCharacteristics() {
-    if (anyCharacteristicWasChosen) {
-        location.href =
-            document.location.origin + '/items?category=' + $('#chosenCategory').val() + '&' + getSortingParams();
-
-    } else {
+    if (anyCharacteristicWasChosen()) {
         location.href =
             document.location.origin + '/items/filter?category=' + $('#chosenCategory').val() + '&' + getSortingParams() + getChosenCharacteristicParams();
     }
 }
 
 function anyCharacteristicWasChosen() {
+    var chosen=false;
     $("li[id*='characteristics_values']").each(function (index, li) {
         var values = '';
         var characteristicName = ((li.children)[1]).value;
@@ -96,26 +92,16 @@ function anyCharacteristicWasChosen() {
         $.each(valuesDiv.children, function (key, ch) {
             var characteristic = ((ch.children)[0].children)[0]; //checkBox
             if ((((ch.children)[0].children)[0]).checked) {
-                return true;
+                chosen=true;
             }
         });
 
     });
-//     $("li[id*='characteristics_values']").each(function () {
-//         var characterisricName = $("#characteristic_name").text();
-//         var children = $("div[id*='values']");
-//         $.each(children, function (key, child) {
-//             $.each(child.children, function (key, ch) {
-//                 if ((((ch.children)[0].children)[0]).checked) return true;
-//             })
-//         });
-//     });
-    return false;
+    return chosen;
 }
 
 function getChosenCharacteristicParams() {
     var params = '';
-
         $("li[id*='characteristics_values']").each(function (index, li) {
             var values = '';
             var characteristicName = ((li.children)[1]).value;
