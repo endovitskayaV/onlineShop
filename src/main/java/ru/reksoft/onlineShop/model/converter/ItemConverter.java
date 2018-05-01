@@ -82,7 +82,7 @@ public class ItemConverter {
                     .categoryId(categoryConverter.toDto(itemEntity.getCategory()).getId())
                     .characteristics(characteristicDtos)
                     .photoName(itemEntity.getPhotoName())
-                    .sellerId(itemEntity.getSeller().getId())
+                    .sellerId(itemEntity.getSeller().getUserId())
                     .build();
         }
     }

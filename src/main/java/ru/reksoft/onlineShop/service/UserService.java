@@ -9,8 +9,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.reksoft.onlineShop.model.domain.entity.RoleEntity;
+import ru.reksoft.onlineShop.model.domain.entity.SellerEntity;
 import ru.reksoft.onlineShop.model.domain.entity.UserEntity;
 import ru.reksoft.onlineShop.model.domain.repository.RoleRepository;
+import ru.reksoft.onlineShop.model.domain.repository.SellerRepository;
 import ru.reksoft.onlineShop.model.domain.repository.UserRepository;
 import ru.reksoft.onlineShop.model.dto.SignupUserDto;
 import ru.reksoft.onlineShop.model.dto.UserDto;
@@ -23,13 +25,18 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private RoleRepository roleRepository;
+    private SellerRepository sellerRepository;
+
     public static final String ROLE_PREFIX = "ROLE_";
+    private static final int ROLE_SELLER_ID=1;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       RoleRepository roleRepository, SellerRepository sellerRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.sellerRepository=sellerRepository;
     }
 
     @Override
@@ -55,7 +62,11 @@ public class UserService implements UserDetailsService {
                     .password(passwordEncoder.encode(signupUserDto.getPassword()))
                     .id(userRepository.count() + 1)
                     .role(roleRepository.getOne(signupUserDto.getRoleId())).build();
+
             userRepository.save(userEntity);
+            if (signupUserDto.getRoleId()==ROLE_SELLER_ID){
+                sellerRepository.save(SellerEntity.builder().userId(userEntity.getId()).income(0).build());
+            }
             return true;
         }
     }

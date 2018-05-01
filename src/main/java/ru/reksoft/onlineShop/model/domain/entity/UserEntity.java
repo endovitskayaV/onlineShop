@@ -1,7 +1,7 @@
 package ru.reksoft.onlineShop.model.domain.entity;
 
 import lombok.*;
-
+import ru.reksoft.onlineShop.model.domain.entity.RoleEntity;
 import javax.persistence.*;
 
 /**
