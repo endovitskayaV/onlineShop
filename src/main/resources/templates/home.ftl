@@ -70,6 +70,9 @@
                             <a href="javascript: addItemToBasket(${item.id})"
                                class="waves-effect waves-light btn">buy</a>
                         </div>
+
+                        <#if currentUser??>
+                        <#if currentUser.roleId==1 && currentUser.id==item.sellerId>
                         <div class="input-field col s1 offset-s7">
                             <a href="/items/edit/${item.id}"> <i class="material-icons cl-4db6a sz-30">edit</i></a>
                         </div>
@@ -78,6 +81,8 @@
                                     class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
                             </a>
                         </div>
+                        </#if>
+                        </#if>
                     </div>
                 </div>
             </div>

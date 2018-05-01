@@ -51,4 +51,6 @@ public class ItemDto {
      */
     private String photoName;
 
+    private Long sellerId;
+
 }

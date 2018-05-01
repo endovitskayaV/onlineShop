@@ -7,6 +7,7 @@ import ru.reksoft.onlineShop.model.domain.entity.CharactersticValueEntity;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
 import ru.reksoft.onlineShop.model.domain.repository.CategoryRepository;
 import ru.reksoft.onlineShop.model.domain.repository.CharactersticValueRepository;
+import ru.reksoft.onlineShop.model.domain.repository.SellerRepository;
 import ru.reksoft.onlineShop.model.dto.CharacteristicDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 
@@ -28,6 +29,7 @@ public class ItemConverter {
     private CategoryConverter categoryConverter;
     private CharacteristicConverter characteristicConverter;
     private CharactersticValueRepository charactersticValueRepository;
+    private SellerRepository sellerRepository;
 
     /**
      * @param categoryRepository      repository for category
@@ -37,11 +39,14 @@ public class ItemConverter {
     @Autowired
     public ItemConverter(CategoryRepository categoryRepository,
                          CategoryConverter categoryConverter,
-                         CharacteristicConverter characteristicConverter, CharactersticValueRepository charactersticValueRepository) {
+                         CharacteristicConverter characteristicConverter,
+                         CharactersticValueRepository charactersticValueRepository,
+                         SellerRepository sellerRepository) {
         this.categoryRepository = categoryRepository;
         this.categoryConverter = categoryConverter;
         this.characteristicConverter = characteristicConverter;
         this.charactersticValueRepository = charactersticValueRepository;
+        this.sellerRepository=sellerRepository;
     }
 
     /**
@@ -77,6 +82,7 @@ public class ItemConverter {
                     .categoryId(categoryConverter.toDto(itemEntity.getCategory()).getId())
                     .characteristics(characteristicDtos)
                     .photoName(itemEntity.getPhotoName())
+                    .sellerId(itemEntity.getSeller().getId())
                     .build();
         }
     }
@@ -114,6 +120,7 @@ public class ItemConverter {
                     .category(categoryRepository.findById(itemDto.getCategoryId()).orElse(null))
                     .characteristicValue(characteristicsValues)
                     .photoName(itemDto.getPhotoName())
+                    .seller(sellerRepository.getOne(itemDto.getId()))
                     .build();
         }
     }

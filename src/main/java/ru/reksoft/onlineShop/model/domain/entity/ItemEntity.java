@@ -74,5 +74,8 @@ public class ItemEntity {
     @Column(name = "popularity")
     private int popularity;
 
+    @ManyToOne
+    @JoinColumn( name = "seller_id",  referencedColumnName = "user_id")
+    private SellerEntity seller;
 
 }
