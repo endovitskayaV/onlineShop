@@ -85,7 +85,7 @@ function deleteItem(basketId, itemId) {
 
 function checkItemQuantity(basketId) {
     $.get("/basket/check/" + basketId, function () {
-        location.href = document.location.origin + '/orders/finish/';
+        location.href = document.location.origin + '/orders/finish';
     })
         .fail(function (data) {
             $('[value ^= "#error-quantity-"]').html("");
