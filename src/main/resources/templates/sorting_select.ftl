@@ -1,5 +1,16 @@
 <div class="row" style="margin-top: 30px">
-    <div class="col s2"></div>
+    <div class="col s2">
+        <#if currentUser??>
+                  <#if currentUser.roleId==1>
+              <br>
+
+              <a style="margin-left: 10px" href="/items/add">
+                    <i class="material-icons cl-4db6a sz-30">add</i><span class="cl-4db6ac">New item<span>
+              </a>
+                  </#if>
+        </#if>
+
+    </div>
     <div class="row">
         <div class="col s5 offset-s1">
                 <div class="card horizontal hoverable">
@@ -59,16 +70,7 @@
                     </div>
                     </div>
                 </div>
-              <#if currentUser??>
-                  <#if currentUser.roleId==1>
-          <div  class="col s1">
-              <br>
-              <a href="/items/add">
-                  <i class="material-icons cl-4db6a sz-33 fw-b">add</i>
-              </a>
-          </div>
-                  </#if>
-              </#if>
+
             </div>
 
         </div>
