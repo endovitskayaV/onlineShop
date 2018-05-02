@@ -1,4 +1,5 @@
 <#import "/spring.ftl" as spring/>
+<#escape x as x?html>
 <!DOCTYPE html>
 <html>
 <head>
@@ -113,3 +114,4 @@
 
 </body>
 </html>
+</#escape>

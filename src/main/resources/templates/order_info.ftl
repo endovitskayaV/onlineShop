@@ -1,4 +1,5 @@
 <#import "/spring.ftl" as spring/>
+<#escape x as x?html>
 <!DOCTYPE html>
 <html>
 <head>
@@ -87,3 +88,4 @@
 <script type="text/javascript" src="/js/materialize.min.js"></script>
 </body>
 </html>
+</#escape>
