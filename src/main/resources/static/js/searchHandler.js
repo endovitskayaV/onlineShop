@@ -1,5 +1,11 @@
 var query="";
 
+$('#search').keypress(function (e) {
+    if (e.which === 13) {
+        findItems();
+    }
+});
+
 function findItems() {
     var search = String($('#search').val()).replace(/&/g, '').replace(/</g, '').replace(/>/g, '').replace(/"/g, '');
     if (search !== "") {
