@@ -5,8 +5,12 @@ function findItems() {
     if (search !== "") {
         query=search;
         $('#characteristrics_filter').html("");
-        var url = document.location.origin + '/items/search?query=' + search + '&' + getSortingParams();
-        setCategories(url);
+        var url = document.location.origin + '/items/search?query=' + search;
+        var element = document.getElementById('sort_criteria');
+        if (element !== null) {
+           url+=  '&' + getSortingParams();
+        }
+          setCategories(url);
     }
 }
 
@@ -58,8 +62,14 @@ function getByCategoryAndQuery(categoryId, query) {
     $('#specifiedCategory').remove();
     $('<input id="specifiedCategory" hidden value="' + categoryId + '">').appendTo(document.body);
     var search = $('#search').val();
-    setNewSortedItems(document.location.origin + '/items/search?query=' + search + '&' + getSortingParams() +
-        '&' + 'categoryId=' + categoryId);
+
+    var url = document.location.origin + '/items/search?query=' + search;
+    var element = document.getElementById('sort_criteria');
+    if (element !== null) {
+        url+=  '&' + getSortingParams() ;
+    }
+    url+= '&' + 'categoryId=' + categoryId;
+    setNewSortedItems(url);
 }
 
 function setNewSortedItems(query) {

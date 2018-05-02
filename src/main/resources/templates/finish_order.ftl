@@ -18,6 +18,8 @@
 <#include "header.ftl">
 
 <div class="row" style="margin-top: 100px">
+    <div id="verifyCategory"></div>
+
     <#assign overall=0>
     <#assign i=0>
     <label for="id"></label>
@@ -25,6 +27,7 @@
     <div class="col s8">
         <div class="row">
             <div class="col s8 offset-s4">
+                <div id="items_div">
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
 
@@ -76,6 +79,8 @@
                     </div>
                 </div>
             </div>
+            </div>
+            <#include "characteristic_filter.ftl">
         </div>
     </div>
 </div>
@@ -89,8 +94,9 @@
     </#list>
 </#if>
 
-<script type="text/javascript" src="/js/orderHandler.js"></script>
 <script type="text/javascript" src="/js/materialize.min.js"></script>
+<script type="text/javascript" src="/js/orderHandler.js"></script>
+<script type="text/javascript" src="/js/searchHandler.js"></script>
 </body>
 </html>
 </#escape>

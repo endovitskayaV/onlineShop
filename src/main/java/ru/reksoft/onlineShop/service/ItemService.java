@@ -47,7 +47,9 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    /**_
+    /**
+     * _
+     *
      * @param id item id
      * @return item dto found by its id
      */
@@ -103,11 +105,11 @@ public class ItemService {
                                     .findFirst().get())));
 
                     List<ValueChecked> values = foundCharacteristicValueDto.getValues();
-                    values.add(new  ValueChecked(charactersticValueEntity.getValue(), false));
+                    values.add(new ValueChecked(charactersticValueEntity.getValue(), false));
                     foundCharacteristicValueDto.setValues(values);
                 } else {
                     List<ValueChecked> values = new ArrayList<>();
-                    values.add(new  ValueChecked(charactersticValueEntity.getValue(), false));
+                    values.add(new ValueChecked(charactersticValueEntity.getValue(), false));
                     characteristicValueDtos.add(new CharacteristicValueDto(
                             charactersticValueEntity.getCharacteristic().getName(), charactersticValueEntity.getCharacteristic().getCode(), values));
                 }
@@ -142,6 +144,10 @@ public class ItemService {
 
 
     public List<ItemDto> getByQueryAndCategoryId(String query, long categoryId, boolean isAcsSort, SortCriteria sortCriteria) {
+        if (sortCriteria == null) {
+            sortCriteria = SortCriteria.POPULARITY;
+        }
+
         return itemRepository.findAllByNameContainsOrProducerContains(
                 query, query, Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
                 .map(itemConverter::toDto)

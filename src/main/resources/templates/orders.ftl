@@ -29,10 +29,11 @@
       </div>
   </div>
 </#if>
-
+    <div id="verifyCategory"></div>
     <div class="col s8">
         <div class="row">
             <div class="col s5 offset-s6">
+                <div id="items_div">
     <#list orders as order>
         <div id="${order.id}" class="card horizontal hoverable">
             <div class="card-stacked">
@@ -45,6 +46,8 @@
         </div>
     </#list>
             </div>
+            </div>
+            <#include "characteristic_filter.ftl">
         </div>
     </div>
 </div>
@@ -54,7 +57,7 @@
 <script>setCookie("${cookie.name}");</script>
     </#list>
 </#if>
-
+<script type="text/javascript" src="/js/searchHandler.js"></script>
 <script type="text/javascript" src="/js/materialize.min.js"></script>
 </body>
 </html>

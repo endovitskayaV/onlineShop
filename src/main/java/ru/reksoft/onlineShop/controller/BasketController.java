@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
 import ru.reksoft.onlineShop.model.dto.OrderedItemDto;
@@ -31,14 +32,16 @@ public class BasketController {
     private OrderService orderService;
     private ItemService itemService;
     private UserService userService;
+    private ClientDataConstructor clientDataConstructor;
     private int itemCount;
 
 
     @Autowired
-    public BasketController(OrderService orderService, ItemService itemService, UserService userService) {
+    public BasketController(OrderService orderService, ItemService itemService, UserService userService, ClientDataConstructor clientDataConstructor) {
         this.orderService = orderService;
         this.itemService = itemService;
         this.userService = userService;
+        this.clientDataConstructor=clientDataConstructor;
     }
 
     //TODO: check if cookies name is correct
@@ -60,6 +63,8 @@ public class BasketController {
 
     @GetMapping
     public String getBasket(Model model, HttpServletRequest request) {
+        clientDataConstructor.setCurrentUser(model);
+
         List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
         ItemDto[] items = new ItemDto[cookies.size() / 2 + 10];
         Integer[] quatities = new Integer[cookies.size() / 2 + 10];

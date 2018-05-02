@@ -132,6 +132,8 @@ public class ItemController {
      */
     @GetMapping("{id}")
     public String getById(Model model, @PathVariable long id) {
+        clientDataConstructor.setCurrentUser(model);
+
         ItemDto itemDto = itemService.getById(id);
         if (itemDto == null) {
             model.addAttribute("message", "No such item");

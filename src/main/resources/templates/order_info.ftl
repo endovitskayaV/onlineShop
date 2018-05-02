@@ -20,10 +20,11 @@
 <div class="row" style="margin-top: 100px">
     <#assign overall=0>
     <#assign i=0>
-
+    <div id="verifyCategory"></div>
     <div class="col s8">
         <div class="row">
             <div class="col s8 offset-s4">
+                <div id="items_div">
                 <div class="card hoverable">
                     <div class="card-content">
                         <span class="cl-1b5e20">ORDERED</span>
@@ -67,10 +68,11 @@
 
 
             </div>
+            </div>
         </div>
     </div>
 
-
+<#include "characteristic_filter.ftl">
 </div>
 
 
@@ -85,6 +87,7 @@
 </#if>
 
 <script type="text/javascript" src="/js/orderHandler.js"></script>
+<script type="text/javascript" src="/js/searchHandler.js"></script>
 <script type="text/javascript" src="/js/materialize.min.js"></script>
 </body>
 </html>

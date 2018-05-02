@@ -14,9 +14,18 @@
 </head>
 
 <body>
-<#assign itemsCount=0>
+    <#assign itemsCount=0>
 <#include "header.ftl">
 <div id="top" class="row" style="margin-top: 100px">
+    <div id="verifyCategory"></div>
+    <div class="col s8">
+        <div class="row">
+            <div class="col s8 offset-s4">
+                <div id="items_div"></div>
+            </div>
+        </div>
+<#include "characteristic_filter.ftl">
+    </div>
 <#if  items?size==0>
 
     <div class="col s2 offset-s4 card horizontal">
@@ -49,6 +58,8 @@
     <div class="col s8">
         <div class="row">
             <div class="col s8 offset-s4">
+
+                <div id="items_div"></div>
     <#list items as item>
         <#if item??>
 
@@ -139,8 +150,9 @@
 
 <div id="info-modal" class="modal modal-content"></div>
 
-<script type="text/javascript" src="js/basketHandler.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>
+<script type="text/javascript" src="js/basketHandler.js"></script>
+<script type="text/javascript" src="js/searchHandler.js"></script>
 </body>
 </html>
 </#escape>

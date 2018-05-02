@@ -39,6 +39,8 @@ public class OrderController {
 
     @GetMapping
     public String getAll(Model model) {
+        clientDataConstructor.setCurrentUser(model);
+
         UserDto user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         model.addAttribute("orders", orderService.getAllOrderedByUserId(user.getId()));
@@ -46,8 +48,7 @@ public class OrderController {
     }
 
     @GetMapping("/finish")
-    public String finishOrder(ModelMap model, RedirectAttributes redirectAttributes) {
-
+    public String finishOrder(Model model, RedirectAttributes redirectAttributes) {
         return setOrderModel(model,
                 orderService.getBasket(userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId())) ?
                 "finish_order" : "error";
@@ -65,11 +66,12 @@ public class OrderController {
     }
 
     @GetMapping("{id}")
-    public String getById(ModelMap model, @PathVariable long id) {
+    public String getById(Model model, @PathVariable long id) {
         return setOrderModel(model, orderService.getById(id)) ? "order_info" : "error";
     }
 
-    private boolean setOrderModel(ModelMap model, OrderDto orderDto) {
+    private boolean setOrderModel(Model model, OrderDto orderDto) {
+        clientDataConstructor.setCurrentUser(model);
 
         if (orderDto == null) {
             model.addAttribute("message", "No such order");
