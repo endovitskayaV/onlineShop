@@ -64,7 +64,8 @@ public class CharacteristicConverter {
                     .name(characteristicDto.getName())
                     .measureUnit(characteristicDto.getMeasureUnit())
                     .valueDataType(characteristicDto.getValueDataType())
-                    .code(characteristicDto.getCode())
+                   // .code(characteristicDto.getCode())
+                    .code(characteristicRepository.getOne(characteristicDto.getId()).getCode())
                     .build();
         }
     }

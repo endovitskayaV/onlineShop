@@ -46,7 +46,7 @@ public class ItemConverter {
         this.categoryConverter = categoryConverter;
         this.characteristicConverter = characteristicConverter;
         this.charactersticValueRepository = charactersticValueRepository;
-        this.sellerRepository=sellerRepository;
+        this.sellerRepository = sellerRepository;
     }
 
     /**
@@ -105,11 +105,20 @@ public class ItemConverter {
             //construct characteristicsValues for itemEntity
             Map<CharacteristicEntity, CharactersticValueEntity> characteristicsValues = new HashMap<>();
             itemDto.getCharacteristics().forEach(
-                    characteristicDto ->
-                            characteristicsValues.put
-                                    (characteristicConverter.toEntity(characteristicDto),
-                                            charactersticValueRepository.findByCharacteristicIdAndValue(characteristicDto.getId(), characteristicDto.getValue())
-                                    ));
+                    characteristicDto -> {
+                        CharacteristicEntity characteristicEntity = characteristicConverter.toEntity(characteristicDto);
+
+                        CharactersticValueEntity charactersticValueEntity = charactersticValueRepository.findByCharacteristicIdAndValue(characteristicDto.getId(), characteristicDto.getValue());
+                        if (charactersticValueEntity == null) {
+                            charactersticValueEntity = CharactersticValueEntity.builder()
+                                    .characteristic(characteristicEntity)
+                                    .id(charactersticValueRepository.count() + 1)
+                                    .value(characteristicDto.getValue())
+                                    .build();
+                            charactersticValueRepository.save(charactersticValueEntity);
+                        }
+                        characteristicsValues.put(characteristicEntity, charactersticValueEntity);
+                    });
             return ItemEntity.builder()
                     .id(itemDto.getId())
                     .name(itemDto.getName())
