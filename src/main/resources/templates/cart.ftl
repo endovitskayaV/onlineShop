@@ -37,14 +37,7 @@
     </div>
 
 
-    <#elseif itemsSize??>
- <div class="col s2 offset-s4 card horizontal">
-     <div class="card-stacked">
-         <div class="card-content">
-             <p>No items</p>
-         </div>
-     </div>
- </div>
+
     <#else>
 <label for="id"></label>
     <input id="id" hidden="hidden" type="number" value="${basketId}">

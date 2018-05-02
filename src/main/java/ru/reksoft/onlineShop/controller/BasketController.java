@@ -1,5 +1,6 @@
 package ru.reksoft.onlineShop.controller;
 
+import javafx.print.Collation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,9 +19,7 @@ import ru.reksoft.onlineShop.service.UserService;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.reksoft.onlineShop.controller.util.CookiesUtils.*;
@@ -41,7 +40,7 @@ public class BasketController {
         this.orderService = orderService;
         this.itemService = itemService;
         this.userService = userService;
-        this.clientDataConstructor=clientDataConstructor;
+        this.clientDataConstructor = clientDataConstructor;
     }
 
     //TODO: check if cookies name is correct
@@ -56,7 +55,7 @@ public class BasketController {
                     ResponseEntity.badRequest().build();
         } else { //unknown user
             List<Cookie> cookies = createCookie(itemId, request);
-           createCookie(itemId, request).forEach(response::addCookie);
+            createCookie(itemId, request).forEach(response::addCookie);
             return ResponseEntity.ok(cookies);
         }
     }
@@ -85,7 +84,7 @@ public class BasketController {
                 }
             } else {
                 basket = orderService.createBasket(user.getId());
-                model.addAttribute("itemsSize", 0);
+                // model.addAttribute("itemsSize", 0);
             }
 
             model.addAttribute("basketId", basket.getId());
@@ -108,13 +107,17 @@ public class BasketController {
                 }
             });
         } else {
-            model.addAttribute("itemsSize", 0);
+            //  model.addAttribute("itemsSize", 0);
             model.addAttribute("basketId", 0);
         }
 
 
         model.addAttribute("quantities", quatities);
-        model.addAttribute("items", items);
+        if (Arrays.stream(items).allMatch(Objects::isNull)) {
+            model.addAttribute("items", Collections.EMPTY_LIST);
+        } else {
+            model.addAttribute("items", items);
+        }
         return "cart";
     }
 
