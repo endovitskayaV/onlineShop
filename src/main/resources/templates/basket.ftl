@@ -93,12 +93,11 @@
                                 <a href="javascript: setItemQuantity(${basketId},${item.id},false)">
                                     <i class="material-icons cl-4db6a sz-20">remove</i></a>
                             </div>
-                            <div id="error-quantity-${item.id}" class="input-field col s1">
-                            </div>
+                            <div id="error-quantity-${item.id}" class="input-field col s4"></div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="input-field col s5">Sum, rub:</div>
+                        <div class="input-field col s7">Sum, rub:</div>
                         <div class="input-field col s1">
                                      <#assign sum=item.price*quantities[i]>
                                       <#assign overall=overall+sum>
@@ -124,8 +123,8 @@
                 <div class="card hoverable">
                     <div class="card-content">
                         <div class="row">
-                            <div class="input-field col s3">
-                                <div class="left">Overall sum, rub:
+                            <div class="input-field col s5">
+                                <div id="1" class="left">Overall sum, rub:
                                 </div>
                             </div>
                             <div class="input-field col s1">

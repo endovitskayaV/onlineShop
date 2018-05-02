@@ -115,7 +115,7 @@ public class BasketController {
 
         model.addAttribute("quantities", quatities);
         model.addAttribute("items", items);
-        return "basket";
+        return "cart";
     }
 
     @PostMapping("/edit/{id}")

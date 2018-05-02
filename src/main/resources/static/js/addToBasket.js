@@ -17,7 +17,7 @@ function addItemToBasket(id) {
 
             showModal('<div class="row">' +
                 '          <div class="card-content">' +
-                '             <p class="center-align">Added to basket</p>' +
+                '             <p class="center-align">Added to cart</p>' +
                 '      </div></div></div>');
         })
         .fail(function () {
