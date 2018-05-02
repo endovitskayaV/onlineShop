@@ -3,6 +3,7 @@ package ru.reksoft.onlineShop.model.dto;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
+import ru.reksoft.onlineShop.validating.alphabeticNumericData.AlphabeticNumericData;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -23,9 +24,11 @@ public class EditableItemDto {
     private long id;
 
     @NotBlank(message = "Name must contain at least one not blank character")
+    @AlphabeticNumericData
     private String name;
 
     @NotBlank(message = "Producer must contain at least one not blank character")
+    @AlphabeticNumericData
     private String producer;
 
     /**
@@ -34,6 +37,7 @@ public class EditableItemDto {
     @NotNull(message = "Fill in count")
     private String storage;
 
+    @AlphabeticNumericData
     private String description;
 
     @NotNull(message = "Fill in price")
@@ -55,5 +59,7 @@ public class EditableItemDto {
     @Valid
     private List<CharacteristicDto> characteristics;
 
+
+    @AlphabeticNumericData
     private String photoName;
 }

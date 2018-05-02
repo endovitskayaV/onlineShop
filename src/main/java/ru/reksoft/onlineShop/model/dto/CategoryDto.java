@@ -2,6 +2,7 @@ package ru.reksoft.onlineShop.model.dto;
 
 import lombok.*;
 import ru.reksoft.onlineShop.model.domain.entity.CategoryEntity;
+import ru.reksoft.onlineShop.validating.alphabeticNumericData.AlphabeticNumericData;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -23,9 +24,11 @@ public class CategoryDto {
 
     private long id;
 
-
     @NotBlank(message = "Name must contain at least one not blank character")
+    @AlphabeticNumericData
     private String name;
+
+    @AlphabeticNumericData
     private String description;
 
     /**

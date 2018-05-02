@@ -23,7 +23,7 @@
                 <form enctype="multipart/form-data" class="container" method="post" action="/items/add">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
-                            <input id="name" name="name" type="text" value="${item.name?html}">
+                            <input id="name" name="name" type="text" value="${item.name}">
                             <label for="name" >Name</label>
                             <div name="name-errors"></div>
                         </div>
@@ -118,6 +118,7 @@
                                                       </#if>
                                                       <label for="value" >${characteristic.name}</label>
                                                    <div name="characteristics[${i}]-errors"></div>
+                                                  <div name="characteristics[${i}].value-errors"></div>
                                    <span class="helper-text">${characteristic.measureUnit}</span>
                                                   </div>
                                           </div>

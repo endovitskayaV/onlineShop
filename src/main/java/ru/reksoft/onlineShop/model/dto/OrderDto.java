@@ -2,6 +2,7 @@ package ru.reksoft.onlineShop.model.dto;
 
 import lombok.*;
 import ru.reksoft.onlineShop.model.domain.entity.OrderEntity;
+import ru.reksoft.onlineShop.validating.alphabeticNumericData.AlphabeticNumericData;
 
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class OrderDto {
     private Date date;
 
     @NotBlank(message = "Address must contain at least one not blank character")
+    @AlphabeticNumericData
     private String deliveryAddress;
+
     private List<OrderedItemDto> items;
 }

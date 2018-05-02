@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.reksoft.onlineShop.model.domain.entity.CategoryEntity;
 import ru.reksoft.onlineShop.service.CategoryService;
+import ru.reksoft.onlineShop.validating.alphabeticNumericData.AlphabeticNumericData;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -30,8 +31,11 @@ import java.util.List;
 public class NewCategoryDto {
 
     @NotBlank(message = "Name must contain at least one not blank character")
+    @AlphabeticNumericData
     private String name;
+
     @NotBlank(message = "Description must contain at least one not blank character")
+    @AlphabeticNumericData
     private String description;
 
     /**

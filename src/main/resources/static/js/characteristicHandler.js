@@ -13,6 +13,8 @@ function loadCharacteristics(element) {
                 '                    <input id="value" name="characteristics[' + i + '].value" type="text" class="validate">\n' +
                 '                    <label for="value">' + characteristic.name + '</label>\n' +
                 ' <span class="helper-text">' + characteristic.measureUnit + '</span>' +
+                '  <div name="characteristics[' + i + ']-errors"></div>' +
+                '  <div name="characteristics[' + i + '].value-errors"></div>' +
                 '                </div>' +
                 '            </div>';
             characteristicsDiv.append(newInput);

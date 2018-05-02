@@ -108,6 +108,7 @@
                                                  value="${characteristic.value}">
                                           <label for="value">${characteristic.name}</label>
                                           <div name="characteristics[${i}]-errors"></div>
+                                          <div name="characteristics[${i}].value-errors"></div>
                                           <span class="helper-text">${characteristic.measureUnit}</span>
                                       </div>
                                   </div>

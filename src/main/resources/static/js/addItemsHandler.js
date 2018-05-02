@@ -26,6 +26,7 @@ function loadCharacteristics(elemId) {
                 '                    <label for="value">' + characteristic.name + '</label>\n' +
                 ' <span class="helper-text">' + characteristic.measureUnit + '</span>' +
               '  <div name="characteristics[' + i + ']-errors"></div>' +
+                '  <div name="characteristics[' + i + '].value-errors"></div>' +
                 '                </div>' +
                 '            </div></div>';
             characteristicDiv.append(newInput);
