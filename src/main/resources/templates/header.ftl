@@ -1,24 +1,26 @@
 <div class="white hoverable">
+<div class="row">
     <#if currentUser??>
-    <div class="row">
+
         <div class="input-field col s2 offset-s9">
             <span class="cl-4db6ac truncate"><b>${currentUser.email}</b></span>
         </div>
         <div class="input-field col">
             <a href="/logout" class="cl-4db6ac">logout</a>
         </div>
-    </div>
+
     <#else>
 
-    <div class="row">
         <div class="input-field col s1 offset-s10">
             <a href="/login" class="cl-4db6ac">log in</a>
         </div>
         <div class="input-field col">
             <a href="/signup" class="cl-4db6ac">register</a>
         </div>
+
     </div>
     </#if>
+
     <div class="row">
         <div class="input-field col s1 offset-s3">
             <div class="right"><a href="/items" class="flow-text cl-4db6ac fs-40">Volt</a></div>

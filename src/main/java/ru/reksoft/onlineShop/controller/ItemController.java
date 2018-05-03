@@ -137,6 +137,7 @@ public class ItemController {
             if (characteristics != null) {
                 deleteCharacteristics(characteristics, sortBy, acs);
             }
+
             if (characteristics != null && characteristics.size() > 0) {
                 setModel(model,
                         itemService.getByCharacteristicAndQuery(getStringListMap(characteristics), getSafeBoolean(acs), sortBy, categoryId, query),
@@ -148,11 +149,10 @@ public class ItemController {
 
                 items = itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy);
                 setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category,
-                        itemService.getCharacteristicValuesByCategoryIdAndQuery(categoryService.getByName(category).getId(),query));
+                        itemService.getCharacteristicValuesByCategoryIdAndQuery(categoryService.getByName(category).getId(), query));
 
             }
         }
-
 
         setSearchModel(model, query, sortBy, acs);
         return "home";
