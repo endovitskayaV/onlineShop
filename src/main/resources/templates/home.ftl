@@ -20,6 +20,20 @@
 
 <body id="body">
     <#include "header.ftl">
+
+    <#if  search??  && items?size==0>
+   <div class="row" style="margin-top: 30px">
+        <div class="col s2 offset-s4 card horizontal">
+            <div class="card-stacked">
+                <div class="card-content">
+                    <p>No items</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <#else>
+
+
     <#include "sorting_select.ftl">
 <div class="row">
     <#if categories??>
@@ -41,6 +55,7 @@
     <input id="chosenCategory" type="text" hidden value="${selectedCategory}">
         </#if>
     </#list>
+
 <#else>
     <#list categories as category>
         <div>
@@ -56,18 +71,19 @@
             </div>
         </div>
     </#if>
-    <#if  search??>
-    <#else>
-        <#if  items?size==0>
-  <div class="col s2 offset-s1 card horizontal">
-      <div class="card-stacked">
-          <div class="card-content">
-              <p>No items</p>
-          </div>
-      </div>
-  </div>
-        </#if>
-    </#if>
+
+
+     <#if  items?size==0>
+    <div class="row">
+        <div class="col s2 offset-s2 card horizontal">
+            <div class="card-stacked">
+                <div class="card-content">
+                    <p>No items</p>
+                </div>
+            </div>
+        </div>
+    </div>
+     </#if>
 
     <div id="verifyCategory"></div>
 
@@ -138,6 +154,7 @@
 <script id="initSelect" type="text/javascript" src="../js/initSelect.js"></script>
 <script id="initSelect" type="text/javascript" src="../js/initCollapsible.js"></script>
 <script type="text/javascript" src="../js/cookieHandler.js"></script>
+    </#if>
 
 
 </#escape>
