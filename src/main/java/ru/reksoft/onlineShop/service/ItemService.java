@@ -69,8 +69,8 @@ public class ItemService {
                                              boolean isAcsSort, SortCriteria sortCriteria) {
 
 
-       return getByCharacteristic(getByCategoryId(categoryId, isAcsSort, sortCriteria)
-                ,filterCharacteristics,isAcsSort,sortCriteria);
+        return getByCharacteristic(getByCategoryId(categoryId, isAcsSort, sortCriteria)
+                , filterCharacteristics, isAcsSort, sortCriteria);
     }
 
 
@@ -89,9 +89,9 @@ public class ItemService {
     }
 
     public List<ItemDto> getByCharacteristicAndQuery(Map<String, List<String>> filterCharacteristics,
-                                                     boolean isAcsSort, SortCriteria sortCriteria, long categoryId,String query) {
-        return getByCharacteristic(getByQueryAndCategoryId(query,categoryId,isAcsSort,sortCriteria),
-                filterCharacteristics,isAcsSort,sortCriteria);
+                                                     boolean isAcsSort, SortCriteria sortCriteria, long categoryId, String query) {
+        return getByCharacteristic(getByQueryAndCategoryId(query, categoryId, isAcsSort, sortCriteria),
+                filterCharacteristics, isAcsSort, sortCriteria);
     }
 
     /**
@@ -103,10 +103,18 @@ public class ItemService {
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
-    public List<CharacteristicValueDto> getCharacteristicValues(long categoryId) {
+    public List<CharacteristicValueDto> getCharacteristicValuesByCategoryIdAndQuery(long categoryId, String query) {
+        return getCharacteristics(
+                itemRepository.findAllByCategoryId(categoryId).stream()
+                        .filter(itemEntity -> (
+                                itemEntity.getName().contains(query) || itemEntity.getProducer().contains(query)))
+                        .collect(Collectors.toList()));
+    }
+
+    private List<CharacteristicValueDto> getCharacteristics(List<ItemEntity> items) {
         List<CharacteristicValueDto> characteristicValueDtos = new ArrayList<>();
 
-        itemRepository.findAllByCategoryId(categoryId).forEach(itemEntity -> {
+        items.forEach(itemEntity -> {
             itemEntity.getCharacteristicValue().values().forEach(charactersticValueEntity -> {
                 if (characteristicValueDtos.stream()
                         .anyMatch(characteristicValueDto ->
@@ -130,6 +138,10 @@ public class ItemService {
         });
 
         return characteristicValueDtos;
+    }
+
+    public List<CharacteristicValueDto> getCharacteristicValuesByCategoryId(long categoryId) {
+        return getCharacteristics(itemRepository.findAllByCategoryId(categoryId));
     }
 
 

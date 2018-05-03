@@ -73,19 +73,19 @@ function getSortingParams() {
 }
 
 function sortItems() {
-    var r = window.location.pathname;
     if (query !== "") {
         if (document.getElementById('specifiedCategory') === null || $('#specifiedCategory').val() === "") {
-            var url = document.location.origin + window.location.pathname + '?query=' + getSaveQuery() + '&' + getSortingParams();
-            location.href = url;
+            location.href = document.location.origin + window.location.pathname + '?query=' + getSaveQuery() + '&' + getSortingParams();
         } else {
-          //  getByCategoryAndQuery($('#specifiedCategory').val());
-            var url = document.location.origin +'/items/find?query='+query+'&categoryId='+$('#specifiedCategory').val()+'&' + getSortingParams()+ getChosenCharacteristicParams();
-            location.href = url;
+            location.href = document.location.origin + '/items/find?query=' + query + '&categoryId=' + $('#specifiedCategory').val() + '&' + getSortingParams() + getChosenCharacteristicParams();
         }
 
     } else if (document.location.href.includes("category")) {
-        location.href = document.location.origin + '/items?category=' + $('#chosenCategory').val() + '&' + getSortingParams();
+        if (anyCharacteristicWasChosen()) {
+            location.href = document.location.origin + '/items/filter?category=' + $('#chosenCategory').val() + '&' + getSortingParams()+ getChosenCharacteristicParams();
+        } else {
+            location.href = document.location.origin + '/items/filter?category=' + $('#chosenCategory').val() + '&' + getSortingParams();
+        }
     } else {
         location.href = document.location.origin + '/items?' + getSortingParams();
     }
@@ -97,10 +97,8 @@ function getByCategory(categoryName) {
 
 function findByCharacteristics() {
     if (anyCharacteristicWasChosen()) {
-
         if (query !== "") {
-            var url = document.location.origin +'/items/find?query='+query+'&categoryId='+$('#specifiedCategory').val()+'&' + getSortingParams()+ getChosenCharacteristicParams();
-            location.href = url;
+            location.href = document.location.origin + '/items/find?query=' + query + '&categoryId=' + $('#specifiedCategory').val() + '&' + getSortingParams() + getChosenCharacteristicParams();
         } else {
             location.href =
                 document.location.origin + '/items/filter?category=' + $('#chosenCategory').val() + '&' + getSortingParams() + getChosenCharacteristicParams();
@@ -115,8 +113,8 @@ function anyCharacteristicWasChosen() {
         var characteristicName = ((li.children)[1]).value;
         var valuesDiv = li.children[2];
         $.each(valuesDiv.children, function (key, ch) {
-            var characteristic = ((ch.children)[0].children)[0]; //checkBox
-            if ((((ch.children)[0].children)[0]).checked) {
+            var checkBox = ((ch.children)[0].children)[0];
+            if (checkBox.checked) {
                 chosen = true;
             }
         });
@@ -132,9 +130,9 @@ function getChosenCharacteristicParams() {
         var characteristicName = ((li.children)[1]).value;
         var valuesDiv = li.children[2];
         $.each(valuesDiv.children, function (key, ch) {
-            var characteristic = ((ch.children)[0].children)[0]; //checkBox
-            if ((((ch.children)[0].children)[0]).checked) {
-                values += ',' + characteristic.value;
+            var checkBox = ((ch.children)[0].children)[0];
+            if (checkBox.checked) {
+                values += ',' + checkBox.value;
             }
         });
 

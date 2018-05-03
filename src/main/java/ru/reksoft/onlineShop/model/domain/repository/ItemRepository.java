@@ -21,6 +21,7 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
 
     List<ItemEntity> findAllByCategoryId(long categoryId);
 
+
     List<ItemEntity> findAllByCategoryId(long categoryId, Sort sort);
 
     /**

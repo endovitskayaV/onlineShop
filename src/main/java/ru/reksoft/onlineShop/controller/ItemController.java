@@ -61,7 +61,7 @@ public class ItemController {
             setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), null, null);
         } else {
             items = itemService.getByCategoryId(categoryService.getByName(category).getId(), getSafeBoolean(acs), sortBy);
-            setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category, itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
+            setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category, itemService.getCharacteristicValuesByCategoryId(categoryService.getByName(category).getId()));
         }
 
 
@@ -89,7 +89,7 @@ public class ItemController {
 
 
     private List<CharacteristicValueDto> setChosenCharacteristics(String category, Map<String, List<String>> characteristicMap) {
-        List<CharacteristicValueDto> dbcharacteristics = itemService.getCharacteristicValues(categoryService.getByName(category).getId());
+        List<CharacteristicValueDto> dbcharacteristics = itemService.getCharacteristicValuesByCategoryId(categoryService.getByName(category).getId());
         dbcharacteristics.forEach(dbcharacteristicValueDto ->
                 dbcharacteristicValueDto.getValues().forEach(dbcharacteristicValue ->
                         characteristicMap.forEach((code, values) -> {
@@ -147,7 +147,8 @@ public class ItemController {
             } else {
 
                 items = itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy);
-                setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category, itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
+                setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category,
+                        itemService.getCharacteristicValuesByCategoryIdAndQuery(categoryService.getByName(category).getId(),query));
 
             }
         }
@@ -156,19 +157,6 @@ public class ItemController {
         setSearchModel(model, query, sortBy, acs);
         return "home";
     }
-
-//    @GetMapping("/search")
-//    public ResponseEntity getAll(Model model, String query,
-//                                 @RequestParam(required = false) Long categoryId,
-//                                 @RequestParam(required = false) SortCriteria sortBy,
-//                                 @RequestParam(required = false) Boolean acs) {
-//
-//        clientDataConstructor.setCurrentUser(model);
-//
-//        return categoryId == null ?
-//                ResponseEntity.ok(new ItemsCategories(itemService.getByNameOrProducer(query, getSafeBoolean(acs), sortBy), categoryService.getByQuery(query))) :
-//                ResponseEntity.ok(itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy));
-//    }
 
 
     /**

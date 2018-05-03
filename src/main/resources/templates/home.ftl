@@ -134,7 +134,7 @@
     </div>
 
 </div>
-
+    </#if>
 <div id="info-modal" class="modal modal-content"></div>
 
 <script type="text/javascript" src="js/initHome.js"></script>
@@ -154,7 +154,7 @@
 <script id="initSelect" type="text/javascript" src="../js/initSelect.js"></script>
 <script id="initSelect" type="text/javascript" src="../js/initCollapsible.js"></script>
 <script type="text/javascript" src="../js/cookieHandler.js"></script>
-    </#if>
+
 
 
 </#escape>
