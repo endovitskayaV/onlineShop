@@ -22,18 +22,24 @@
     <#include "header.ftl">
     <#include "sorting_select.ftl">
 <div class="row">
+ <#if categories??>
     <div id="categories">
         <div class="col s2">
             <div class="collection z-depth-1 hoverable">
+
     <#list categories as category>
         <div><a href="javascript: getByCategory('${category.name}')" class="collection-item">${category.name}</a></div>
-   <#if selectedCategory??>
+        <#if selectedCategory??>
     <input id="chosenCategory" type="text" hidden value="${selectedCategory}">
-   </#if>
+        </#if>
     </#list>
+
             </div>
         </div>
     </div>
+ </#if>
+    <#if  search??>
+    <#else>
 <#if  items?size==0>
   <div class="col s2 offset-s1 card horizontal">
       <div class="card-stacked">
@@ -43,6 +49,7 @@
       </div>
   </div>
 </#if>
+    </#if>
 
     <div id="verifyCategory"></div>
 
@@ -118,15 +125,17 @@
 </#escape>
 
 <#if specifyCategory??>
-    <#assign url= "/items/search?query="+query+"&sortBy="+"&acs=" +acs?then('true', 'false')>
+    <#assign url= "/items/search?query="+query+"&sortBy="+sortBy+"&acs=" +acs?then('true', 'false')>
 <script>
-    setCategories("${url}");
     $('#search').val("${query}");
+    query=getSaveQuery();
+    setCategories("${url}");
 </script>
 <#elseif categoryId??>
 <script>
-    getByCategoryAndQuery(${categoryId});
     $('#search').val("${query}");
+    query=getSaveQuery();
+    getByCategoryAndQuery(${categoryId});
 </script>
 </#if>
 

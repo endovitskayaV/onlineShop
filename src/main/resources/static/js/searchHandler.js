@@ -6,8 +6,12 @@ $('#search').keypress(function (e) {
     }
 });
 
+function getSaveQuery(){
+    return String($('#search').val()).replace(/&/g, '').replace(/</g, '').replace(/>/g, '').replace(/"/g, '');
+}
+
 function findItems() {
-    var search = String($('#search').val()).replace(/&/g, '').replace(/</g, '').replace(/>/g, '').replace(/"/g, '');
+    var search = getSaveQuery();
     if (search !== "") {
         query=search;
         $('#characteristrics_filter').html("");
@@ -25,6 +29,7 @@ function findItems() {
 }
 
 function setCategories(req) {
+    query=getSaveQuery();
     $.get(req, function (data) {
         var select = document.getElementById("sort_criteria_div");
 
@@ -47,9 +52,11 @@ function setCategories(req) {
 
 
             if (data.categories.length > 1) {
+                $('<input id="specifiedCategory" hidden value="">').appendTo(document.body);
+
                 var div = '<div class="col s2"> <div class="collection z-depth-1">' +
-                    '<div style="background-color: white">' +
-                    '<span>Specify category:</span></div>';
+                    '<div style="background-color: white"><br>'+
+                    '<span style="margin-left: 10px">Specify category:</span></div><br>';
 
                 $.each(data.categories, function (index, category) {
                     div += '<div>' +
@@ -71,7 +78,8 @@ function getByCategoryAndQuery(categoryId) {
     $('#verifyCategory').html("").append('<div class="col s2"></div>');
     $('#specifiedCategory').remove();
     $('<input id="specifiedCategory" hidden value="' + categoryId + '">').appendTo(document.body);
-    var search = $('#search').val();
+    var search=getSaveQuery();
+    query=search;
 
     var url = document.location.origin + '/items/search?query=' + search;
     var urlForUser = document.location.origin + '/items/find?query=' + search;

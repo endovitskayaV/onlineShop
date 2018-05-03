@@ -61,9 +61,12 @@ function getSortingParams() {
 }
 
 function sortItems() {
+    var r=window.location.pathname;
     if (query !== "") {
         if (document.getElementById('specifiedCategory') === null || $('#specifiedCategory').val() === "") {
-            setCategories(document.location.origin + '/items/search?query=' + $('#search').val() + '&' + getSortingParams());
+            var url=document.location.origin+window.location.pathname+'?query=' + getSaveQuery() + '&' + getSortingParams();
+            history.replaceState('', 'VOLT-Home', url);
+            setCategories(document.location.origin+'/items/search?query=' + getSaveQuery() + '&' + getSortingParams());
         } else {
             getByCategoryAndQuery($('#specifiedCategory').val());
         }

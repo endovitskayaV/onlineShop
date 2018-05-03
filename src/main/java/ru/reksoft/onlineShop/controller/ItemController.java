@@ -117,17 +117,18 @@ public class ItemController {
         String category;
         List<ItemDto> items;
         if (categoryId == null) {
-            category = null;
             items = itemService.getByNameOrProducer(query, getSafeBoolean(acs), sortBy);
             model.addAttribute("specifyCategory", categoryService.getByQuery(query));
+            setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), null, null);
 
         } else {
             category = categoryService.getById(categoryId).getName();
             items = itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy);
             model.addAttribute("categoryId", categoryId);
+            setModel(model, items, sortBy, getSafeBoolean(acs), null, category, null);
         }
 
-        setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category, null);
+
         setSearchModel(model,query,sortBy,acs);
         return "home";
     }
@@ -407,6 +408,7 @@ public class ItemController {
         model.addAttribute("query", query);
         model.addAttribute("sortBy", sortBy == null ? SortCriteria.POPULARITY : sortBy);
         model.addAttribute("acs", getSafeBoolean(acs));
+        model.addAttribute("search", "search");
     }
 
     @Data
