@@ -12,11 +12,15 @@ function findItems() {
         query=search;
         $('#characteristrics_filter').html("");
         var url = document.location.origin + '/items/search?query=' + search;
+        var urlForUser = document.location.origin + '/items/find?query=' + search;
         var element = document.getElementById('sort_criteria');
         if (element !== null) {
            url+=  '&' + getSortingParams();
+           urlForUser+='&' + getSortingParams();
         }
-          setCategories(url);
+
+        history.replaceState('', 'VOLT-Home', urlForUser);
+        setCategories(url);
     }
 }
 
@@ -63,27 +67,33 @@ function setCategories(req) {
     });
 }
 
-function getByCategoryAndQuery(categoryId, query) {
+function getByCategoryAndQuery(categoryId) {
     $('#verifyCategory').html("").append('<div class="col s2"></div>');
     $('#specifiedCategory').remove();
     $('<input id="specifiedCategory" hidden value="' + categoryId + '">').appendTo(document.body);
     var search = $('#search').val();
 
     var url = document.location.origin + '/items/search?query=' + search;
+    var urlForUser = document.location.origin + '/items/find?query=' + search;
     var element = document.getElementById('sort_criteria');
     if (element !== null) {
         url+=  '&' + getSortingParams() ;
+        urlForUser+='&' + getSortingParams() ;
     }
     url+= '&' + 'categoryId=' + categoryId;
-    setNewSortedItems(url);
+    urlForUser+='&' + 'categoryId=' + categoryId;
+    setNewSortedItemsFilterCharacteristics(url);
+
+    history.replaceState('', 'VOLT-Home', urlForUser);
+
 }
 
-function setNewSortedItems(query) {
+function setNewSortedItemsFilterCharacteristics(query) {
     $.get(query, function (data) {
-        setItemCards(data)
+        setItemCards(data);
+
     });
 }
-
 
 function setItemCards(data) {
     var itemsDiv = $('#items_div').html("");

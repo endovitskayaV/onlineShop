@@ -65,7 +65,7 @@ function sortItems() {
         if (document.getElementById('specifiedCategory') === null || $('#specifiedCategory').val() === "") {
             setCategories(document.location.origin + '/items/search?query=' + $('#search').val() + '&' + getSortingParams());
         } else {
-            getByCategoryAndQuery($('#specifiedCategory').val(), $('#search').val());
+            getByCategoryAndQuery($('#specifiedCategory').val());
         }
 
     } else if (document.location.href.includes("category")) {

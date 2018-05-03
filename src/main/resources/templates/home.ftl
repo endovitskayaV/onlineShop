@@ -19,10 +19,8 @@
 </head>
 
 <body id="body">
-
-<#include "header.ftl">
-<#include "sorting_select.ftl">
-
+    <#include "header.ftl">
+    <#include "sorting_select.ftl">
 <div class="row">
     <div id="categories">
         <div class="col s2">
@@ -72,7 +70,7 @@
                         </div>
 
                         <#if currentUser??>
-                        <#if currentUser.roleId==1 && currentUser.id==item.sellerId>
+                            <#if currentUser.roleId==1 && currentUser.id==item.sellerId>
                         <div class="input-field col s1 offset-s7">
                             <a href="/items/edit/${item.id}"> <i class="material-icons cl-4db6a sz-30">edit</i></a>
                         </div>
@@ -81,7 +79,7 @@
                                     class="material-icons cl-4db6a sz-30 modal-trigger">delete</i>
                             </a>
                         </div>
-                        </#if>
+                            </#if>
                         </#if>
                     </div>
                 </div>
@@ -116,6 +114,22 @@
 <script id="initSelect" type="text/javascript" src="../js/initCollapsible.js"></script>
 <script type="text/javascript" src="../js/cookieHandler.js"></script>
 
+
+</#escape>
+
+<#if specifyCategory??>
+    <#assign url= "/items/search?query="+query+"&sortBy="+"&acs=" +acs?then('true', 'false')>
+<script>
+    setCategories("${url}");
+    $('#search').val("${query}");
+</script>
+<#elseif categoryId??>
+<script>
+    getByCategoryAndQuery(${categoryId});
+    $('#search').val("${query}");
+</script>
+</#if>
+
 <#if cookies??>
     <#list cookies as cookie>
 <script>setCookie("${cookie.name}");</script>
@@ -124,4 +138,3 @@
 
 </body>
 </html>
-</#escape>

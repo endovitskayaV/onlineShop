@@ -119,6 +119,7 @@ public class ItemService {
         return characteristicValueDtos;
     }
 
+
     private Sort.Direction getDirection(boolean isAcsSort) {
         return isAcsSort ? Sort.Direction.ASC : Sort.Direction.DESC;
     }

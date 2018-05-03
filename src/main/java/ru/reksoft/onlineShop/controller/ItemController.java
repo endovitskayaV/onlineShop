@@ -47,7 +47,7 @@ public class ItemController {
         this.characteristicService = characteristicService;
         this.storageService = storageService;
         this.clientDataConstructor = clientDataConstructor;
-        this.userService=userService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -107,6 +107,29 @@ public class ItemController {
         );
 
         return dbcharacteristics;
+    }
+
+    @GetMapping("/find")
+    public String getAllByQuery(Model model, String query,
+                                @RequestParam(required = false) Long categoryId,
+                                @RequestParam(required = false) SortCriteria sortBy,
+                                @RequestParam(required = false) Boolean acs) {
+        String category;
+        List<ItemDto> items;
+        if (categoryId == null) {
+            category = null;
+            items = itemService.getByNameOrProducer(query, getSafeBoolean(acs), sortBy);
+            model.addAttribute("specifyCategory", categoryService.getByQuery(query));
+
+        } else {
+            category = categoryService.getById(categoryId).getName();
+            items = itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy);
+            model.addAttribute("categoryId", categoryId);
+        }
+
+        setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category, null);
+        setSearchModel(model,query,sortBy,acs);
+        return "home";
     }
 
     @GetMapping("/search")
@@ -304,7 +327,7 @@ public class ItemController {
     }
 
     private ItemDto toItemDto(EditableItemDto editableItemDto) {
-        UserDto u=userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        UserDto u = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         return ItemDto.builder()
                 .id(editableItemDto.getId())
                 .name(editableItemDto.getName())
@@ -327,7 +350,7 @@ public class ItemController {
     }
 
     private Boolean getSafeBoolean(Boolean booleanValue) {
-        return booleanValue == null ? false: booleanValue;
+        return booleanValue == null ? false : booleanValue;
     }
 
     private String setSelectedSortCriteria(SortCriteria sortBy, Boolean acs) {
@@ -377,6 +400,13 @@ public class ItemController {
 
         modelMap.addAttribute("categories", categories);
         modelMap.addAttribute("characteristics", characteristics);
+    }
+
+
+    private void setSearchModel(Model model, String query, SortCriteria sortBy, Boolean acs) {
+        model.addAttribute("query", query);
+        model.addAttribute("sortBy", sortBy == null ? SortCriteria.POPULARITY : sortBy);
+        model.addAttribute("acs", getSafeBoolean(acs));
     }
 
     @Data
