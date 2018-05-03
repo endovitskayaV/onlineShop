@@ -423,7 +423,6 @@ public class ItemController {
         modelMap.addAttribute("characteristics", characteristics);
     }
 
-
     private void setSearchModel(Model model, String query, SortCriteria sortBy, Boolean acs) {
         model.addAttribute("query", query);
         model.addAttribute("sortBy", sortBy == null ? SortCriteria.POPULARITY : sortBy);
@@ -431,10 +430,4 @@ public class ItemController {
         model.addAttribute("search", "search");
     }
 
-    @Data
-    @AllArgsConstructor
-    private class ItemsCategories {
-        List<ItemDto> items;
-        Set<CategoryDto> categories;
-    }
 }

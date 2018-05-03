@@ -152,10 +152,18 @@ public class BasketController {
         } else {
             List<Cookie> cookies = deleteCookie(itemId, request);
             return ResponseEntity.ok(cookies);
-//            //last item in basket: only basketId, itemId, itemQuantity left -> delete whole basket
-//            return cookies.size() == 3 ?
-//                    ResponseEntity.badRequest().build() :
-//                    ResponseEntity.ok(cookies);
+        }
+    }
+
+
+    @DeleteMapping("/delete/{basketId}")
+    public ResponseEntity delete(@PathVariable long basketId) {
+        UserDto user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (user != null) {
+            orderService.deleteBasket(basketId);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.noContent().build();
         }
     }
 
@@ -252,8 +260,6 @@ public class BasketController {
             //delete whole basket
             deletedCookies.add(new Cookie(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ID + 0, null));
         }
-
-
         return deletedCookies;
 
     }

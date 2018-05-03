@@ -121,3 +121,36 @@ function setOverall() {
     }
     $("#overall").html("").append(overall);
 }
+
+function clearBasket(basketId, authUser) {
+    if (confirm("Are you sure?")) {
+        if (!authUser) {
+            //delete cookies
+
+            var cookies = document.cookie.split(";");
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
+
+        } else {
+            // $.get("/basket/delete/" + basketId, function () {})
+            $.ajax({
+                url: document.location.origin + '/basket/delete/' + basketId,
+                type: "DELETE"
+            });
+        }
+
+        $('#overall').html("");
+        $('#top').html("").append('<div class="col s2 offset-s4 card horizontal">\n' +
+            '      <div class="card-stacked">\n' +
+            '          <div class="card-content">\n' +
+            '              <p>No items</p>\n' +
+            '          </div>\n' +
+            '      </div>\n' +
+            '  </div>');
+    }
+}

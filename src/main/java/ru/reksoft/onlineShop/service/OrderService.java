@@ -136,6 +136,11 @@ public class OrderService {
         return increase ? ++number : --number;
     }
 
+
+    public void deleteBasket(long basketId){
+        orderRepository.deleteById(basketId);
+    }
+
     public boolean deleteItem(long basketId, long itemId) {
         OrderEntity basket = orderRepository.getOne(basketId);
         Map<ItemEntity, Integer> itemsQuantity = basket.getItemsQuantity();
