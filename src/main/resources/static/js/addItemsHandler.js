@@ -42,6 +42,9 @@ function showError(field, message) {
 }
 
 $(document).ready(function () {
+    // $("#file-btn").click(function () {
+    //     $("#file-name").val("");
+    // });
     //file type validation
     $("#file").change(function () {
         var fileMaxSize=1048575;

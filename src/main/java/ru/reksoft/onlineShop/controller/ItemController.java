@@ -58,12 +58,13 @@ public class ItemController {
 
         if (category == null) {
             items = itemService.getAll(getSafeBoolean(acs), sortBy);
+            setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), null, null);
         } else {
             items = itemService.getByCategoryId(categoryService.getByName(category).getId(), getSafeBoolean(acs), sortBy);
-            model.addAttribute("characteristics", itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
+            setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category, itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
         }
 
-        setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category, null);
+
         return "home";
     }
 
@@ -73,14 +74,8 @@ public class ItemController {
                                        @RequestParam(required = false) SortCriteria sortBy,
                                        @RequestParam(required = false) Boolean acs) {
 
-        characteristics.remove("category");
 
-        if (sortBy != null) {
-            characteristics.remove("sortBy");
-        }
-        if (acs != null) {
-            characteristics.remove("acs");
-        }
+        deleteCharacteristics(characteristics, sortBy, acs);
 
         setModel(model,
                 itemService.getByCharacteristic(categoryService.getByName(category).getId(), getStringListMap(characteristics), getSafeBoolean(acs), sortBy),
@@ -109,9 +104,23 @@ public class ItemController {
         return dbcharacteristics;
     }
 
+    private void deleteCharacteristics(Map<String, String> characteristics, SortCriteria sortBy, Boolean acs) {
+        characteristics.remove("category");
+        characteristics.remove("query");
+        characteristics.remove("categoryId");
+
+        if (sortBy != null) {
+            characteristics.remove("sortBy");
+        }
+        if (acs != null) {
+            characteristics.remove("acs");
+        }
+    }
+
     @GetMapping("/find")
     public String getAllByQuery(Model model, String query,
                                 @RequestParam(required = false) Long categoryId,
+                                @RequestParam(required = false) Map<String, String> characteristics,
                                 @RequestParam(required = false) SortCriteria sortBy,
                                 @RequestParam(required = false) Boolean acs) {
         String category;
@@ -119,13 +128,28 @@ public class ItemController {
         if (categoryId == null) {
             items = itemService.getByNameOrProducer(query, getSafeBoolean(acs), sortBy);
             model.addAttribute("specifyCategory", categoryService.getByQuery(query));
-            setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), null, null);
+            setModel(model, items, sortBy, getSafeBoolean(acs), new ArrayList<>(categoryService.getByQuery(query)), null, null);
 
         } else {
             category = categoryService.getById(categoryId).getName();
-            items = itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy);
             model.addAttribute("categoryId", categoryId);
-            setModel(model, items, sortBy, getSafeBoolean(acs), null, category, null);
+
+            if (characteristics != null) {
+                deleteCharacteristics(characteristics, sortBy, acs);
+            }
+            if (characteristics != null && characteristics.size() > 0) {
+                setModel(model,
+                        itemService.getByCharacteristicAndQuery(getStringListMap(characteristics), getSafeBoolean(acs), sortBy, categoryId, query),
+                        sortBy, getSafeBoolean(acs),
+                        categoryService.getAll(),
+                        category,
+                        setChosenCharacteristics(category, getStringListMap(characteristics)));
+            } else {
+
+                items = itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy);
+                setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category, itemService.getCharacteristicValues(categoryService.getByName(category).getId()));
+
+            }
         }
 
 
@@ -133,18 +157,18 @@ public class ItemController {
         return "home";
     }
 
-    @GetMapping("/search")
-    public ResponseEntity getAll(Model model, String query,
-                                 @RequestParam(required = false) Long categoryId,
-                                 @RequestParam(required = false) SortCriteria sortBy,
-                                 @RequestParam(required = false) Boolean acs) {
-
-        clientDataConstructor.setCurrentUser(model);
-
-        return categoryId == null ?
-                ResponseEntity.ok(new ItemsCategories(itemService.getByNameOrProducer(query, getSafeBoolean(acs), sortBy), categoryService.getByQuery(query))) :
-                ResponseEntity.ok(itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy));
-    }
+//    @GetMapping("/search")
+//    public ResponseEntity getAll(Model model, String query,
+//                                 @RequestParam(required = false) Long categoryId,
+//                                 @RequestParam(required = false) SortCriteria sortBy,
+//                                 @RequestParam(required = false) Boolean acs) {
+//
+//        clientDataConstructor.setCurrentUser(model);
+//
+//        return categoryId == null ?
+//                ResponseEntity.ok(new ItemsCategories(itemService.getByNameOrProducer(query, getSafeBoolean(acs), sortBy), categoryService.getByQuery(query))) :
+//                ResponseEntity.ok(itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy));
+//    }
 
 
     /**
@@ -190,6 +214,17 @@ public class ItemController {
         return "add_item";
     }
 
+
+    private void validFile(MultipartFile file, List<Error> errors) {
+        if (file.getSize() > 1048575) {
+            errors.add(new Error("file", "File size must be not more than 1 Mb"));
+        }
+        String extension = file.getOriginalFilename().split("\\.")[1];
+        if (!(extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png"))) {
+            errors.add(new Error("file", "Please select a valid image file (JPEG/JPG/PNG)."));
+        }
+    }
+
     @Secured("ROLE_SELLER")
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ModelAndView add(ModelMap modelMap,
@@ -201,6 +236,7 @@ public class ItemController {
 
         editableItemDto.setPhotoName(file.isEmpty() ? NO_PHOTO_NAME : file.getOriginalFilename());
         checkIntegerFields(editableItemDto, errors);
+        validFile(file, errors);
 
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
@@ -263,8 +299,8 @@ public class ItemController {
                              @RequestParam("file") MultipartFile file) {
 
         List<Error> errors = clientDataConstructor.getFormErrors(bindingResult);
-
         checkIntegerFields(editableItemDto, errors);
+        validFile(file, errors);
 
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);

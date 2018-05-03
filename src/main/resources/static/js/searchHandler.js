@@ -23,8 +23,11 @@ function findItems() {
            urlForUser+='&' + getSortingParams();
         }
 
-        history.replaceState('', 'VOLT-Home', urlForUser);
-        setCategories(url);
+     //   setCategories(url);
+
+        location.href = urlForUser;
+        //history.replaceState('', 'VOLT-Home', urlForUser);
+
     }
 }
 
@@ -75,7 +78,7 @@ function setCategories(req) {
 }
 
 function getByCategoryAndQuery(categoryId) {
-    $('#verifyCategory').html("").append('<div class="col s2"></div>');
+    $('#verifyCategory').html("");//.append('<div class="col s2"></div>');
     $('#specifiedCategory').remove();
     $('<input id="specifiedCategory" hidden value="' + categoryId + '">').appendTo(document.body);
     var search=getSaveQuery();
@@ -90,14 +93,15 @@ function getByCategoryAndQuery(categoryId) {
     }
     url+= '&' + 'categoryId=' + categoryId;
     urlForUser+='&' + 'categoryId=' + categoryId;
-    history.replaceState('', 'VOLT-Home', urlForUser);
+   // setNewSortedItemsFilterCharacteristics(url);
+   // history.replaceState('', 'VOLT-Home', urlForUser);
+    location.href = urlForUser;
 
-    setNewSortedItemsFilterCharacteristics(url);
 }
 
 function setNewSortedItemsFilterCharacteristics(query) {
     $.get(query, function (data) {
-        setItemCards(data);
+     ///  setItemCards(data);
 
     });
 }

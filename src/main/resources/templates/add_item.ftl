@@ -129,13 +129,14 @@
 
                     <div class="row">
                         <div class="file-field input-field col s10 offset-s1">
-                            <div class="btn">
+                            <div id="file-btn" class="btn">
                                 <span>File</span>
                                 <input id="file" name="file" type="file">
                             </div>
                             <div class="file-path-wrapper">
-                                <input class="file-path validate" type="text">
+                                <input id="file-name" class="file-path validate" type="text">
                             </div>
+                            <div name="file-errors"></div>
                         </div>
                     </div>
 

@@ -22,25 +22,43 @@
     <#include "header.ftl">
     <#include "sorting_select.ftl">
 <div class="row">
- <#if categories??>
-    <div id="categories">
-        <div class="col s2">
-            <div class="collection z-depth-1 hoverable">
+    <#if categories??>
+        <div id="categories">
+            <div class="col s2">
+                <div class="collection z-depth-1 hoverable">
 
-    <#list categories as category>
-        <div><a href="javascript: getByCategory('${category.name}')" class="collection-item">${category.name}</a></div>
+<#if specifyCategory??>
+    <div style="background-color: white"><br>
+        <span style="margin-left: 10px">Specify category:</span></div>
+    <br>
+
+    <#list specifyCategory as category>
+        <div>
+            <a href="javascript: getByCategoryAndQuery('${category.id}', '${query}')"
+               class="collection-item">${category.name}</a>
+        </div>
         <#if selectedCategory??>
     <input id="chosenCategory" type="text" hidden value="${selectedCategory}">
         </#if>
     </#list>
+<#else>
+    <#list categories as category>
+        <div>
+            <a href="javascript: getByCategory('${category.name}')" class="collection-item">${category.name}</a>
+        </div>
+        <#if selectedCategory??>
+    <input id="chosenCategory" type="text" hidden value="${selectedCategory}">
+        </#if>
+    </#list>
+</#if>
 
+                </div>
             </div>
         </div>
-    </div>
- </#if>
+    </#if>
     <#if  search??>
     <#else>
-<#if  items?size==0>
+        <#if  items?size==0>
   <div class="col s2 offset-s1 card horizontal">
       <div class="card-stacked">
           <div class="card-content">
@@ -48,7 +66,7 @@
           </div>
       </div>
   </div>
-</#if>
+        </#if>
     </#if>
 
     <div id="verifyCategory"></div>
@@ -123,20 +141,15 @@
 
 
 </#escape>
+<#if search??>
+<script>
+    $('#search').val("${query}");
+    query = getSaveQuery();
+</script>
+</#if>
 
-<#if specifyCategory??>
-    <#assign url= "/items/search?query="+query+"&sortBy="+sortBy+"&acs=" +acs?then('true', 'false')>
-<script>
-    $('#search').val("${query}");
-    query=getSaveQuery();
-    setCategories("${url}");
-</script>
-<#elseif categoryId??>
-<script>
-    $('#search').val("${query}");
-    query=getSaveQuery();
-    getByCategoryAndQuery(${categoryId});
-</script>
+<#if categoryId??>
+ <input id="specifiedCategory" hidden value="${categoryId}">
 </#if>
 
 <#if cookies??>

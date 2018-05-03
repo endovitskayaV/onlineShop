@@ -67,9 +67,17 @@ public class ItemService {
 
     public List<ItemDto> getByCharacteristic(long categoryId, Map<String, List<String>> filterCharacteristics,
                                              boolean isAcsSort, SortCriteria sortCriteria) {
-        List<ItemDto> foundItems = new ArrayList<>();
 
-        getByCategoryId(categoryId, isAcsSort, sortCriteria).forEach(itemDto -> {
+
+       return getByCharacteristic(getByCategoryId(categoryId, isAcsSort, sortCriteria)
+                ,filterCharacteristics,isAcsSort,sortCriteria);
+    }
+
+
+    private List<ItemDto> getByCharacteristic(List<ItemDto> items, Map<String, List<String>> filterCharacteristics,
+                                              boolean isAcsSort, SortCriteria sortCriteria) {
+        List<ItemDto> foundItems = new ArrayList<>();
+        items.forEach(itemDto -> {
 
             if (itemDto.getCharacteristics().stream().anyMatch(characteristicDto ->
 
@@ -80,6 +88,11 @@ public class ItemService {
         return foundItems;
     }
 
+    public List<ItemDto> getByCharacteristicAndQuery(Map<String, List<String>> filterCharacteristics,
+                                                     boolean isAcsSort, SortCriteria sortCriteria, long categoryId,String query) {
+        return getByCharacteristic(getByQueryAndCategoryId(query,categoryId,isAcsSort,sortCriteria),
+                filterCharacteristics,isAcsSort,sortCriteria);
+    }
 
     /**
      * @param categoryId category id

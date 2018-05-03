@@ -1,4 +1,5 @@
 <#if items??>
+    <#if (items?size>0)>
     <#if characteristics??>
           <div id="characteristrics_filter" class="col s3 offset-s1">
               <div><ul class="collapsible expandable">
@@ -27,8 +28,13 @@
               </ul></div>
 
 
-              <a style="visibility: hidden" id="apply_btn" href="javascript: findByCharacteristics()"
+              <a  id="apply_btn" href="javascript: findByCharacteristics()"
                  class="waves-effect waves-light btn">apply</a>
+
+
+              <input id="chosenCategory" type="text" hidden value="${selectedCategory}">
           </div>
     </#if>
+</#if>
+
 </#if>
