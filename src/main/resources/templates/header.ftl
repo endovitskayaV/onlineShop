@@ -34,9 +34,11 @@
         </div>
 
     </div>
+<#if currentUser??>
     <div class="row">
     <div class="input-field col s1 offset-s10">
         <div class="right"><a class="cl-4db6ac" href="/orders">my orders</a></div></div>
     </div>
+</#if>
     <div class="divider z-depth-3"></div>
 </div>
