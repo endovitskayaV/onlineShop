@@ -129,7 +129,7 @@ public class ItemController {
         }
 
 
-        setSearchModel(model,query,sortBy,acs);
+        setSearchModel(model, query, sortBy, acs);
         return "home";
     }
 
@@ -207,15 +207,15 @@ public class ItemController {
             setItemModel(modelMap, editableItemDto);
             return new ModelAndView("add_item");
         } else {
-            //  storageService.store(editableItemDto.getPhoto());
+            if (!file.isEmpty()) {
+                editableItemDto.setPhotoName(storageService.store(file));
+            }
+
             long id = itemService.add(toItemDto(editableItemDto));
             if (id == -1) {
                 modelMap.addAttribute("message", "Item '" + editableItemDto.getProducer() + " " + editableItemDto.getName() + "' already exists!");
                 return new ModelAndView("error", modelMap);
             } else {
-                if (!file.isEmpty()) {
-                    storageService.store(file);
-                }
                 return new ModelAndView("redirect:/items/" + id);
             }
         }
@@ -274,11 +274,7 @@ public class ItemController {
             if (file.isEmpty() && editableItemDto.getPhotoName() == null) {
                 editableItemDto.setPhotoName(NO_PHOTO_NAME);
             } else if (!file.isEmpty()) {
-                editableItemDto.setPhotoName(file.getOriginalFilename());
-            }
-
-            if (!file.isEmpty()) {
-                storageService.store(file);
+                editableItemDto.setPhotoName(storageService.store(file));
             }
             return new ModelAndView("redirect:/items/" + itemService.edit(toItemDto(editableItemDto)));
         }

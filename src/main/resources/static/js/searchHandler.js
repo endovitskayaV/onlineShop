@@ -67,7 +67,7 @@ function setCategories(req) {
                 div += '</div></div>';
                 categoriesDiv.append(div);
             } else {
-                categoriesDiv.append('<div class="col s3"></div>');
+                categoriesDiv.append('<div class="col s2"></div>');
             }
             setItemCards(data.items);
         }
@@ -90,10 +90,9 @@ function getByCategoryAndQuery(categoryId) {
     }
     url+= '&' + 'categoryId=' + categoryId;
     urlForUser+='&' + 'categoryId=' + categoryId;
-    setNewSortedItemsFilterCharacteristics(url);
-
     history.replaceState('', 'VOLT-Home', urlForUser);
 
+    setNewSortedItemsFilterCharacteristics(url);
 }
 
 function setNewSortedItemsFilterCharacteristics(query) {

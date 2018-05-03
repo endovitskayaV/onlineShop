@@ -59,7 +59,5 @@ public class EditableItemDto {
     @Valid
     private List<CharacteristicDto> characteristics;
 
-
-    @AlphabeticNumericData
     private String photoName;
 }
