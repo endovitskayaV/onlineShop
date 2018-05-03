@@ -133,12 +133,15 @@
                 </#if>
 
                     <div class="row">
-                        <div class="input-field col s11 offset-s1">
-                            <label for="file">Change photo</label>
+                        <div class="file-field input-field col s10 offset-s1">
+                            <div class="btn">
+                                <span>Change photo</span>
+                                <input id="file" name="file" type="file">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s11 offset-s1"><input type="file" id="file" name="file"/></div>
                     </div>
                     <div class="row">
                         <div class="input-field col s2 offset-s1">
