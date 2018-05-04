@@ -12,6 +12,7 @@ import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.ValueChecked;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -140,14 +141,21 @@ public class ItemService {
         return isAcsSort ? Sort.Direction.ASC : Sort.Direction.DESC;
     }
 
+    private List<ItemEntity>  findAllByNameInOrProducerIn(String[] words, Sort sort){
+        return itemRepository.findAll(sort).stream()
+                .filter(itemEntity ->
+                    Arrays.stream(words).anyMatch(word->itemEntity.getName().contains(word)) ||
+                            Arrays.stream(words).anyMatch(word->itemEntity.getProducer().contains(word))).collect(Collectors.toList());
+    }
+
     public List<ItemDto> getByNameOrProducer(String query, boolean isAcsSort, SortCriteria sortCriteria) {
         return sortCriteria == null ?
-                itemRepository.findAllByNameContainingOrProducerContaining(
-                        query, query, Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase())).stream()
+                findAllByNameInOrProducerIn(
+                        query.split(" "), Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase())).stream()
                         .map(itemConverter::toDto).collect(Collectors.toList()) :
 
-                itemRepository.findAllByNameContainingOrProducerContaining(
-                        query, query, Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
+                findAllByNameInOrProducerIn(
+                        query.split(" "),Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
                         .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
@@ -165,8 +173,8 @@ public class ItemService {
             sortCriteria = SortCriteria.POPULARITY;
         }
 
-        return itemRepository.findAllByNameContainingOrProducerContaining(
-                query, query, Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
+        return findAllByNameInOrProducerIn(
+                query.split(" "), Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
                 .map(itemConverter::toDto)
                 .collect(Collectors.toList())
                 .stream().filter(itemDto -> itemDto.getCategoryId() == categoryId)
