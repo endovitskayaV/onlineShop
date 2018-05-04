@@ -3,7 +3,10 @@ package ru.reksoft.onlineShop.model.domain.repository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import ru.reksoft.onlineShop.model.domain.entity.ItemEntity;
+import ru.reksoft.onlineShop.model.dto.ItemDto;
 
 import java.util.List;
 
@@ -33,5 +36,15 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
      */
     ItemEntity findByNameAndProducer(String name, String producer);
 
-    List<ItemEntity> findAllByNameInOrProducerIn(String[] nameContains, String[] producerContains, Sort sort);
+   // List<ItemEntity> findAllByNameInOrProducerIn(String[] nameContains, String[] producerContains, Sort sort);
+
+   // @Procedure(procedureName = "search")
+    //@Query(value = "EXECUTE search :words", nativeQuery = true)
+   //@Query(value = "SELECT  i from item i where id= ANY (search(:words)) ", nativeQuery = true)
+
+
+    List<ItemEntity> findAllByIdIn(List<Integer> ids, Sort sort);
+
+    @Query(value = "select search(:words)", nativeQuery = true)
+    List<Integer> search(@Param("words") String[] words);
 }

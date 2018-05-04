@@ -149,14 +149,17 @@ public class ItemService {
     }
 
     public List<ItemDto> getByNameOrProducer(String query, boolean isAcsSort, SortCriteria sortCriteria) {
-        return sortCriteria == null ?
-                findAllByNameInOrProducerIn(
-                        query.split(" "), Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase())).stream()
-                        .map(itemConverter::toDto).collect(Collectors.toList()) :
+       // return sortCriteria == null ?
 
-                findAllByNameInOrProducerIn(
-                        query.split(" "),Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
-                        .map(itemConverter::toDto).collect(Collectors.toList());
+        List<Integer> itemEntities= itemRepository.search( query.split(" "));
+      return   new ArrayList<>();
+//                findAllByNameInOrProducerIn(
+//                        query.split(" "), Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase())).stream()
+//                        .map(itemConverter::toDto).collect(Collectors.toList()) :
+//
+//                findAllByNameInOrProducerIn(
+//                        query.split(" "),Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
+//                        .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
     public List<ItemDto> getAll(boolean isAcsSort, SortCriteria sortCriteria) {
@@ -172,13 +175,15 @@ public class ItemService {
         if (sortCriteria == null) {
             sortCriteria = SortCriteria.POPULARITY;
         }
-
-        return findAllByNameInOrProducerIn(
-                query.split(" "), Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
-                .map(itemConverter::toDto)
-                .collect(Collectors.toList())
-                .stream().filter(itemDto -> itemDto.getCategoryId() == categoryId)
-                .collect(Collectors.toList());
+       // List<ItemEntity> itemEntities= itemRepository.search( query.split(" "));
+//
+//        return findAllByNameInOrProducerIn(
+//                query.split(" "), Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
+//                .map(itemConverter::toDto)
+//                .collect(Collectors.toList())
+//                .stream().filter(itemDto -> itemDto.getCategoryId() == categoryId)
+//                .collect(Collectors.toList());
+     return new ArrayList<>();
     }
 
     /**
