@@ -24,13 +24,11 @@
                 </li>
             </#list>
 
-
               </ul></div>
 
 
               <a  id="apply_btn" href="javascript: findByCharacteristics()"
                  class="waves-effect waves-light btn">apply</a>
-
 
               <input id="chosenCategory" type="text" hidden value="${selectedCategory}">
           </div>

@@ -17,14 +17,7 @@
     <#assign itemsCount=0>
     <#include "header.ftl">
 
-
-
-
-
-
-
 <div id="top" class="row" style="margin-top: 100px">
-
 
     <#if  items?size==0>
 
@@ -35,8 +28,6 @@
             </div>
         </div>
     </div>
-
-
 
     <#else>
 <label for="id"></label>

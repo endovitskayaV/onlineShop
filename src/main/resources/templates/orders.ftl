@@ -19,9 +19,8 @@
 <#include "header.ftl">
 <div class="row" style="margin-top: 100px">
 
-
 <#if  orders?size==0>
-  <div class="col s2 offset-s1 card horizontal">
+  <div class="col s3 offset-s4 card horizontal">
       <div class="card-stacked">
           <div class="card-content">
               <p>No orders</p>

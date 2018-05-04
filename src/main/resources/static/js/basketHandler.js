@@ -24,11 +24,6 @@ function setItemQuantity(basketId, itemId, isIncrease) {
                 if (data !== "") {
                     $.cookie(data.name, null, {path: '/'});
                     $.cookie(data.name, data.value)
-                    // , {
-                    //     expires: data.maxAge,
-                    //     path: data.path
-                    //
-                    // });
                 }
             })
             .fail(function (data) {
@@ -97,9 +92,7 @@ function checkItemQuantity(basketId) {
                 '             <p class="center-align">No more items in stock</p>' +
                 '      </div></div></div>');
         });
-
 }
-
 
 function showModal(message) {
     var modalDiv = $('#info-modal');
@@ -137,7 +130,6 @@ function clearBasket(basketId, authUser) {
             }
 
         } else {
-            // $.get("/basket/delete/" + basketId, function () {})
             $.ajax({
                 url: document.location.origin + '/basket/delete/' + basketId,
                 type: "DELETE"

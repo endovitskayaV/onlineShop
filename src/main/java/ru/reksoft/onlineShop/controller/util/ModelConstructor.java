@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ClientDataConstructor {
+public class ModelConstructor {
     private UserService userService;
 
     @Autowired
-    public ClientDataConstructor(UserService userService) {
+    public ModelConstructor(UserService userService) {
         this.userService = userService;
     }
 
@@ -43,8 +43,7 @@ public class ClientDataConstructor {
     }
 
     public void setCurrentUser(Model model) {
-        model.addAttribute("currentUser",
-                userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()));
+        model.addAttribute("currentUser", userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()));
 
     }
 }

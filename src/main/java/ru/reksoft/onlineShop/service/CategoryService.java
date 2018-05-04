@@ -49,7 +49,6 @@ public class CategoryService {
      * @return category dto found by its id
      */
     public CategoryDto getById(long id) {
-        CategoryEntity categoryEntity = categoryRepository.findById(id).orElse(null);
         return categoryConverter.toDto(categoryRepository.getOne(id));
     }
 

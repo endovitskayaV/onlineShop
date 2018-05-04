@@ -66,8 +66,8 @@ public class ItemConverter {
                             .toDto(characteristicEntity,
                                     itemEntity.getCategory().getCharacteristicsRequired().get(characteristicEntity)))
                     .collect(Collectors.toList());
-            List<String> values = new ArrayList<>();
 
+            List<String> values = new ArrayList<>();
             itemEntity.getCharacteristicValue().values().forEach(charactersticValueEntity -> values.add(charactersticValueEntity.getValue()));
             for (int i = 0; i < values.size(); i++) {
                 characteristicDtos.get(i).setValue(values.get(i));
@@ -102,6 +102,7 @@ public class ItemConverter {
                     itemDto.getCharacteristics().stream()
                             .filter(characteristicDto -> !characteristicDto.getValue().equals(""))
                             .collect(Collectors.toList()));
+
             //construct characteristicsValues for itemEntity
             Map<CharacteristicEntity, CharactersticValueEntity> characteristicsValues = new HashMap<>();
             itemDto.getCharacteristics().forEach(
@@ -119,6 +120,7 @@ public class ItemConverter {
                         }
                         characteristicsValues.put(characteristicEntity, charactersticValueEntity);
                     });
+
             return ItemEntity.builder()
                     .id(itemDto.getId())
                     .name(itemDto.getName())

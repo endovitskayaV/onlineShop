@@ -4,23 +4,20 @@ function deleteItem(id) {
             url: document.location.origin + '/items/delete/' + id,
             type: "DELETE",
             contentType: "application/x-www-form-urlencoded",
-            success: function (data) {
-                if (window.location.href === document.location.origin + '/items/' + id) {
-                    showModal('<div class="row">' +
-                        '          <div class="card-content">' +
-                        '             <p class="center-align">Deleted</p>' +
-                        '      </div></div></div>');
+            success: function () {
+                $('#' + id).html("");
+                showModal('<div class="row">' +
+                    '          <div class="card-content">' +
+                    '             <p class="center-align">Deleted</p>' +
+                    '      </div></div></div>');
 
-                    setTimeout(function () {
-                        location.href = document.location.origin + '/items';
-                    }, 1000);
-
-                } else {
-                    $('#' + id).html("");
-                    showModal('<div class="row">' +
-                        '          <div class="card-content">' +
-                        '             <p class="center-align">Deleted</p>' +
-                        '      </div></div></div>');
+                var url=window.location.href;
+                var f=document.location.origin + '/items/' + id;
+                if (url.search(f)!==-1) {
+                    $('#categories').html("");
+                    $('#' + id).append('<div style="margin-top: 50px" class="row">\n' +
+                        '  <div class="col s3 offset-s4 card hoverable"><div class="card-content">\n' +
+                        '<p class="center-align">No such item</p> </div></div></div>');
                 }
             },
             error: function (data) {
@@ -82,7 +79,7 @@ function sortItems() {
 
     } else if (document.location.href.includes("category")) {
         if (anyCharacteristicWasChosen()) {
-            location.href = document.location.origin + '/items/filter?category=' + $('#chosenCategory').val() + '&' + getSortingParams()+ getChosenCharacteristicParams();
+            location.href = document.location.origin + '/items/filter?category=' + $('#chosenCategory').val() + '&' + getSortingParams() + getChosenCharacteristicParams();
         } else {
             location.href = document.location.origin + '/items/filter?category=' + $('#chosenCategory').val() + '&' + getSortingParams();
         }
@@ -140,6 +137,5 @@ function getChosenCharacteristicParams() {
             params += '&' + characteristicName + '=' + values.substring(1, values.length);
         }
     });
-
     return params;
 }

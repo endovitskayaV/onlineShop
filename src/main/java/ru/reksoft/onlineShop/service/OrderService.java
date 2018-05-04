@@ -125,7 +125,7 @@ public class OrderService {
         }
     }
 
-    public boolean canChangeIemQuantity(OrderedItemDto orderedItemDto, boolean isIncrease) {
+    public boolean canChangeItemQuantity(OrderedItemDto orderedItemDto, boolean isIncrease) {
         ItemEntity itemEntity = itemRepository.getOne(orderedItemDto.getItemId());
 
         return ((isIncrease && (itemEntity.getStorage() >= orderedItemDto.getQuantity() + 1))

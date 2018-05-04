@@ -48,8 +48,6 @@ public class ItemService {
     }
 
     /**
-     * _
-     *
      * @param id item id
      * @return item dto found by its id
      */
@@ -65,12 +63,8 @@ public class ItemService {
                         .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
-    public List<ItemDto> getByCharacteristic(long categoryId, Map<String, List<String>> filterCharacteristics,
-                                             boolean isAcsSort, SortCriteria sortCriteria) {
-
-
-        return getByCharacteristic(getByCategoryId(categoryId, isAcsSort, sortCriteria)
-                , filterCharacteristics, isAcsSort, sortCriteria);
+    public List<ItemDto> getByCharacteristic(long categoryId, Map<String, List<String>> filterCharacteristics, boolean isAcsSort, SortCriteria sortCriteria) {
+        return getByCharacteristic(getByCategoryId(categoryId, isAcsSort, sortCriteria), filterCharacteristics, isAcsSort, sortCriteria);
     }
 
 
@@ -78,9 +72,7 @@ public class ItemService {
                                               boolean isAcsSort, SortCriteria sortCriteria) {
         List<ItemDto> foundItems = new ArrayList<>();
         items.forEach(itemDto -> {
-
             if (itemDto.getCharacteristics().stream().anyMatch(characteristicDto ->
-
                     (filterCharacteristics.keySet().contains(characteristicDto.getCode()) &&
                             filterCharacteristics.get(characteristicDto.getCode()).contains(characteristicDto.getValue()))))
                 foundItems.add(itemDto);
@@ -90,8 +82,7 @@ public class ItemService {
 
     public List<ItemDto> getByCharacteristicAndQuery(Map<String, List<String>> filterCharacteristics,
                                                      boolean isAcsSort, SortCriteria sortCriteria, long categoryId, String query) {
-        return getByCharacteristic(getByQueryAndCategoryId(query, categoryId, isAcsSort, sortCriteria),
-                filterCharacteristics, isAcsSort, sortCriteria);
+        return getByCharacteristic(getByQueryAndCategoryId(query, categoryId, isAcsSort, sortCriteria), filterCharacteristics, isAcsSort, sortCriteria);
     }
 
     /**
@@ -151,11 +142,11 @@ public class ItemService {
 
     public List<ItemDto> getByNameOrProducer(String query, boolean isAcsSort, SortCriteria sortCriteria) {
         return sortCriteria == null ?
-                itemRepository.findAllByNameContainsOrProducerContains(
+                itemRepository.findAllByNameContainingOrProducerContaining(
                         query, query, Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase())).stream()
                         .map(itemConverter::toDto).collect(Collectors.toList()) :
 
-                itemRepository.findAllByNameContainsOrProducerContains(
+                itemRepository.findAllByNameContainingOrProducerContaining(
                         query, query, Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
                         .map(itemConverter::toDto).collect(Collectors.toList());
     }
@@ -174,7 +165,7 @@ public class ItemService {
             sortCriteria = SortCriteria.POPULARITY;
         }
 
-        return itemRepository.findAllByNameContainsOrProducerContains(
+        return itemRepository.findAllByNameContainingOrProducerContaining(
                 query, query, Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
                 .map(itemConverter::toDto)
                 .collect(Collectors.toList())

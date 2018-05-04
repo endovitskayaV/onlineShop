@@ -33,5 +33,5 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
      */
     ItemEntity findByNameAndProducer(String name, String producer);
 
-    List<ItemEntity> findAllByNameContainsOrProducerContains(String nameContains, String producerContains, Sort sort);
+    List<ItemEntity> findAllByNameContainingOrProducerContaining(String nameContains, String producerContains, Sort sort);
 }

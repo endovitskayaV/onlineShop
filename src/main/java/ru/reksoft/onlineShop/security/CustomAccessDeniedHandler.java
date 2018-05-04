@@ -21,6 +21,8 @@ public class CustomAccessDeniedHandler implements AuthenticationEntryPoint {
         String queryString = request.getQueryString();
         queryString = (queryString != null && queryString.length() > 0) ? "?" + request.getQueryString() : "";
 
-        response.sendRedirect("/login?destination=" + request.getRequestURI() + queryString);
+        if (!request.getRequestURI().contains("delete")) {
+            response.sendRedirect("/login?destination=" + request.getRequestURI() + queryString);
+        }
     }
 }

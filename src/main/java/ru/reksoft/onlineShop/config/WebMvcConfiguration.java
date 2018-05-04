@@ -9,6 +9,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //indicate where images are stored in file system
         registry.addResourceHandler("/img/**")
                 .addResourceLocations("file:src/main/resources/static/img/");
     }

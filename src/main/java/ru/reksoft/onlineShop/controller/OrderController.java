@@ -5,11 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
+import ru.reksoft.onlineShop.controller.util.ModelConstructor;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
 import ru.reksoft.onlineShop.model.dto.UserDto;
@@ -27,19 +25,19 @@ public class OrderController {
     private OrderService orderService;
     private ItemService itemService;
     private UserService userService;
-    private ClientDataConstructor clientDataConstructor;
+    private ModelConstructor modelConstructor;
 
     @Autowired
-    public OrderController(OrderService orderService, ItemService itemService, UserService userService, ClientDataConstructor clientDataConstructor) {
+    public OrderController(OrderService orderService, ItemService itemService, UserService userService, ModelConstructor modelConstructor) {
         this.orderService = orderService;
         this.itemService = itemService;
         this.userService = userService;
-        this.clientDataConstructor=clientDataConstructor;
+        this.modelConstructor = modelConstructor;
     }
 
     @GetMapping
     public String getAll(Model model) {
-        clientDataConstructor.setCurrentUser(model);
+        modelConstructor.setCurrentUser(model);
 
         UserDto user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
@@ -48,8 +46,8 @@ public class OrderController {
     }
 
     @GetMapping("/finish")
-    public String finishOrder(Model model, RedirectAttributes redirectAttributes) {
-        return setOrderModel(model,
+    public String finishOrder(Model model) {
+        return canSetOrderModel(model,
                 orderService.getBasket(userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId())) ?
                 "finish_order" : "error";
     }
@@ -57,7 +55,7 @@ public class OrderController {
     @PostMapping(value = "/finish")
     public ResponseEntity finishOrder(@Valid @RequestBody OrderDto orderDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(clientDataConstructor.getFormErrors(bindingResult));
+            return ResponseEntity.badRequest().body(modelConstructor.getFormErrors(bindingResult));
         } else {
             orderService.finishOrder(orderDto);
             return ResponseEntity.noContent().build();
@@ -67,11 +65,11 @@ public class OrderController {
 
     @GetMapping("{id}")
     public String getById(Model model, @PathVariable long id) {
-        return setOrderModel(model, orderService.getById(id)) ? "order_info" : "error";
+        return canSetOrderModel(model, orderService.getById(id)) ? "order_info" : "error";
     }
 
-    private boolean setOrderModel(Model model, OrderDto orderDto) {
-        clientDataConstructor.setCurrentUser(model);
+    private boolean canSetOrderModel(Model model, OrderDto orderDto) {
+        modelConstructor.setCurrentUser(model);
 
         if (orderDto == null) {
             model.addAttribute("message", "No such order");
@@ -85,11 +83,8 @@ public class OrderController {
 
         List<ItemDto> items = new ArrayList<>();
         List<Integer> quatities = new ArrayList<>();
-
-        orderDto.getItems()
-                .forEach(orderedItem -> items.add(itemService.getById(orderedItem.getItemId())));
+        orderDto.getItems().forEach(orderedItem -> items.add(itemService.getById(orderedItem.getItemId())));
         orderDto.getItems().forEach(orderedItem -> quatities.add(orderedItem.getQuantity()));
-
         model.addAttribute("items", items);
         model.addAttribute("quantities", quatities);
 

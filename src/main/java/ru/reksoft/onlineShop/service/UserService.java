@@ -45,7 +45,6 @@ public class UserService implements UserDetailsService {
         if (userEntity == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
-        UserDetails u = new User(userEntity.getEmail(), userEntity.getPassword(), getAuthority(userEntity.getRole().getName()));
         return new User(userEntity.getEmail(), userEntity.getPassword(), getAuthority(userEntity.getRole().getName()));
     }
 
@@ -64,6 +63,7 @@ public class UserService implements UserDetailsService {
                     .role(roleRepository.getOne(signupUserDto.getRoleId())).build();
 
             userRepository.save(userEntity);
+
             if (signupUserDto.getRoleId()==ROLE_SELLER_ID){
                 sellerRepository.save(SellerEntity.builder().userId(userEntity.getId()).income(0).build());
             }

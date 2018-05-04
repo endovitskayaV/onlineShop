@@ -1,7 +1,5 @@
 function addItemToBasket(id) {
-    $.post(document.location.origin + "/basket/add?itemId=" + id, function () {
-
-    })
+    $.post(document.location.origin + "/basket/add?itemId=" + id, function () {})
         .done(function (data) {
             if (data!=="") {
                 $.each(data, function (index, cookie) {
@@ -11,8 +9,6 @@ function addItemToBasket(id) {
 
                     });
                 });
-
-
             }
 
             showModal('<div class="row">' +
@@ -26,9 +22,7 @@ function addItemToBasket(id) {
                 '             <p class="center-align">Sorry, item is not on sell now</p>' +
                 '      </div></div></div>');
         });
-
 }
-
 
 function showModal(message) {
     var modalDiv = $('#info-modal');

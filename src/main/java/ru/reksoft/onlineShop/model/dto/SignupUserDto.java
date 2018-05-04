@@ -19,9 +19,8 @@ import javax.validation.constraints.Size;
 @PasswordMatch
 public class SignupUserDto implements PasswordsProvider{
 
-    //TODO: make up regexp
     @NotBlank(message = "Enter email")
-    @Email(message = "Enter valid email")//(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$" ,message = "Enter valid email")
+    @Email(message = "Enter valid email")
     private String email;
 
     @Size(min = 5, message = "Password must be at least 5 characters length")

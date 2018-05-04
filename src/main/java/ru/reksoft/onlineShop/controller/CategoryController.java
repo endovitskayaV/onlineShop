@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.reksoft.onlineShop.controller.util.ClientDataConstructor;
+import ru.reksoft.onlineShop.controller.util.ModelConstructor;
 import ru.reksoft.onlineShop.model.dto.CategoryDto;
 import ru.reksoft.onlineShop.model.dto.NewCategoryDto;
 import ru.reksoft.onlineShop.service.CategoryService;
@@ -20,15 +20,15 @@ import javax.validation.Valid;
 public class CategoryController {
     private CategoryService categoryService;
     private CharacteristicService characteristicService;
-    private ClientDataConstructor clientDataConstructor;
+    private ModelConstructor modelConstructor;
 
     @Autowired
     public CategoryController(CategoryService categoryService,
                               CharacteristicService characteristicService,
-                              ClientDataConstructor clientDataConstructor) {
+                              ModelConstructor modelConstructor) {
         this.categoryService = categoryService;
         this.characteristicService = characteristicService;
-        this.clientDataConstructor=clientDataConstructor;
+        this.modelConstructor = modelConstructor;
     }
 
     /**
@@ -79,7 +79,7 @@ public class CategoryController {
             }
 
         } else {
-            return ResponseEntity.badRequest().body(clientDataConstructor.getFormErrors(bindingResult));
+            return ResponseEntity.badRequest().body(modelConstructor.getFormErrors(bindingResult));
         }
     }
 }

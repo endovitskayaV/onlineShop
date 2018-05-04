@@ -30,11 +30,12 @@
     </div>
     <div id="verifyCategory"></div>
 
-    <div class="col s8">
+    <div id="${item.id}">
+    <div  class="col s8">
         <div class="row">
             <div class="col s8 offset-s1">
                 <div id="items_div">
-                    <div class="card horizontal hoverable">
+                    <div  class="card horizontal hoverable">
                         <div class="card-image">
                         <#include "item_photo.ftl">
                         </div>
@@ -94,6 +95,7 @@
             </div>
         </div>
     </div>
+    </div>
 </div>
 
 <div id="info-modal" class="modal modal-content"></div>
@@ -104,7 +106,6 @@
 <script type="text/javascript" src="../js/itemInfoHandler.js"></script>
 <script type="text/javascript" src="../js/materialize.min.js"></script>
 <script type="text/javascript" src="../js/cookieHandler.js"></script>
-
 
 <#if cookies??>
     <#list cookies as cookie>
