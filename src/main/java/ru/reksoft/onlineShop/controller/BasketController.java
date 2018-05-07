@@ -52,7 +52,7 @@ public class BasketController {
                     ResponseEntity.badRequest().build();
         } else { //unknown user
             List<Cookie> cookies = createCookie(itemId, request);
-            createCookie(itemId, request).forEach(response::addCookie);
+          // co.forEach(response::addCookie);
             return ResponseEntity.ok(cookies);
         }
     }
