@@ -100,12 +100,8 @@ public class ItemService {
                 .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
-    public List<CharacteristicValueDto> getCharacteristicValuesByCategoryIdAndQuery(long categoryId, String query) {
-        return getCharacteristics(
-                itemRepository.findAllByCategoryId(categoryId).stream()
-                        .filter(itemEntity -> (
-                                itemEntity.getName().contains(query) || itemEntity.getProducer().contains(query)))
-                        .collect(Collectors.toList()));
+    public List<CharacteristicValueDto> getCharacteristicValuesByCategoryIdAndQuery(List<ItemDto> items) {
+        return getCharacteristics(items.stream().map(itemConverter::toEntity).collect(Collectors.toList()));
     }
 
     private List<CharacteristicValueDto> getCharacteristics(List<ItemEntity> items) {
@@ -154,28 +150,7 @@ public class ItemService {
     }
 
     public List<ItemDto> getByNameOrProducer(String keyWords, boolean isAcsSort, SortCriteria sortCriteria) {
-        StoredProcedureQuery query = entityManager
-                .createStoredProcedureQuery("search")
-                .registerStoredProcedureParameter(1, String.class,
-                        ParameterMode.IN)
-                .registerStoredProcedureParameter(2, String.class,
-                        ParameterMode.OUT)
-                .setParameter(1, keyWords);
-        query.execute();
-
-        String s=(String) query.getOutputParameterValue(2);
-
-    long[] ids =  Arrays.stream( s.substring(1, s.length()).split(" ")).mapToLong(Long::parseLong).toArray();
-// Arrays.stream(((String) query.getOutputParameterValue(2)).split(" "))
-//                .map(s -> Integer.parseInt(s)).collect(Collectors.toList());
-
-
-        return sortCriteria == null ?
-                itemRepository.findAllByIdIn(ids, Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase())).stream()
-                        .map(itemConverter::toDto).collect(Collectors.toList()) :
-
-                itemRepository.findAllByIdIn(ids, Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
-                        .map(itemConverter::toDto).collect(Collectors.toList());
+        return getSearchedItemEntities(keyWords, isAcsSort, sortCriteria).stream().map(itemConverter::toDto).collect(Collectors.toList());
     }
 
     public List<ItemDto> getAll(boolean isAcsSort, SortCriteria sortCriteria) {
@@ -186,20 +161,35 @@ public class ItemService {
                         .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
-
-    public List<ItemDto> getByQueryAndCategoryId(String query, long categoryId, boolean isAcsSort, SortCriteria sortCriteria) {
+    public List<ItemDto> getByQueryAndCategoryId(String keyWords, long categoryId, boolean isAcsSort, SortCriteria sortCriteria) {
         if (sortCriteria == null) {
             sortCriteria = SortCriteria.POPULARITY;
         }
-        // List<ItemEntity> itemEntities= itemRepository.search( query.split(" "));
-//
-//        return findAllByNameInOrProducerIn(
-//                query.split(" "), Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
-//                .map(itemConverter::toDto)
-//                .collect(Collectors.toList())
-//                .stream().filter(itemDto -> itemDto.getCategoryId() == categoryId)
-//                .collect(Collectors.toList());
-        return new ArrayList<>();
+
+        return getSearchedItemEntities(keyWords, isAcsSort, sortCriteria).stream()
+                .map(itemConverter::toDto)
+                .collect(Collectors.toList())
+                .stream().filter(itemDto -> itemDto.getCategoryId() == categoryId)
+                .collect(Collectors.toList());
+    }
+
+    private List<ItemEntity> getSearchedItemEntities(String keyWords, boolean isAcsSort, SortCriteria sortCriteria) {
+        StoredProcedureQuery query = entityManager
+                .createStoredProcedureQuery("search")
+                .registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
+                .registerStoredProcedureParameter(2, String.class, ParameterMode.OUT)
+                .setParameter(1, keyWords);
+        query.execute();
+        String idsString = (String) query.getOutputParameterValue(2);
+        if (idsString==null) {
+            return new ArrayList<>();
+        } else {
+            long[] ids = Arrays.stream(idsString.split(" ")).mapToLong(Long::parseLong).toArray();
+
+            return sortCriteria == null ?
+                    itemRepository.findAllByIdIn(ids, Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase())) :
+                    itemRepository.findAllByIdIn(ids, Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase()));
+        }
     }
 
     /**

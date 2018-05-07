@@ -120,7 +120,7 @@ public class ItemController {
             } else {
                 items = itemService.getByQueryAndCategoryId(query, categoryId, getSafeBoolean(acs), sortBy);
                 setModel(model, items, sortBy, getSafeBoolean(acs), categoryService.getAll(), category,
-                        itemService.getCharacteristicValuesByCategoryIdAndQuery(categoryService.getByName(category).getId(), query));
+                        itemService.getCharacteristicValuesByCategoryIdAndQuery(items));
             }
         }
 

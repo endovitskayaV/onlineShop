@@ -37,16 +37,6 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
      */
     ItemEntity findByNameAndProducer(String name, String producer);
 
-   // List<ItemEntity> findAllByNameInOrProducerIn(String[] nameContains, String[] producerContains, Sort sort);
-
-   // @Procedure(procedureName = "search")
-    //@Query(value = "EXECUTE search :words", nativeQuery = true)
-   //@Query(value = "SELECT  i from item i where id= ANY (search(:words)) ", nativeQuery = true)
-
-
     List<ItemEntity> findAllByIdIn(long[] ids, Sort sort);
 
-   // @Query(value = "select search(:words)", nativeQuery = true)
-   //@NamedQuery(name = "search", query="{? call search}")
-  //  List<Integer> search(@Param("words") String[] words);
 }
