@@ -16,7 +16,10 @@
 
 <body>
 <script type="text/javascript" src="../js/cookieHandler.js"></script>
-<div style="margin-top: 80px" class="row">
+<div style="margin: 20px" class="row">
+<a href="/items"><i class="material-icons cl-4db6a sz-30">home</i></a>
+</div>
+<div class="row">
     <div class="col s6 offset-s3">
         <div class="card hoverable">
             <div class="card-content">

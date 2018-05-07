@@ -107,28 +107,26 @@ public class ItemService {
     private List<CharacteristicValueDto> getCharacteristics(List<ItemEntity> items) {
         List<CharacteristicValueDto> characteristicValueDtos = new ArrayList<>();
 
-        items.forEach(itemEntity -> {
-            itemEntity.getCharacteristicValue().values().forEach(charactersticValueEntity -> {
-                if (characteristicValueDtos.stream()
-                        .anyMatch(characteristicValueDto ->
-                                characteristicValueDto.getCode().equals(charactersticValueEntity.getCharacteristic().getCode()))) {
-                    CharacteristicValueDto foundCharacteristicValueDto =
-                            characteristicValueDtos.get(characteristicValueDtos.indexOf((characteristicValueDtos.stream()
-                                    .filter(characteristicValueDto -> characteristicValueDto
-                                            .getCode().equals(charactersticValueEntity.getCharacteristic().getCode()))
-                                    .findFirst().get())));
+        items.forEach(itemEntity -> itemEntity.getCharacteristicValue().values().forEach(charactersticValueEntity -> {
+            if (characteristicValueDtos.stream()
+                    .anyMatch(characteristicValueDto ->
+                            characteristicValueDto.getCode().equals(charactersticValueEntity.getCharacteristic().getCode()))) {
+                CharacteristicValueDto foundCharacteristicValueDto =
+                        characteristicValueDtos.get(characteristicValueDtos.indexOf((characteristicValueDtos.stream()
+                                .filter(characteristicValueDto -> characteristicValueDto
+                                        .getCode().equals(charactersticValueEntity.getCharacteristic().getCode()))
+                                .findFirst().get())));
 
-                    List<ValueChecked> values = foundCharacteristicValueDto.getValues();
-                    values.add(new ValueChecked(charactersticValueEntity.getValue(), false));
-                    foundCharacteristicValueDto.setValues(values);
-                } else {
-                    List<ValueChecked> values = new ArrayList<>();
-                    values.add(new ValueChecked(charactersticValueEntity.getValue(), false));
-                    characteristicValueDtos.add(new CharacteristicValueDto(
-                            charactersticValueEntity.getCharacteristic().getName(), charactersticValueEntity.getCharacteristic().getCode(), values));
-                }
-            });
-        });
+                List<ValueChecked> values = foundCharacteristicValueDto.getValues();
+                values.add(new ValueChecked(charactersticValueEntity.getValue(), false));
+                foundCharacteristicValueDto.setValues(values);
+            } else {
+                List<ValueChecked> values = new ArrayList<>();
+                values.add(new ValueChecked(charactersticValueEntity.getValue(), false));
+                characteristicValueDtos.add(new CharacteristicValueDto(
+                        charactersticValueEntity.getCharacteristic().getName(), charactersticValueEntity.getCharacteristic().getCode(), values));
+            }
+        }));
 
         return characteristicValueDtos;
     }
@@ -140,13 +138,6 @@ public class ItemService {
 
     private Sort.Direction getDirection(boolean isAcsSort) {
         return isAcsSort ? Sort.Direction.ASC : Sort.Direction.DESC;
-    }
-
-    private List<ItemEntity> findAllByNameInOrProducerIn(String[] words, Sort sort) {
-        return itemRepository.findAll(sort).stream()
-                .filter(itemEntity ->
-                        Arrays.stream(words).anyMatch(word -> itemEntity.getName().contains(word)) ||
-                                Arrays.stream(words).anyMatch(word -> itemEntity.getProducer().contains(word))).collect(Collectors.toList());
     }
 
     public List<ItemDto> getByNameOrProducer(String keyWords, boolean isAcsSort, SortCriteria sortCriteria) {

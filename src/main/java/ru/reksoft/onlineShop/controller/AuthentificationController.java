@@ -165,14 +165,12 @@ public class AuthentificationController {
         Map<Long, Integer> itemQuantity = new HashMap<>();
         cookies.stream()
                 .filter(cookie -> cookie.getName().startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_ID))
-                .forEach(cookie -> {
-                    itemQuantity.put(Long.parseLong(cookie.getValue()),
+                .forEach(cookie -> itemQuantity.put(Long.parseLong(cookie.getValue()),
                             /*quantity=*/ Integer.parseInt(cookies.stream()
                                     .filter(cookie1 ->
                                             cookie1.getName().equals(
                                                     COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + CookiesUtils.getCookieId(cookie.getName())))
-                                    .findFirst().get().getValue()));
-                });
+                                    .findFirst().get().getValue())));
 
         OrderDto basket = orderService.getBasket(userId);
         if (basket == null) {

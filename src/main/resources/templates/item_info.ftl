@@ -17,7 +17,7 @@
 <#include "header.ftl">
 <div class="row" style="margin-top: 100px">
     <div id="categories">
-        <div class="col s3">
+        <div class="col s2">
             <div class="collection z-depth-1 hoverable">
     <#list categories as category>
         <div><a href="javascript: getByCategory('${category.name}')" class="collection-item">${category.name}</a></div>
