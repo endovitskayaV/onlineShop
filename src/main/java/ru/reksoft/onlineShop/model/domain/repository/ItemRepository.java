@@ -1,5 +1,6 @@
 package ru.reksoft.onlineShop.model.domain.repository;
 
+import org.hibernate.annotations.NamedQuery;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -43,8 +44,9 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
    //@Query(value = "SELECT  i from item i where id= ANY (search(:words)) ", nativeQuery = true)
 
 
-    List<ItemEntity> findAllByIdIn(List<Integer> ids, Sort sort);
+    List<ItemEntity> findAllByIdIn(long[] ids, Sort sort);
 
-    @Query(value = "select search(:words)", nativeQuery = true)
-    List<Integer> search(@Param("words") String[] words);
+   // @Query(value = "select search(:words)", nativeQuery = true)
+   //@NamedQuery(name = "search", query="{? call search}")
+  //  List<Integer> search(@Param("words") String[] words);
 }

@@ -11,6 +11,9 @@ import ru.reksoft.onlineShop.model.dto.CharacteristicValueDto;
 import ru.reksoft.onlineShop.model.dto.ItemDto;
 import ru.reksoft.onlineShop.model.dto.ValueChecked;
 
+import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,15 +28,17 @@ import java.util.stream.Collectors;
 public class ItemService {
     private ItemRepository itemRepository;
     private ItemConverter itemConverter;
+    private EntityManager entityManager;
 
     /**
      * @param itemRepository repository for item
      * @param itemConverter  converter for item
      */
     @Autowired
-    public ItemService(ItemRepository itemRepository, ItemConverter itemConverter) {
+    public ItemService(ItemRepository itemRepository, ItemConverter itemConverter, EntityManager entityManager) {
         this.itemRepository = itemRepository;
         this.itemConverter = itemConverter;
+        this.entityManager = entityManager;
     }
 
     /**
@@ -141,25 +146,36 @@ public class ItemService {
         return isAcsSort ? Sort.Direction.ASC : Sort.Direction.DESC;
     }
 
-    private List<ItemEntity>  findAllByNameInOrProducerIn(String[] words, Sort sort){
+    private List<ItemEntity> findAllByNameInOrProducerIn(String[] words, Sort sort) {
         return itemRepository.findAll(sort).stream()
                 .filter(itemEntity ->
-                    Arrays.stream(words).anyMatch(word->itemEntity.getName().contains(word)) ||
-                            Arrays.stream(words).anyMatch(word->itemEntity.getProducer().contains(word))).collect(Collectors.toList());
+                        Arrays.stream(words).anyMatch(word -> itemEntity.getName().contains(word)) ||
+                                Arrays.stream(words).anyMatch(word -> itemEntity.getProducer().contains(word))).collect(Collectors.toList());
     }
 
-    public List<ItemDto> getByNameOrProducer(String query, boolean isAcsSort, SortCriteria sortCriteria) {
-       // return sortCriteria == null ?
+    public List<ItemDto> getByNameOrProducer(String keyWords, boolean isAcsSort, SortCriteria sortCriteria) {
+        StoredProcedureQuery query = entityManager
+                .createStoredProcedureQuery("search")
+                .registerStoredProcedureParameter(1, String.class,
+                        ParameterMode.IN)
+                .registerStoredProcedureParameter(2, String.class,
+                        ParameterMode.OUT)
+                .setParameter(1, keyWords);
+        query.execute();
 
-        List<Integer> itemEntities= itemRepository.search( query.split(" "));
-      return   new ArrayList<>();
-//                findAllByNameInOrProducerIn(
-//                        query.split(" "), Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase())).stream()
-//                        .map(itemConverter::toDto).collect(Collectors.toList()) :
-//
-//                findAllByNameInOrProducerIn(
-//                        query.split(" "),Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
-//                        .map(itemConverter::toDto).collect(Collectors.toList());
+        String s=(String) query.getOutputParameterValue(2);
+
+    long[] ids =  Arrays.stream( s.substring(1, s.length()).split(" ")).mapToLong(Long::parseLong).toArray();
+// Arrays.stream(((String) query.getOutputParameterValue(2)).split(" "))
+//                .map(s -> Integer.parseInt(s)).collect(Collectors.toList());
+
+
+        return sortCriteria == null ?
+                itemRepository.findAllByIdIn(ids, Sort.by(Sort.Direction.ASC, SortCriteria.PRODUCER.name().toLowerCase())).stream()
+                        .map(itemConverter::toDto).collect(Collectors.toList()) :
+
+                itemRepository.findAllByIdIn(ids, Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
+                        .map(itemConverter::toDto).collect(Collectors.toList());
     }
 
     public List<ItemDto> getAll(boolean isAcsSort, SortCriteria sortCriteria) {
@@ -175,7 +191,7 @@ public class ItemService {
         if (sortCriteria == null) {
             sortCriteria = SortCriteria.POPULARITY;
         }
-       // List<ItemEntity> itemEntities= itemRepository.search( query.split(" "));
+        // List<ItemEntity> itemEntities= itemRepository.search( query.split(" "));
 //
 //        return findAllByNameInOrProducerIn(
 //                query.split(" "), Sort.by(getDirection(isAcsSort), sortCriteria.name().toLowerCase())).stream()
@@ -183,7 +199,7 @@ public class ItemService {
 //                .collect(Collectors.toList())
 //                .stream().filter(itemDto -> itemDto.getCategoryId() == categoryId)
 //                .collect(Collectors.toList());
-     return new ArrayList<>();
+        return new ArrayList<>();
     }
 
     /**
