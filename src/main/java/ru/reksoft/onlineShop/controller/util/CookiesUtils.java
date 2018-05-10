@@ -1,5 +1,8 @@
 package ru.reksoft.onlineShop.controller.util;
 
+import javax.servlet.http.Cookie;
+import java.util.List;
+
 public class CookiesUtils {
     public static final String COOKIE_BASKET_PREFIX = "basket_";
     private static final String COOKIE_BASKET_ITEM = "item";
@@ -12,4 +15,10 @@ public class CookiesUtils {
     public static final String PAIRS_DELIMITER = "_";
 
     public static final int COOKIE_AGE = 60 * 60 * 24 * 7;
+
+    public static Cookie getItemQuantityCookie(List<Cookie> requestCookies) {
+        return requestCookies.stream()
+                .filter(requestCookie -> ITEM.equals(requestCookie.getName()))
+                .findFirst().orElse(null);
+    }
 }

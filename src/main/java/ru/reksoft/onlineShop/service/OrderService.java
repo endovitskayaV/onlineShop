@@ -199,8 +199,14 @@ public class OrderService {
         orderRepository.save(orderEntity);
     }
 
-    public void addItemsToBasket(long basketId, Map<Long, Integer> itemQuantity) {
-        OrderEntity basket = orderRepository.getOne(basketId);
+    public void addItemsToBasket(long userId, Map<Long, Integer> itemQuantity) {
+
+        OrderDto basketDto = getBasket(userId);
+        if (basketDto == null) {
+            basketDto = createBasket(userId);
+        }
+
+        OrderEntity basket = orderRepository.getOne(basketDto.getId());
         Map<ItemEntity, Integer> itemEntityQuantity = basket.getItemsQuantity();
         itemQuantity.forEach((itemId, quantuty) -> {
             ItemEntity itemEntity = itemRepository.getOne(itemId);

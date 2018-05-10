@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.reksoft.onlineShop.controller.util.CookiesUtils;
 import ru.reksoft.onlineShop.controller.util.Error;
 import ru.reksoft.onlineShop.controller.util.ModelConstructor;
 import ru.reksoft.onlineShop.model.dto.LoginUserDto;
@@ -161,24 +160,22 @@ public class AuthentificationController {
         return true;
     }
 
-    private void saveBasketFromCookiesToDb(long userId, List<Cookie> cookies) {
+    private void saveBasketFromCookiesToDb(long userId, List<Cookie> requestCookies) {
         Map<Long, Integer> itemQuantity = new HashMap<>();
-        cookies.stream()
-                .filter(cookie -> cookie.getName().startsWith(ITEM))
-                .forEach(cookie -> {
-                    String quantityCookieName ="";// ITEM + CookiesUtils.getCookieId(cookie.getName());
-                    itemQuantity.put(Long.parseLong(cookie.getValue()),
-                            Integer.parseInt(cookies.stream()
-                                    .filter(Objects::nonNull)
-                                    .filter(cookie1 -> quantityCookieName.equals(cookie1.getName()))
-                                    .findFirst().get().getValue()));
-                });
 
-        OrderDto basket = orderService.getBasket(userId);
-        if (basket == null) {
-            basket = orderService.createBasket(userId);
+        Cookie itemCookie = getItemQuantityCookie(requestCookies);
+        List<String> itemQuantityPairs;
+        if (itemCookie != null) {
+            itemQuantityPairs = Arrays.asList(itemCookie.getValue().split(PAIRS_DELIMITER));
+            if (itemQuantityPairs.size() > 0) { //build items model
+                itemQuantityPairs.forEach(pair -> {
+                    long itemId = Long.parseLong(pair.split(ITEM_QUANTITY_DELIMITER)[0]);
+                    int quantity = Integer.parseInt(pair.split(ITEM_QUANTITY_DELIMITER)[1]);
+                   itemQuantity.put(itemId,quantity);
+                });
+            }
         }
-        orderService.addItemsToBasket(basket.getId(), itemQuantity);
+        orderService.addItemsToBasket(userId, itemQuantity);
     }
 
     private List<Cookie> deleteBasketCookies(List<Cookie> cookies) {

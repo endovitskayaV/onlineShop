@@ -64,7 +64,7 @@ public class BasketController {
 
         List<Cookie> requestCookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
 
-        Cookie itemCookie = getBasketItemQuantityCookie(requestCookies);
+        Cookie itemCookie = getItemQuantityCookie(requestCookies);
         List<String> itemQuantityPairs;
         if (itemCookie != null) {
             itemQuantityPairs = Arrays.asList(itemCookie.getValue().split(PAIRS_DELIMITER));
@@ -179,7 +179,7 @@ public class BasketController {
             cookies.add(newCookie(BASKET_ID, "1"));
         }
 
-        Cookie itemCookie = getBasketItemQuantityCookie(requestCookies);
+        Cookie itemCookie = getItemQuantityCookie(requestCookies);
         if (itemCookie != null) {
             List<String> itemQuantityPairs = new ArrayList<>(Arrays.asList(itemCookie.getValue().split(PAIRS_DELIMITER)));
 
@@ -206,7 +206,7 @@ public class BasketController {
     private Cookie editCookie(boolean isIncrease, OrderedItemDto orderedItemDto, HttpServletResponse response, HttpServletRequest request) {
         List<Cookie> requestCookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
 
-        Cookie itemCookie = getBasketItemQuantityCookie(requestCookies);
+        Cookie itemCookie = getItemQuantityCookie(requestCookies);
 
         if (itemCookie != null) {
             List<String> itemQuantityPairs = Arrays.asList(itemCookie.getValue().split(PAIRS_DELIMITER));
@@ -234,7 +234,7 @@ public class BasketController {
     private List<Cookie> deleteCookie(long itemId, HttpServletRequest request) {
         List<Cookie> requestCookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
         List<Cookie> changedCookies = new ArrayList<>();
-        Cookie itemCookie = getBasketItemQuantityCookie(requestCookies);
+        Cookie itemCookie = getItemQuantityCookie(requestCookies);
 
         if (itemCookie != null) {
             List<String> itemQuantityPairs = new ArrayList<>(Arrays.asList(itemCookie.getValue().split(PAIRS_DELIMITER)));
@@ -266,12 +266,6 @@ public class BasketController {
 
     private Cookie newCookie(long itemId) {
         return newCookie(ITEM, itemId + ITEM_QUANTITY_DELIMITER + 1); //new item quantity=1
-    }
-
-    private Cookie getBasketItemQuantityCookie(List<Cookie> requestCookies) {
-        return requestCookies.stream()
-                .filter(requestCookie -> ITEM.equals(requestCookie.getName()))
-                .findFirst().orElse(null);
     }
 
     private String pairsToValue(List<String> itemQuantityPairs) {
