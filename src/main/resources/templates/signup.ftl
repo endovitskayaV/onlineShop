@@ -77,7 +77,7 @@
                             <button class="waves-effect waves-light btn" type="submit">Signup</button>
                         </div>
                         <div class="input-field col s2 offset-s7">
-                            <a href="/login" class="cl-4db6ac">login</a>
+                            <a href="javascript:login()" class="cl-4db6ac">login</a>
                         </div>
                     </div>
                 </form>
@@ -97,3 +97,9 @@
 </body>
 </html>
 </#escape>
+
+<script>
+    function login() {
+        location.href=document.location.origin+"/login?destination="+window.location.pathname+window.location.search;
+    }
+</script>
