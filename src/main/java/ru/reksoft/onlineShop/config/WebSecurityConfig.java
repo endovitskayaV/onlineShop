@@ -1,5 +1,6 @@
 package ru.reksoft.onlineShop.config;
 
+import com.fasterxml.jackson.databind.util.ArrayIterator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/fonts/**", "/img/**",

@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
     private SellerRepository sellerRepository;
 
     public static final String ROLE_PREFIX = "ROLE_";
-    private static final int ROLE_SELLER_ID=1;
+    private static final int ROLE_SELLER_ID = 1;
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
@@ -36,7 +36,7 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
-        this.sellerRepository=sellerRepository;
+        this.sellerRepository = sellerRepository;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class UserService implements UserDetailsService {
 
             userRepository.save(userEntity);
 
-            if (signupUserDto.getRoleId()==ROLE_SELLER_ID){
+            if (signupUserDto.getRoleId() == ROLE_SELLER_ID) {
                 sellerRepository.save(SellerEntity.builder().userId(userEntity.getId()).income(0).build());
             }
             return true;
@@ -76,8 +76,8 @@ public class UserService implements UserDetailsService {
     }
 
     public RoleEntity getRoleByEmail(String email) {
-        UserEntity userEntity=userRepository.findByEmail(email);
-        return userEntity!=null? userEntity.getRole():null;
+        UserEntity userEntity = userRepository.findByEmail(email);
+        return userEntity != null ? userEntity.getRole() : null;
     }
 
     private UserDto toDto(UserEntity userEntity) {

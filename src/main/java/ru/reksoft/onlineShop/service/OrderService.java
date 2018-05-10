@@ -137,7 +137,7 @@ public class OrderService {
     }
 
 
-    public void deleteBasket(long basketId){
+    public void deleteBasket(long basketId) {
         orderRepository.deleteById(basketId);
     }
 
@@ -188,8 +188,8 @@ public class OrderService {
         int i = 0;
         for (ItemEntity itemEntity : orderEntity.getItemsQuantity().keySet()) {
             itemEntity.setStorage(itemEntity.getStorage() - orderDto.getItems().get(i).getQuantity());
-            int quantity=(int)orderEntity.getItemsQuantity().values().toArray()[i];
-            itemEntity.setPopularity(itemEntity.getPopularity()+quantity);
+            int quantity = (int) orderEntity.getItemsQuantity().values().toArray()[i];
+            itemEntity.setPopularity(itemEntity.getPopularity() + quantity);
             i++;
         }
         orderRepository.save(orderEntity);

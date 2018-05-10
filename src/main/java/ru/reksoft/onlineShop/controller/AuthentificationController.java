@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.reksoft.onlineShop.controller.util.ModelConstructor;
 import ru.reksoft.onlineShop.controller.util.CookiesUtils;
 import ru.reksoft.onlineShop.controller.util.Error;
+import ru.reksoft.onlineShop.controller.util.ModelConstructor;
 import ru.reksoft.onlineShop.model.dto.LoginUserDto;
 import ru.reksoft.onlineShop.model.dto.OrderDto;
 import ru.reksoft.onlineShop.model.dto.SignupUserDto;
@@ -155,7 +155,7 @@ public class AuthentificationController {
                     Collections.singletonList(new SimpleGrantedAuthority(ROLE_PREFIX + userService.getRoleByEmail(email).getName().toUpperCase())));
             Authentication authentication = authenticationManager.authenticate(user);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (BadCredentialsException  | NullPointerException e) {
+        } catch (BadCredentialsException | NullPointerException e) {
             return false;
         }
         return true;
@@ -165,12 +165,14 @@ public class AuthentificationController {
         Map<Long, Integer> itemQuantity = new HashMap<>();
         cookies.stream()
                 .filter(cookie -> cookie.getName().startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_ID))
-                .forEach(cookie -> itemQuantity.put(Long.parseLong(cookie.getValue()),
-                            /*quantity=*/ Integer.parseInt(cookies.stream()
-                                    .filter(cookie1 ->
-                                            cookie1.getName().equals(
-                                                    COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + CookiesUtils.getCookieId(cookie.getName())))
-                                    .findFirst().get().getValue())));
+                .forEach(cookie -> {
+                    String quantityCookieName = COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + CookiesUtils.getCookieId(cookie.getName());
+                    itemQuantity.put(Long.parseLong(cookie.getValue()),
+                            Integer.parseInt(cookies.stream()
+                                    .filter(Objects::nonNull)
+                                    .filter(cookie1 -> quantityCookieName.equals(cookie1.getName()))
+                                    .findFirst().get().getValue()));
+                });
 
         OrderDto basket = orderService.getBasket(userId);
         if (basket == null) {
