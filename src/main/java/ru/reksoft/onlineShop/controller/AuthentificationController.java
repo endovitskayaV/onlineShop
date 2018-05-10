@@ -25,6 +25,7 @@ import ru.reksoft.onlineShop.service.UserService;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,12 +54,12 @@ public class AuthentificationController {
     }
 
     @GetMapping("/login")
-    public String login(ModelMap model, @RequestParam(required = false) String destination, HttpServletRequest request) {
+    public String login(ModelMap model, @RequestParam(required = false) String destination, HttpServletRequest request) throws UnsupportedEncodingException {
 
         List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
         model.addAttribute("cookies", cookies);
 
-        setLoginUserModel(model, LoginUserDto.builder().email("").password("").build(), destination);
+        setLoginUserModel(model, LoginUserDto.builder().email("").password("").build(), java.net.URLEncoder.encode(destination, "UTF-8"));
 
         return "login";
     }
@@ -66,7 +67,7 @@ public class AuthentificationController {
     @PostMapping("/login")
     public String login(ModelMap modelMap, @Valid LoginUserDto loginUserDto,
                         BindingResult bindingResult, @RequestParam String destination,
-                        HttpServletRequest request, RedirectAttributes redirectAttributes) {
+                        HttpServletRequest request, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
 
         List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
 

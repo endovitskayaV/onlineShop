@@ -50,11 +50,11 @@
 </div>
 <script>
     function login() {
-        var s= window.location.search;
-        location.href=document.location.origin+"/login?destination="+window.location.pathname+window.location.search;
+        var url=document.location.origin+"/login?destination="+encodeURIComponent(window.location.pathname+window.location.search);
+        location.href=url;
     }
 
     function signup() {
-        location.href=document.location.origin+"/signup?destination="+window.location.pathname+window.location.search;
+        location.href=document.location.origin+"/signup?destination="+encodeURIComponent(window.location.pathname+window.location.search);
     }
  </script>

@@ -97,9 +97,3 @@
 </body>
 </html>
 </#escape>
-
-<script>
-    function login() {
-        location.href=document.location.origin+"/login?destination="+window.location.pathname+window.location.search;
-    }
-</script>
