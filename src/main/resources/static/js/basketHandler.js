@@ -63,7 +63,7 @@ function deleteItem(basketId, itemId) {
 
                 if (data !== "") {
                     $.each(data, function (index, cookie) {
-                        $.cookie(cookie.name, null, {path: '/'});
+                        $.cookie(cookie.name, cookie.value, {path: '/'});
                     });
                 }
             },

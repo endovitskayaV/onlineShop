@@ -132,6 +132,10 @@ public class OrderService {
                 || (!isIncrease && (orderedItemDto.getQuantity() - 1 >= 0)));
     }
 
+
+    public boolean canAddItemToBasket(long itemId){
+       return itemRepository.getOne(itemId).getStorage()>0;
+    }
     private int doOperation(boolean increase, int number) {
         return increase ? ++number : --number;
     }

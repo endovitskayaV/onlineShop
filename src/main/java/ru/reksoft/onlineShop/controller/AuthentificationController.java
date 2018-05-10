@@ -164,9 +164,9 @@ public class AuthentificationController {
     private void saveBasketFromCookiesToDb(long userId, List<Cookie> cookies) {
         Map<Long, Integer> itemQuantity = new HashMap<>();
         cookies.stream()
-                .filter(cookie -> cookie.getName().startsWith(COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_ID))
+                .filter(cookie -> cookie.getName().startsWith(ITEM))
                 .forEach(cookie -> {
-                    String quantityCookieName = COOKIE_BASKET_PREFIX + COOKIE_BASKET_ITEM_QUANTITY + CookiesUtils.getCookieId(cookie.getName());
+                    String quantityCookieName ="";// ITEM + CookiesUtils.getCookieId(cookie.getName());
                     itemQuantity.put(Long.parseLong(cookie.getValue()),
                             Integer.parseInt(cookies.stream()
                                     .filter(Objects::nonNull)
