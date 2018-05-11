@@ -215,17 +215,12 @@ public class BasketController {
                     .filter(itemQuantity -> Long.parseLong(itemQuantity.split(ITEM_QUANTITY_DELIMITER)[0]) == orderedItemDto.getItemId())
                     .findFirst().orElse(null);
 
-            if (itemQuantityTargetPair == null) {//no basket cookie for item with id=itemId
-                //?
-            } else {//if exists increase quantity cookie
+            if (itemQuantityTargetPair != null) { //if exists increase quantity cookie
                 String[] itemQuantity = itemQuantityTargetPair.split(ITEM_QUANTITY_DELIMITER);
                 int quantity = doOperation(isIncrease, Integer.parseInt(itemQuantity[1]));
                 itemQuantityPairs.set(itemQuantityPairs.indexOf(itemQuantityTargetPair), itemQuantity[0] + ITEM_QUANTITY_DELIMITER + quantity);
                 itemCookie = newCookie(ITEM, pairsToValue(itemQuantityPairs));
             }
-
-        } else {
-            //?
         }
         response.addCookie(itemCookie);
         return itemCookie;

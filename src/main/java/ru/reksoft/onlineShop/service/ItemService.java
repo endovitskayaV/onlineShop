@@ -14,10 +14,7 @@ import ru.reksoft.onlineShop.model.dto.ValueChecked;
 import javax.persistence.EntityManager;
 import javax.persistence.ParameterMode;
 import javax.persistence.StoredProcedureQuery;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -173,7 +170,7 @@ public class ItemService {
         query.execute();
         String idsString = (String) query.getOutputParameterValue(2);
         if (idsString==null) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         } else {
             long[] ids = Arrays.stream(idsString.split(" ")).mapToLong(Long::parseLong).toArray();
 

@@ -37,7 +37,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .addLogoutHandler(new LogoutHandlerImpl())
                 .logoutSuccessHandler(new LogoutSuccessHandlerImpl())
-              //  .logoutSuccessUrl("/items").permitAll()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new CustomAccessDeniedHandler());
     }

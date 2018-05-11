@@ -54,27 +54,32 @@ public class StorageService {
         boolean isExtensionPng = originalImageExtension.equals("png");
 
         try {
-            if (isExtensionPng) {
+            if (isExtensionPng) { //originalImage.png to originalImage.jpg
                 originalImageExtension = "jpg";
                 compressedImageName = originalImageName.substring(0, originalImageName.lastIndexOf('.')) + "_small." + originalImageExtension;
 
-               //originalImage.png to originalImage.jpg
                 BufferedImage oldImage = ImageIO.read(new File(ROOT_LOCATION + "/" + originalImageName));
                 BufferedImage newImage = new BufferedImage(oldImage.getWidth(), oldImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+                //png to jpg with white background
                 newImage.createGraphics().drawImage(oldImage, 0, 0, Color.WHITE, null);
+
+                //save new jpg file
                 originalImageName = getOriginalFileName(originalImageName) + ".jpg";
                 originalImageFile = new File(ROOT_LOCATION + "/" + originalImageName);
                 ImageIO.write(newImage, "jpg", originalImageFile);
             }
 
-
+            //create output stream
             OutputStream fileOutputStreamCompressedImage = new FileOutputStream(new File(ROOT_LOCATION + "/" + compressedImageName));
             ImageOutputStream compressedImageOutputStream = ImageIO.createImageOutputStream(fileOutputStreamCompressedImage);
 
+            //create image writer based on original file extension
             Iterator<ImageWriter> imageWriterIter = ImageIO.getImageWritersByFormatName(originalImageExtension);
             ImageWriter imageWriter = imageWriterIter.next();
             imageWriter.setOutput(compressedImageOutputStream);
 
+            //set params for image writer
             ImageWriteParam imageWriteParam = imageWriter.getDefaultWriteParam();
             imageWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
             imageWriteParam.setCompressionQuality(0.5f);
