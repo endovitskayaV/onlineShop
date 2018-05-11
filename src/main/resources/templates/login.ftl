@@ -67,3 +67,8 @@
 </html>
 </#escape>
 
+<script>
+    function signup() {
+        location.href=document.location.origin+"/signup?destination="+"${destination}";
+    }
+</script>

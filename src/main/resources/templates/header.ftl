@@ -50,8 +50,7 @@
 </div>
 <script>
     function login() {
-        var url=document.location.origin+"/login?destination="+encodeURIComponent(window.location.pathname+window.location.search);
-        location.href=url;
+        location.href=document.location.origin+"/login?destination="+encodeURIComponent(window.location.pathname+window.location.search);
     }
 
     function signup() {

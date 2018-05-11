@@ -80,7 +80,7 @@ public class AuthentificationController {
 
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
-            setLoginUserModel(modelMap, loginUserDto, destination);
+            setLoginUserModel(modelMap, loginUserDto, java.net.URLEncoder.encode(destination, "UTF-8"));
             return "login";
         } else {
             saveBasketFromCookiesToDb(userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId(), cookies);
@@ -91,21 +91,21 @@ public class AuthentificationController {
     }
 
     @GetMapping("/signup")
-    public String signup(ModelMap model, @RequestParam(required = false) String destination, HttpServletRequest request) {
+    public String signup(ModelMap model, @RequestParam String destination, HttpServletRequest request) throws UnsupportedEncodingException {
 
         List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
         model.addAttribute("cookies", cookies);
 
         setSignupUserModel(model,
                 SignupUserDto.builder().email("").password("").confirmPassword("").roleId(CUSTOMER_ROLE_ID).build(),
-                destination);
+                java.net.URLEncoder.encode(destination, "UTF-8"));
         return "signup";
     }
 
     @PostMapping("/signup")
     public String signup(ModelMap modelMap, @Valid SignupUserDto signupUserDto,
-                         BindingResult bindingResult, @RequestParam(required = false) String destination,
-                         HttpServletRequest request, RedirectAttributes redirectAttributes) {
+                         BindingResult bindingResult, @RequestParam String destination,
+                         HttpServletRequest request, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
 
         List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
 
@@ -119,7 +119,7 @@ public class AuthentificationController {
 
         if (errors.size() > 0) {
             modelMap.addAttribute("errors", errors);
-            setSignupUserModel(modelMap, signupUserDto, destination);
+            setSignupUserModel(modelMap, signupUserDto, java.net.URLEncoder.encode(destination, "UTF-8"));
             return "signup";
         } else {
             login(signupUserDto.getEmail(), signupUserDto.getPassword());
@@ -129,7 +129,7 @@ public class AuthentificationController {
 
             deleteBasketCookies(cookies);
             redirectAttributes.addFlashAttribute("cookies", deleteBasketCookies(cookies));
-            return "redirect:" + (destination == null ? DEFAULT_DESTINATION : destination);
+            return "redirect:" +  destination;
         }
     }
 
