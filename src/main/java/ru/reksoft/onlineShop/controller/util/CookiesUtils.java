@@ -16,6 +16,11 @@ public class CookiesUtils {
 
     public static final int COOKIE_AGE = 60 * 60 * 24 * 7;
 
+    /**
+     *
+     * @param requestCookies cookies from request
+     * @return cookie with name ITEM
+     */
     public static Cookie getItemQuantityCookie(List<Cookie> requestCookies) {
         return requestCookies.stream()
                 .filter(requestCookie -> ITEM.equals(requestCookie.getName()))

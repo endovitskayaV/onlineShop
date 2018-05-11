@@ -14,6 +14,9 @@ import ru.reksoft.onlineShop.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * creates model from given data
+ */
 @Service
 public class ModelConstructor {
     private UserService userService;
