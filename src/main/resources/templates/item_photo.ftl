@@ -1,5 +1,5 @@
 <#if item.photoNameCompressed??>
-                <img  id="img" width="60" height="200" src="../img/${item.photoNameCompressed}">
+                <img  style="margin-top: 12px" id="img" width="60" height="200" src="../img/${item.photoNameCompressed}">
 <#else>
                     <img id="img" width="60" height="200" src="../img/no_photo.png">
 </#if>
