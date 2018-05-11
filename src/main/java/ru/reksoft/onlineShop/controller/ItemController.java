@@ -180,7 +180,7 @@ public class ItemController {
 
         List<Error> errors = modelConstructor.getFormErrors(bindingResult);
 
-        editableItemDto.setPhotoName(file.isEmpty() ? NO_PHOTO_NAME : file.getOriginalFilename());
+        editableItemDto.setPhotoNameOriginal(file.isEmpty() ? NO_PHOTO_NAME : file.getOriginalFilename());
         checkIntegerFields(editableItemDto, errors);
         validFile(file, errors);
 
@@ -190,7 +190,8 @@ public class ItemController {
             return new ModelAndView("add_item");
         } else {
             if (!file.isEmpty()) {
-                editableItemDto.setPhotoName(storageService.store(file));
+                editableItemDto.setPhotoNameOriginal(storageService.store(file));
+                editableItemDto.setPhotoNameCompressed(storageService.getCompressedImage(editableItemDto.getPhotoNameOriginal()));
             }
 
             long id = itemService.add(toItemDto(editableItemDto));
@@ -220,9 +221,9 @@ public class ItemController {
             return "error";
         }
 
-        if (itemDto.getPhotoName() != null) {
-            if (itemDto.getPhotoName().equals(NO_PHOTO_NAME)) {
-                itemDto.setPhotoName(null);
+        if (itemDto.getPhotoNameOriginal() != null) {
+            if (itemDto.getPhotoNameOriginal().equals(NO_PHOTO_NAME)) {
+                itemDto.setPhotoNameOriginal(null);
             }
         }
 
@@ -254,10 +255,11 @@ public class ItemController {
             setItemModel(modelMap, editableItemDto);
             return new ModelAndView("edit");
         } else {
-            if (file.isEmpty() && editableItemDto.getPhotoName() == null) {
-                editableItemDto.setPhotoName(NO_PHOTO_NAME);
+            if (file.isEmpty() && editableItemDto.getPhotoNameOriginal() == null) {
+                editableItemDto.setPhotoNameOriginal(NO_PHOTO_NAME);
             } else if (!file.isEmpty()) {
-                editableItemDto.setPhotoName(storageService.store(file));
+                editableItemDto.setPhotoNameOriginal(storageService.store(file));
+                editableItemDto.setPhotoNameCompressed(storageService.getCompressedImage(editableItemDto.getPhotoNameOriginal()));
             }
             return new ModelAndView("redirect:/items/" + itemService.edit(toItemDto(editableItemDto)));
         }
@@ -317,7 +319,8 @@ public class ItemController {
                 .storage(Integer.parseInt(editableItemDto.getStorage()))
                 .categoryId(editableItemDto.getCategoryId())
                 .characteristics(editableItemDto.getCharacteristics())
-                .photoName(editableItemDto.getPhotoName())
+                .photoNameOriginal(editableItemDto.getPhotoNameOriginal())
+                .photoNameCompressed(editableItemDto.getPhotoNameCompressed())
                 .sellerId(userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId())
                 .build();
     }
@@ -429,9 +432,10 @@ public class ItemController {
             if (file.getSize() > 1048575) {
                 errors.add(new Error("file", "File size must be not more than 1 Mb"));
             }
-            String extension = file.getOriginalFilename().split("\\.")[1];
+            String fileName=file.getOriginalFilename();
+            String extension = fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length());
             if (!(extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png"))) {
-                errors.add(new Error("file", "Please select a valid image file (JPEG/JPG/PNG)."));
+                errors.add(new Error("file", "Please select a valid image file (JPEG/JPG/PNG)"));
             }
         }
     }

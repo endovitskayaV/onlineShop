@@ -68,8 +68,11 @@ public class ItemEntity {
     private Map<CharacteristicEntity, CharactersticValueEntity> characteristicValue;
 
 
-    @Column(name = "photo_name")
-    private String photoName;
+    @Column(name = "photo_name_original")
+    private String photoNameOriginal;
+
+    @Column(name = "photo_name_compressed")
+    private String photoNameCompressed;
 
     @Column(name = "popularity")
     private int popularity;

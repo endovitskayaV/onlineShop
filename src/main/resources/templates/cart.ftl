@@ -48,7 +48,7 @@
         <#if item??>
             <#assign itemsCount=itemsCount+1>
        <div id="${item.id}" class="card horizontal hoverable">
-           <div class="card-image"><#include "item_photo.ftl"></div>
+           <div class="card-image col s5"><#include "item_photo.ftl"></div>
            <div id="anyCardLeft">
                <div class="card-stacked">
                    <div class="card-content">

@@ -123,7 +123,7 @@
                 <#if item.photoName??>
                     <div id="image_div">
                         <div class="col s8 offset-s1">
-                            <div class="card-image">
+                            <div class="card-image col s5">
                                 <img width="60" height="200" src="../../../img/${item.photoName}">
                             </div>
                             <a href="javascript: deleteImage()">

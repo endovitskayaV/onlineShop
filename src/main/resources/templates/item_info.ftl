@@ -36,7 +36,7 @@
             <div class="col s8 offset-s1">
                 <div id="items_div">
                     <div  class="card horizontal hoverable">
-                        <div class="card-image">
+                        <div class="card-image col s5">
                         <#include "item_photo.ftl">
                         </div>
                         <div class="card-stacked">

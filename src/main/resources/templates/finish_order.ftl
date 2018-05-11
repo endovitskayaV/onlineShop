@@ -31,9 +31,9 @@
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
 
-            <div class="card-image">
-                 <#if item.photoName??>
-                     <img width="60" height="200" src="../../img/${item.photoName}">
+            <div class="card-image col s5">
+                 <#if item.photoNameCompressed??>
+                     <img width="60" height="200" src="../../img/${item.photoNameCompressed}">
                  <#else>
                     <img width="60" height="200" src="../../img/no_photo.png">
                  </#if>
