@@ -81,7 +81,8 @@ public class ItemConverter {
                     .price(itemEntity.getPrice())
                     .categoryId(categoryConverter.toDto(itemEntity.getCategory()).getId())
                     .characteristics(characteristicDtos)
-                    .photoName(itemEntity.getPhotoName())
+                    .photoNameOriginal(itemEntity.getPhotoNameOriginal())
+                    .photoNameCompressed(itemEntity.getPhotoNameCompressed())
                     .sellerId(itemEntity.getSeller().getUserId())
                     .build();
         }
@@ -130,7 +131,8 @@ public class ItemConverter {
                     .price(itemDto.getPrice())
                     .category(categoryRepository.findById(itemDto.getCategoryId()).orElse(null))
                     .characteristicValue(characteristicsValues)
-                    .photoName(itemDto.getPhotoName())
+                    .photoNameOriginal(itemDto.getPhotoNameOriginal())
+                    .photoNameCompressed(itemDto.getPhotoNameCompressed())
                     .seller(sellerRepository.getOne(itemDto.getSellerId()))
                     .build();
         }

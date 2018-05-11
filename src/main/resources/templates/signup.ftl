@@ -19,7 +19,7 @@
     <div class="col s6 offset-s3">
         <div class="card hoverable">
             <div class="card-content">
-                <form method="post" action="/signup">
+                <form method="post" action="/signup?destination=${destination}">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                             <div name="form-errors"></div>
@@ -77,7 +77,7 @@
                             <button class="waves-effect waves-light btn" type="submit">Signup</button>
                         </div>
                         <div class="input-field col s2 offset-s7">
-                            <a href="/login" class="cl-4db6ac">login</a>
+                            <a href="javascript:login()" class="cl-4db6ac">login</a>
                         </div>
                     </div>
                 </form>
@@ -97,3 +97,9 @@
 </body>
 </html>
 </#escape>
+
+<script>
+    function login() {
+        location.href=location.href=document.location.origin+"/login?destination="+"${destination}";
+    }
+</script>

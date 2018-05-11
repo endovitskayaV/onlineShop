@@ -120,20 +120,21 @@
                           </#if>
                     </div>
 
-                <#if item.photoName??>
+                  <#if item.photoNameOriginal??>
                     <div id="image_div">
-                        <div class="col s8 offset-s1">
+                        <div class="col s11 offset-s1">
                             <div class="card-image">
-                                <img width="60" height="200" src="../../../img/${item.photoName}">
+                                <img src="../../../img/${item.photoNameCompressed}" alt="" width="60" height="200"  class="circle responsive-img">
+
                             </div>
                             <a href="javascript: deleteImage()">
                                 <i class="material-icons cl-4db6a sz-20 modal-trigger">clear</i>
                             </a>
                         </div>
-                            <input id="fileName" name="photoName" type="text" value="${item.photoName}" hidden>
+                        <input id="fileName" name="photoName" type="text" value="${item.photoNameOriginal}" hidden>
 
                     </div>
-                </#if>
+                  </#if>
 
                     <div class="row">
                         <div class="file-field input-field col s10 offset-s1">
@@ -158,6 +159,9 @@
             </div>
         </div>
     </div>
+
+
+
 </div>
 
 

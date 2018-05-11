@@ -12,10 +12,10 @@
          <#else>
 
         <div class="input-field col s1 offset-s10">
-            <a href="/login" class="cl-4db6ac">log in</a>
+            <a href="javascript:login()" class="cl-4db6ac">log in</a>
         </div>
         <div class="input-field col">
-            <a href="/signup" class="cl-4db6ac">register</a>
+            <a href="javascript:signup()" class="cl-4db6ac">register</a>
         </div>
          </#if>
     </div>
@@ -48,3 +48,12 @@
     </div>
     <div class="divider z-depth-3"></div>
 </div>
+<script>
+    function login() {
+        location.href=document.location.origin+"/login?destination="+encodeURIComponent(window.location.pathname+window.location.search);
+    }
+
+    function signup() {
+        location.href=document.location.origin+"/signup?destination="+encodeURIComponent(window.location.pathname+window.location.search);
+    }
+ </script>

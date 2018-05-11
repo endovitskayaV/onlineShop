@@ -118,8 +118,13 @@
                                    class="waves-effect waves-light btn">Clear cart</a>
                             </div>
                             <div class="input-field col s1 offset-s8">
-                                <a href="javascript: checkItemQuantity(${basketId})"
-                                   class="waves-effect waves-light btn">Order</a>
+                              <#if currentUser??>
+                                  <a href="javascript: checkItemQuantity(${basketId})"
+                                     class="waves-effect waves-light btn">Order</a>
+                              <#else>
+                                   <a href="/login?destination=/basket"
+                                      class="waves-effect waves-light btn">Order</a>
+                                 </#if>
                             </div>
                         </div>
                     </div>

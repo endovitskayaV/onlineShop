@@ -92,7 +92,7 @@
             <div id="items_div">
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
-            <div class="card-image">
+            <div class="card-image col s8">
                <#include "item_photo.ftl">
             </div>
             <div class="card-stacked">

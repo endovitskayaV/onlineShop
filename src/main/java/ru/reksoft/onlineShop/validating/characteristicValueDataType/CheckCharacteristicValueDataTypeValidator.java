@@ -26,7 +26,7 @@ public class CheckCharacteristicValueDataTypeValidator implements ConstraintVali
                         Double.parseDouble(characteristic.getValue());
                         return true;
                     } catch (NumberFormatException e) {
-                        context.buildConstraintViolationWithTemplate("Enter number").addConstraintViolation();
+                        context.buildConstraintViolationWithTemplate("Enter number, ex 12 or 1.98").addConstraintViolation();
                         return false;
                     }
             }

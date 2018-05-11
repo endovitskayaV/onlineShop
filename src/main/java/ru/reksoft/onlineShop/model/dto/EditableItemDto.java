@@ -59,5 +59,7 @@ public class EditableItemDto {
     @Valid
     private List<CharacteristicDto> characteristics;
 
-    private String photoName;
+    private String photoNameOriginal;
+
+    private String photoNameCompressed;
 }

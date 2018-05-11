@@ -16,8 +16,6 @@ import java.util.List;
 public class CustomAccessDeniedHandler implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        List<Cookie> cookies = request.getCookies() != null ? Arrays.asList(request.getCookies()) : new ArrayList<>();
-
         String queryString = request.getQueryString();
         queryString = (queryString != null && queryString.length() > 0) ? "?" + request.getQueryString() : "";
 

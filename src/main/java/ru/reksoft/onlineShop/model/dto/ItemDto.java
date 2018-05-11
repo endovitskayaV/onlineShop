@@ -47,9 +47,14 @@ public class ItemDto {
     private List<CharacteristicDto> characteristics;
 
     /**
-     * path in file system to item photo
+     *  item photo name
      */
-    private String photoName;
+    private String photoNameOriginal;
+
+    /**
+     *  compressed item photo name
+     */
+    private String photoNameCompressed;
 
     private Long sellerId;
 

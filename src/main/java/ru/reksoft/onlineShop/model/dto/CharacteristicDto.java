@@ -9,6 +9,7 @@ import ru.reksoft.onlineShop.validating.characteristicValueDataType.CheckCharact
 import ru.reksoft.onlineShop.validating.characteristicRequiredValue.CharacteristicValueRequiredProvider;
 import ru.reksoft.onlineShop.validating.characteristicRequiredValue.RequiredCharacteristicNotEmpty;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -35,7 +36,7 @@ public class CharacteristicDto implements CharacteristicValueRequiredProvider, C
     @NotBlank(groups = NewCharacteristic.class, message = "Type must contain at least one not blank character")
     private String measureUnit;
 
-    @AlphabeticNumericData
+   // @AlphabeticNumericData
     private String value;
 
     private boolean required;

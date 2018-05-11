@@ -132,6 +132,10 @@ public class OrderService {
                 || (!isIncrease && (orderedItemDto.getQuantity() - 1 >= 0)));
     }
 
+
+    public boolean canAddItemToBasket(long itemId){
+       return itemRepository.getOne(itemId).getStorage()>0;
+    }
     private int doOperation(boolean increase, int number) {
         return increase ? ++number : --number;
     }
@@ -195,8 +199,14 @@ public class OrderService {
         orderRepository.save(orderEntity);
     }
 
-    public void addItemsToBasket(long basketId, Map<Long, Integer> itemQuantity) {
-        OrderEntity basket = orderRepository.getOne(basketId);
+    public void addItemsToBasket(long userId, Map<Long, Integer> itemQuantity) {
+
+        OrderDto basketDto = getBasket(userId);
+        if (basketDto == null) {
+            basketDto = createBasket(userId);
+        }
+
+        OrderEntity basket = orderRepository.getOne(basketDto.getId());
         Map<ItemEntity, Integer> itemEntityQuantity = basket.getItemsQuantity();
         itemQuantity.forEach((itemId, quantuty) -> {
             ItemEntity itemEntity = itemRepository.getOne(itemId);
