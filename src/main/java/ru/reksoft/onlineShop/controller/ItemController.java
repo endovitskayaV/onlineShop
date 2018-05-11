@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/items")
 public class ItemController {
     private static final String NO_PHOTO_NAME = "no_photo.png";
-
+    private static final String NO_PHOTO_NAME_COMPRESSED = "no_photo_compressed.jpg";
     private ItemService itemService;
     private CategoryService categoryService;
     private CharacteristicService characteristicService;
@@ -257,6 +257,7 @@ public class ItemController {
         } else {
             if (file.isEmpty() && editableItemDto.getPhotoNameOriginal() == null) {
                 editableItemDto.setPhotoNameOriginal(NO_PHOTO_NAME);
+                editableItemDto.setPhotoNameCompressed(NO_PHOTO_NAME_COMPRESSED);
             } else if (!file.isEmpty()) {
                 editableItemDto.setPhotoNameOriginal(storageService.store(file));
                 editableItemDto.setPhotoNameCompressed(storageService.getCompressedImage(editableItemDto.getPhotoNameOriginal()));

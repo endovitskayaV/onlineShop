@@ -34,7 +34,7 @@
     <#list items as item>
         <div id="${item.id}" class="card horizontal hoverable">
 
-            <div class="card-image col s5">
+            <div class="card-image">
                  <#include "item_photo.ftl">
             </div>
             <div id="anyCardLeft">
