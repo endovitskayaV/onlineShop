@@ -22,10 +22,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
 
+import static ru.reksoft.onlineShop.storage.StorageUtils.*;
+
 @Service
 public class StorageService {
     private static final String ROOT_LOCATION = "src/main/resources/static/img";
-
 
     public String store(MultipartFile file) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -39,17 +40,10 @@ public class StorageService {
         }
     }
 
-    private String getFileExtension(String filename) {
-        return filename.substring(filename.lastIndexOf('.') + 1, filename.length());
-    }
-
-    private String getOriginalFileName(String filename) {
-        return filename.substring(0, filename.lastIndexOf('.'));
-    }
 
     public String getCompressedImage(String originalImageName) {
         String originalImageExtension = getFileExtension(originalImageName);
-        String compressedImageName = getOriginalFileName(originalImageName) + "_compressed." + originalImageExtension;
+        String compressedImageName = getOriginalFileName(originalImageName) + COMPRESSED_IMAGE_POSTfIX+"." + originalImageExtension;
         File originalImageFile = new File(ROOT_LOCATION + "/" + originalImageName);
         boolean isExtensionPng = originalImageExtension.equals("png");
 

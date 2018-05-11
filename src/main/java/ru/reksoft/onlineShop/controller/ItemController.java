@@ -23,6 +23,8 @@ import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ru.reksoft.onlineShop.storage.StorageUtils.*;
+
 @Controller
 @RequestMapping("/items")
 public class ItemController {
@@ -73,16 +75,16 @@ public class ItemController {
 
         deleteCharacteristics(characteristics, sortBy, acs);
 
-        if ( characteristics.size() > 0) {
+        if (characteristics.size() > 0) {
             setModel(model,
                     itemService.getByCharacteristic(categoryService.getByName(category).getId(), getStringListMap(characteristics), getSafeBoolean(acs), sortBy),
                     sortBy, getSafeBoolean(acs),
                     categoryService.getAll(),
                     category,
                     setChosenCharacteristics(category, getStringListMap(characteristics)));
-        }else{
+        } else {
             setModel(model,
-                    itemService.getByCategoryId(categoryService.getByName(category).getId(),acs,sortBy),
+                    itemService.getByCategoryId(categoryService.getByName(category).getId(), acs, sortBy),
                     sortBy, getSafeBoolean(acs), categoryService.getAll(), category,
                     itemService.getCharacteristicValuesByCategoryId(categoryService.getByName(category).getId()));
         }
@@ -261,6 +263,10 @@ public class ItemController {
             } else if (!file.isEmpty()) {
                 editableItemDto.setPhotoNameOriginal(storageService.store(file));
                 editableItemDto.setPhotoNameCompressed(storageService.getCompressedImage(editableItemDto.getPhotoNameOriginal()));
+            } else { //file.isEmpty() && editableItemDto.getPhotoNameOriginal() != null
+                String originalPhotoName = editableItemDto.getPhotoNameOriginal();
+                editableItemDto.setPhotoNameCompressed(
+                        getOriginalFileName(originalPhotoName) + COMPRESSED_IMAGE_POSTfIX + "." + getFileExtension(originalPhotoName));
             }
             return new ModelAndView("redirect:/items/" + itemService.edit(toItemDto(editableItemDto)));
         }
@@ -433,7 +439,7 @@ public class ItemController {
             if (file.getSize() > 1048575) {
                 errors.add(new Error("file", "File size must be not more than 1 Mb"));
             }
-            String fileName=file.getOriginalFilename();
+            String fileName = file.getOriginalFilename();
             String extension = fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length());
             if (!(extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png"))) {
                 errors.add(new Error("file", "Please select a valid image file (JPEG/JPG/PNG)"));

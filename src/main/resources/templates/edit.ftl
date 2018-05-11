@@ -131,7 +131,7 @@
                                 <i class="material-icons cl-4db6a sz-20 modal-trigger">clear</i>
                             </a>
                         </div>
-                        <input id="fileName" name="photoName" type="text" value="${item.photoNameOriginal}" hidden>
+                        <input id="fileName" name="photoNameOriginal" type="text" value="${item.photoNameOriginal}" hidden>
 
                     </div>
                   </#if>
