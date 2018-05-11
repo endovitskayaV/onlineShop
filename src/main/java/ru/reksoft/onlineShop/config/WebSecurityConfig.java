@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.reksoft.onlineShop.security.CustomAccessDeniedHandler;
 import ru.reksoft.onlineShop.security.LogoutHandlerImpl;
+import ru.reksoft.onlineShop.security.LogoutSuccessHandlerImpl;
 
 @Configuration
 //@EnableWebSecurity
@@ -35,7 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .addLogoutHandler(new LogoutHandlerImpl())
-                .logoutSuccessUrl("/items").permitAll()
+                .logoutSuccessHandler(new LogoutSuccessHandlerImpl())
+              //  .logoutSuccessUrl("/items").permitAll()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new CustomAccessDeniedHandler());
     }
