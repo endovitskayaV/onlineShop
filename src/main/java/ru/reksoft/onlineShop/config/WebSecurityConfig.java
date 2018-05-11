@@ -30,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/login","/signup",
                         "/", "/items","/items/{\\d+}", "/items/filter", "/items/search",
                         "/characteristics*",
-                        "/basket/**")
+                        "/basket", "/basket/add/**", "/basket/edit/**", "/basket/delete/**")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
